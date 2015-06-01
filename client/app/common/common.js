@@ -1,8 +1,8 @@
 import angular from 'angular';
-import zPresentContainer from './zPresentContainer/zPresentContainer.directive';
+import zPresent from './zPresent/zPresent';
 
 let commonModule = angular.module('app.common', [
-	zPresentContainer.name
+	zPresent.name
 ]);
 
 export default commonModule;
