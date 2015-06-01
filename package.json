@@ -21,5 +21,15 @@
   "bugs": {
     "url": "https://github.com/itechdom/zpresent/issues"
   },
-  "homepage": "https://github.com/itechdom/zpresent"
+  "homepage": "https://github.com/itechdom/zpresent",
+  "dependencies": {
+    "angular": "^1.4.0",
+    "reveal": "0.0.4"
+  },
+  "devDependencies": {
+    "gulp": "^3.8.11",
+    "jasmine-core": "^2.3.4",
+    "karma": "^0.12.35",
+    "karma-jasmine": "^0.3.5"
+  }
 }
