@@ -1,4 +1,4 @@
-angular.module("projectAbort").directive('zSlide', function() {
+angular.module("zPresent").directive('zSlide', function() {
   return {
     templateUrl: 'app/components/zSlide/zSlide.html',
     restrict: 'E',

@@ -1,4 +1,4 @@
-angular.module("projectAbort").directive('zPresentContainer', function() {
+angular.module("zPresent").directive('zPresentContainer', function() {
   return {
     templateUrl: 'app/components/zPresentContainer/zPresentContainer.html',
     restrict: 'E',
