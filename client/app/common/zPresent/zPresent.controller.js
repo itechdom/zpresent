@@ -1,6 +1,6 @@
 class zPresentController {
 	constructor(){
-		this.name = 'navbar';
+		this.name = 'zPresent';
 	}
 }
 
