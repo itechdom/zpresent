@@ -43,16 +43,14 @@ let zPresentComponent = function ($compile) {
         }
 
     }
-
     function initializeReveal() {
         Reveal.initialize({
             loop: false,
             center: true,
-            transition: Reveal.getQueryHash().transition || 'none'
+            transition: 'default'
         });
         return true;
     }
-
 
 };
 

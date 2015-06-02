@@ -14,7 +14,7 @@ class HomeController {
 				"Howdy"
 			];
 
-		},1000)
+		},1000);
 
 	}
 }

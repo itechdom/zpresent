@@ -33058,15 +33058,15 @@
 	        if (!reveal) {
 	            reveal = initializeReveal();
 	        } else {
+	            //that means Reveal has been initialized
 	            _reveal2['default'].slide(0);
 	        }
 	    }
-	
 	    function initializeReveal() {
 	        _reveal2['default'].initialize({
 	            loop: false,
 	            center: true,
-	            transition: _reveal2['default'].getQueryHash().transition || 'none'
+	            transition: 'default'
 	        });
 	        return true;
 	    }
@@ -33087,11 +33087,11 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _zSlideHtml = __webpack_require__(21);
+	var _zSlideHtml = __webpack_require__(19);
 	
 	var _zSlideHtml2 = _interopRequireDefault(_zSlideHtml);
 	
-	var _zSlideControllerJs = __webpack_require__(22);
+	var _zSlideControllerJs = __webpack_require__(20);
 	
 	var _zSlideControllerJs2 = _interopRequireDefault(_zSlideControllerJs);
 	
@@ -33129,11 +33129,11 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _homeHtml = __webpack_require__(19);
+	var _homeHtml = __webpack_require__(21);
 	
 	var _homeHtml2 = _interopRequireDefault(_homeHtml);
 	
-	var _homeController = __webpack_require__(20);
+	var _homeController = __webpack_require__(22);
 	
 	var _homeController2 = _interopRequireDefault(_homeController);
 	
@@ -33240,10 +33240,37 @@
 /* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = "<!--if you'd like to have the navbar and or header on every page, move it up a level to app.html!-->\n<navbar></navbar>\n<header>\n\t<hero></hero>\n</header>\n<main>\n\t<div style=\"margin-top: 100px\" class=\"reveal\">\n\t\t<z-present slides=\"slides\">\n\t\t</z-present>\n\t</div>\n</main>"
+	module.exports = "<section>\n    <ng-transclude></ng-transclude>\n</section>"
 
 /***/ },
 /* 20 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, '__esModule', {
+		value: true
+	});
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+	
+	var zSlideController = function zSlideController() {
+		_classCallCheck(this, zSlideController);
+	
+		this.name = 'navbar';
+	};
+	
+	exports['default'] = zSlideController;
+	module.exports = exports['default'];
+
+/***/ },
+/* 21 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = "<!--if you'd like to have the navbar and or header on every page, move it up a level to app.html!-->\n<navbar></navbar>\n<header>\n\t<hero></hero>\n</header>\n<main>\n\t<div style=\"position: inherit\" class=\"reveal\">\n\t\t<z-present slides=\"slides\">\n\t\t</z-present>\n\t</div>\n</main>"
+
+/***/ },
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -33267,33 +33294,6 @@
 	
 	exports["default"] = HomeController;
 	module.exports = exports["default"];
-
-/***/ },
-/* 21 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = "<section>\n<ng-transclude></ng-transclude>\n</section>"
-
-/***/ },
-/* 22 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, '__esModule', {
-		value: true
-	});
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-	
-	var zSlideController = function zSlideController() {
-		_classCallCheck(this, zSlideController);
-	
-		this.name = 'navbar';
-	};
-	
-	exports['default'] = zSlideController;
-	module.exports = exports['default'];
 
 /***/ },
 /* 23 */
