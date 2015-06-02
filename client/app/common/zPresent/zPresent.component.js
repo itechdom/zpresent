@@ -1,8 +1,9 @@
 import template from './zPresent.html';
 import controller from './zPresent.controller.js';
-import Reveal from 'reveal';
-import 'reveal/index.css';
-import 'reveal/theme/sky.css';
+import Reveal from 'reveal.js';
+import 'reveal.js/css/reveal.css';
+import 'reveal.js/css/theme/sky.css';
+
 
 let zPresentComponent = function ($compile) {
     var reveal;
