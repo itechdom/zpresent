@@ -1,7 +1,5 @@
 import template from './zSlide.html';
 import controller from './zSlide.controller.js';
-import Reveal from 'reveal.js';
-
 
 let zSlideComponent = function(){
   var dir =  {

@@ -1,9 +1,8 @@
 import template from './zPresent.html';
 import controller from './zPresent.controller.js';
-import Reveal from 'reveal.js';
-import 'reveal.js/css/reveal.css';
-import 'reveal.js/css/theme/sky.css';
+import revealConnector from './reveal.connector.js';
 
+var revealC;
 
 let zPresentComponent = function ($compile) {
     var reveal;
@@ -35,25 +34,18 @@ let zPresentComponent = function ($compile) {
             var czslide = $compile(zslide)(scope);
             elem.append(czslide);
         }
-        if(!reveal){
-            reveal = initializeReveal();
+        if(!revealC) {
+            revealC = new revealConnector();
         }
         else{
-            //that means Reveal has been initialized
-            Reveal.slide( 0 );
+            revealC.goToSlide(0);
         }
-
     }
-    function initializeReveal() {
-        Reveal.initialize({
-            loop: false,
-            center: true,
-            transition: 'default'
-        });
-        return true;
+    function readMarkdown(){
+
+
     }
 
 };
-
 
 export default zPresentComponent;
