@@ -8,7 +8,10 @@ var gulp	 		= require('gulp'),
 		fs				= require('fs'),
 		yargs			= require('yargs').argv,
 		lodash 		= require('lodash'),
-		reload		= function () { return serve.reload() };
+		reload		= function () { return serve.reload()},
+		data = require('gulp-data');
+
+var root = 'client';
 
 
 // helper method to resolveToApp paths
@@ -22,11 +25,11 @@ var resolveToComponents = function(glob){
 	return path.join(root, 'app/components', glob); // app/components/{glob}
 };
 
-var root = 'client';
 
 // map of all our paths
 var paths = {
 	js: resolveToComponents('**/*!(.spec.js).js'), // don't include spec files
+	all: resolveToApp('**/*.js'),
 	styl: resolveToApp('**/*.styl'), // our stylus files
 	html: [
 		resolveToApp('**/*.html'),
@@ -36,6 +39,33 @@ var paths = {
 	output: root,
 	blankTemplates: path.join(__dirname, 'generator', 'component/**/*.**')
 };
+
+//this task is responsible for looking
+gulp.task('buildSlides',function(){
+	var slides = [];
+
+	//return gulp.src('client/slides/*')
+	//	.pipe(data(function(file) {
+	//		return file
+	//	}))
+	//	.pipe(gulp.dest('slides'));
+	fs.readdir('client/slides',function(err,files){
+		console.log(err);
+		slides = files;
+		console.log(slides);
+		var writeStream = fs.createWriteStream('client/slides.json',{flags:'r+'});
+		slides.forEach(function(slide,index){
+			if(index == 0){
+				writeStream.write('[ \n');
+			}
+			writeStream.write('"'+slide+'", \n');
+			if(slides.length-1 == index){
+				writeStream.write(']');
+			}
+		});
+	});
+
+});
 
 // use our webpack.config.js to 
 // build our modules
@@ -60,11 +90,10 @@ gulp.task('serve', function(){
 gulp.task('watch', function(){
 	var allPaths = [].concat(
 		[paths.js],
+		[paths.all],
 		paths.html,
 		[paths.styl]
 	);
-		
-
 	gulp.watch(allPaths, ['webpack', reload]);
 });
 

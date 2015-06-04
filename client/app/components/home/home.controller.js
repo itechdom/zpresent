@@ -1,5 +1,5 @@
 class HomeController {
-	constructor($scope,$timeout){
+	constructor($scope,$timeout,homeService){
 		this.name = 'home';
 		$scope.slides = [
 			"Hello",
