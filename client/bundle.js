@@ -88,7 +88,7 @@
 	
 	var _angular2 = _interopRequireDefault(_angular);
 	
-	var _zPresentZPresent = __webpack_require__(7);
+	var _zPresentZPresent = __webpack_require__(6);
 	
 	var _zPresentZPresent2 = _interopRequireDefault(_zPresentZPresent);
 	
@@ -139,7 +139,7 @@
 	
 	var _angular2 = _interopRequireDefault(_angular);
 	
-	var _homeHome = __webpack_require__(6);
+	var _homeHome = __webpack_require__(8);
 	
 	var _homeHome2 = _interopRequireDefault(_homeHome);
 	
@@ -152,7 +152,7 @@
 /* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(8);
+	__webpack_require__(7);
 	module.exports = angular;
 
 
@@ -4538,46 +4538,6 @@
 	'use strict';
 	
 	Object.defineProperty(exports, '__esModule', {
-		value: true
-	});
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-	
-	var _angular = __webpack_require__(4);
-	
-	var _angular2 = _interopRequireDefault(_angular);
-	
-	var _angularUiRouter = __webpack_require__(5);
-	
-	var _angularUiRouter2 = _interopRequireDefault(_angularUiRouter);
-	
-	var _homeComponent = __webpack_require__(13);
-	
-	var _homeComponent2 = _interopRequireDefault(_homeComponent);
-	
-	var _homeService = __webpack_require__(14);
-	
-	var _homeService2 = _interopRequireDefault(_homeService);
-	
-	var homeModule = _angular2['default'].module('home', [_angularUiRouter2['default']]).config(function ($stateProvider, $urlRouterProvider) {
-		$urlRouterProvider.otherwise('/');
-	
-		$stateProvider.state('home', {
-			url: '/',
-			template: '<home></home>'
-		});
-	}).directive('home', _homeComponent2['default']).service('homeService', _homeService2['default']);
-	
-	exports['default'] = homeModule;
-	module.exports = exports['default'];
-
-/***/ },
-/* 7 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, '__esModule', {
 	    value: true
 	});
 	
@@ -4587,11 +4547,11 @@
 	
 	var _angular2 = _interopRequireDefault(_angular);
 	
-	var _zPresentComponentJs = __webpack_require__(15);
+	var _zPresentComponentJs = __webpack_require__(13);
 	
 	var _zPresentComponentJs2 = _interopRequireDefault(_zPresentComponentJs);
 	
-	var _zSlideZSlideComponentJs = __webpack_require__(16);
+	var _zSlideZSlideComponentJs = __webpack_require__(14);
 	
 	var _zSlideZSlideComponentJs2 = _interopRequireDefault(_zSlideZSlideComponentJs);
 	
@@ -4604,7 +4564,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 8 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -32742,6 +32702,46 @@
 	!window.angular.$$csp() && window.angular.element(document).find('head').prepend('<style type="text/css">@charset "UTF-8";[ng\\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide:not(.ng-hide-animate){display:none !important;}ng\\:form{display:block;}.ng-animate-shim{visibility:hidden;}.ng-anchor{position:absolute;}</style>');
 
 /***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, '__esModule', {
+		value: true
+	});
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	
+	var _angular = __webpack_require__(4);
+	
+	var _angular2 = _interopRequireDefault(_angular);
+	
+	var _angularUiRouter = __webpack_require__(5);
+	
+	var _angularUiRouter2 = _interopRequireDefault(_angularUiRouter);
+	
+	var _homeComponent = __webpack_require__(15);
+	
+	var _homeComponent2 = _interopRequireDefault(_homeComponent);
+	
+	var _homeService = __webpack_require__(16);
+	
+	var _homeService2 = _interopRequireDefault(_homeService);
+	
+	var homeModule = _angular2['default'].module('home', [_angularUiRouter2['default']]).config(function ($stateProvider, $urlRouterProvider) {
+		$urlRouterProvider.otherwise('/');
+	
+		$stateProvider.state('home', {
+			url: '/',
+			template: '<home></home>'
+		});
+	}).directive('home', _homeComponent2['default']).service('homeService', _homeService2['default']);
+	
+	exports['default'] = homeModule;
+	module.exports = exports['default'];
+
+/***/ },
 /* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -33012,77 +33012,20 @@
 	'use strict';
 	
 	Object.defineProperty(exports, '__esModule', {
-		value: true
-	});
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-	
-	var _homeHtml = __webpack_require__(19);
-	
-	var _homeHtml2 = _interopRequireDefault(_homeHtml);
-	
-	var _homeController = __webpack_require__(20);
-	
-	var _homeController2 = _interopRequireDefault(_homeController);
-	
-	__webpack_require__(27);
-	
-	var homeComponent = function homeComponent() {
-		return {
-			template: _homeHtml2['default'],
-			controller: _homeController2['default'],
-			restrict: 'E',
-			controllerAs: 'vm',
-			scope: {},
-			bindToController: true
-		};
-	};
-	
-	exports['default'] = homeComponent;
-	module.exports = exports['default'];
-
-/***/ },
-/* 14 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Created by osamaalghanmi on 6/4/15.
-	 */
-	
-	'use strict';
-	
-	Object.defineProperty(exports, '__esModule', {
-	    value: true
-	});
-	var homeService = function homeService($http) {
-	    this.getSlides = function () {
-	        return $http.get('/slides.json');
-	    };
-	};
-	exports['default'] = homeService;
-	module.exports = exports['default'];
-
-/***/ },
-/* 15 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, '__esModule', {
 	    value: true
 	});
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _zPresentHtml = __webpack_require__(21);
+	var _zPresentHtml = __webpack_require__(19);
 	
 	var _zPresentHtml2 = _interopRequireDefault(_zPresentHtml);
 	
-	var _zPresentControllerJs = __webpack_require__(22);
+	var _zPresentControllerJs = __webpack_require__(20);
 	
 	var _zPresentControllerJs2 = _interopRequireDefault(_zPresentControllerJs);
 	
-	var _revealConnectorJs = __webpack_require__(23);
+	var _revealConnectorJs = __webpack_require__(21);
 	
 	var _revealConnectorJs2 = _interopRequireDefault(_revealConnectorJs);
 	
@@ -33118,11 +33061,22 @@
 	
 	    function renderSlides(slides, scope, elem) {
 	        elem.empty();
+	        var czslide;
 	        for (var key in slides) {
-	            var html = slides[key].body;
-	            var zslide = angular.element('<z-slide><h1>' + html + '</h1></z-slide>');
-	            var czslide = $compile(zslide)(scope);
-	            elem.append(czslide);
+	            var slide = slides[key];
+	            if (!slide['body']) {
+	                var subslide = slides[key];
+	                console.log(subslide);
+	                var velem = angular.element('<section></section>');
+	                for (var k in subslide) {
+	                    czslide = createSlide(subslide[k], scope);
+	                    velem.append(czslide);
+	                }
+	                elem.append(velem);
+	            } else {
+	                czslide = createSlide(slide, scope);
+	                elem.append(czslide);
+	            }
 	        }
 	        if (!revealC) {
 	            revealC = new _revealConnectorJs2['default']();
@@ -33130,13 +33084,18 @@
 	            revealC.goToSlide(0);
 	        }
 	    }
+	    function createSlide(slide, scope) {
+	        var zslide = angular.element('<z-slide><h1>' + slide.body + '</h1></z-slide>');
+	        var czslide = $compile(zslide)(scope);
+	        return czslide;
+	    }
 	};
 	
 	exports['default'] = zPresentComponent;
 	module.exports = exports['default'];
 
 /***/ },
-/* 16 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33171,6 +33130,63 @@
 	};
 	
 	exports['default'] = zSlideComponent;
+	module.exports = exports['default'];
+
+/***/ },
+/* 15 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, '__esModule', {
+		value: true
+	});
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	
+	var _homeHtml = __webpack_require__(22);
+	
+	var _homeHtml2 = _interopRequireDefault(_homeHtml);
+	
+	var _homeController = __webpack_require__(23);
+	
+	var _homeController2 = _interopRequireDefault(_homeController);
+	
+	__webpack_require__(27);
+	
+	var homeComponent = function homeComponent() {
+		return {
+			template: _homeHtml2['default'],
+			controller: _homeController2['default'],
+			restrict: 'E',
+			controllerAs: 'vm',
+			scope: {},
+			bindToController: true
+		};
+	};
+	
+	exports['default'] = homeComponent;
+	module.exports = exports['default'];
+
+/***/ },
+/* 16 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Created by osamaalghanmi on 6/4/15.
+	 */
+	
+	'use strict';
+	
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+	var homeService = function homeService($http) {
+	    this.getSlides = function () {
+	        return $http.get('/slides.json');
+	    };
+	};
+	exports['default'] = homeService;
 	module.exports = exports['default'];
 
 /***/ },
@@ -33241,41 +33257,10 @@
 /* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = "<!--if you'd like to have the navbar and or header on every page, move it up a level to app.html!-->\n<navbar></navbar>\n<header>\n\t<hero></hero>\n</header>\n<main>\n\t<div style=\"position: inherit\" class=\"reveal\">\n\t\t<z-present slides=\"slides\">\n\t\t</z-present>\n\t</div>\n</main>"
-
-/***/ },
-/* 20 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, '__esModule', {
-		value: true
-	});
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-	
-	var HomeController = function HomeController($scope, $timeout, homeService) {
-		_classCallCheck(this, HomeController);
-	
-		this.name = 'home';
-	
-		homeService.getSlides().success(function (slides) {
-			$scope.slides = slides;
-		});
-	};
-	
-	exports['default'] = HomeController;
-	module.exports = exports['default'];
-
-/***/ },
-/* 21 */
-/***/ function(module, exports, __webpack_require__) {
-
 	module.exports = "<div class=\"slides\">\n\n</div>"
 
 /***/ },
-/* 22 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33296,7 +33281,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 23 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33350,6 +33335,37 @@
 	})();
 	
 	exports['default'] = revealConnector;
+	module.exports = exports['default'];
+
+/***/ },
+/* 22 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = "<!--if you'd like to have the navbar and or header on every page, move it up a level to app.html!-->\n<navbar></navbar>\n<header>\n\t<hero></hero>\n</header>\n<main>\n\t<div style=\"position: inherit\" class=\"reveal\">\n\t\t<z-present slides=\"slides\">\n\t\t</z-present>\n\t</div>\n</main>"
+
+/***/ },
+/* 23 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, '__esModule', {
+		value: true
+	});
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+	
+	var HomeController = function HomeController($scope, $timeout, homeService) {
+		_classCallCheck(this, HomeController);
+	
+		this.name = 'home';
+	
+		homeService.getSlides().success(function (slides) {
+			$scope.slides = slides;
+		});
+	};
+	
+	exports['default'] = HomeController;
 	module.exports = exports['default'];
 
 /***/ },

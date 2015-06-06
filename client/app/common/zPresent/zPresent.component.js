@@ -34,11 +34,23 @@ let zPresentComponent = function ($compile,$http) {
 
     function renderSlides(slides,scope,elem){
         elem.empty();
+        var czslide;
         for (var key in slides) {
-            var html = slides[key].body;
-            var zslide = angular.element("<z-slide><h1>"+html+"</h1></z-slide>");
-            var czslide = $compile(zslide)(scope);
-            elem.append(czslide);
+            var slide = slides[key];
+            if(!slide["body"]){
+                var subslide = slides[key];
+                console.log(subslide);
+                var velem = angular.element("<section></section>");
+                for(var k in subslide){
+                   czslide = createSlide(subslide[k],scope);
+                    velem.append(czslide);
+                }
+                elem.append(velem);
+            }
+            else{
+               czslide = createSlide(slide,scope);
+                elem.append(czslide);
+            }
         }
         if(!revealC) {
             revealC = new revealConnector();
@@ -46,6 +58,11 @@ let zPresentComponent = function ($compile,$http) {
         else{
             revealC.goToSlide(0);
         }
+    }
+    function createSlide(slide,scope){
+        var zslide = angular.element("<z-slide><h1>"+slide.body+"</h1></z-slide>");
+        var czslide = $compile(zslide)(scope);
+        return czslide;
     }
 
 };

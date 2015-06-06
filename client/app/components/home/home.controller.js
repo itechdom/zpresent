@@ -4,7 +4,6 @@ class HomeController {
 
 	homeService.getSlides().success(function(slides){
 		$scope.slides = slides;
-
 	})
 	}
 }
