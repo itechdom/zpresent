@@ -9,7 +9,9 @@ var gulp	 		= require('gulp'),
 		yargs			= require('yargs').argv,
 		lodash 		= require('lodash'),
 		reload		= function () { return serve.reload()},
-		data = require('gulp-data');
+		data = require('gulp-data'),
+		 gutil = require('gulp-util'),
+		markdown = require('gulp-markdown-to-json');
 
 var root = 'client';
 
@@ -42,29 +44,10 @@ var paths = {
 
 //this task is responsible for looking
 gulp.task('buildSlides',function(){
-	var slides = [];
-
-	//return gulp.src('client/slides/*')
-	//	.pipe(data(function(file) {
-	//		return file
-	//	}))
-	//	.pipe(gulp.dest('slides'));
-	fs.readdir('client/slides',function(err,files){
-		console.log(err);
-		slides = files;
-		console.log(slides);
-		var writeStream = fs.createWriteStream('client/slides.json',{flags:'r+'});
-		slides.forEach(function(slide,index){
-			if(index == 0){
-				writeStream.write('[ \n');
-			}
-			writeStream.write('"'+slide+'", \n');
-			if(slides.length-1 == index){
-				writeStream.write(']');
-			}
-		});
-	});
-
+	return gulp.src('./slides/**/*.md')
+		.pipe(gutil.buffer())
+		.pipe(markdown('slides.json'))
+		.pipe(gulp.dest('client'));
 });
 
 // use our webpack.config.js to 

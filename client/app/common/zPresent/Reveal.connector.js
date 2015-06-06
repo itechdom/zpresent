@@ -11,9 +11,9 @@ class revealConnector {
 		Reveal.initialize({
 			loop: false,
 			center: true,
+			minScale: 0.6,
 			transition: 'default'
 		});
-
 	}
 	configureReveal(){
 
