@@ -1,2 +1,2 @@
 # ZPresent
-Create Presentations using Angular and Gulp with Reveal.js
+Create and Share  Presentations using Angular and Gulp with Reveal.js
