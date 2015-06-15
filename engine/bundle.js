@@ -48,7 +48,7 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _angular = __webpack_require__(4);
+	var _angular = __webpack_require__(3);
 	
 	var _angular2 = _interopRequireDefault(_angular);
 	
@@ -56,19 +56,19 @@
 	
 	var _angularUiRouter2 = _interopRequireDefault(_angularUiRouter);
 	
-	var _commonCommon = __webpack_require__(1);
+	var _commonCommon = __webpack_require__(6);
 	
 	var _commonCommon2 = _interopRequireDefault(_commonCommon);
 	
-	var _appComponent = __webpack_require__(2);
+	var _appComponent = __webpack_require__(1);
 	
 	var _appComponent2 = _interopRequireDefault(_appComponent);
 	
-	var _componentsComponents = __webpack_require__(3);
+	var _componentsComponents = __webpack_require__(24);
 	
 	var _componentsComponents2 = _interopRequireDefault(_componentsComponents);
 	
-	__webpack_require__(9);
+	__webpack_require__(32);
 	
 	_angular2['default'].module('app', [_angularUiRouter2['default'], _commonCommon2['default'].name, _componentsComponents2['default'].name]).directive('app', _appComponent2['default']);
 
@@ -84,32 +84,7 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _angular = __webpack_require__(4);
-	
-	var _angular2 = _interopRequireDefault(_angular);
-	
-	var _zPresentZPresent = __webpack_require__(6);
-	
-	var _zPresentZPresent2 = _interopRequireDefault(_zPresentZPresent);
-	
-	var commonModule = _angular2['default'].module('app.common', [_zPresentZPresent2['default'].name]);
-	
-	exports['default'] = commonModule;
-	module.exports = exports['default'];
-
-/***/ },
-/* 2 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, '__esModule', {
-		value: true
-	});
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-	
-	var _appHtml = __webpack_require__(11);
+	var _appHtml = __webpack_require__(2);
 	
 	var _appHtml2 = _interopRequireDefault(_appHtml);
 	
@@ -124,4448 +99,22 @@
 	module.exports = exports['default'];
 
 /***/ },
+/* 2 */
+/***/ function(module, exports) {
+
+	module.exports = "<!--Anything you want to be on every page, place it in this file-->\n<div class=\"app\">\n\t<div ui-view>\n\t</div>\n</div>\n"
+
+/***/ },
 /* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
-	
-	Object.defineProperty(exports, '__esModule', {
-		value: true
-	});
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-	
-	var _angular = __webpack_require__(4);
-	
-	var _angular2 = _interopRequireDefault(_angular);
-	
-	var _homeHome = __webpack_require__(8);
-	
-	var _homeHome2 = _interopRequireDefault(_homeHome);
-	
-	var componentModule = _angular2['default'].module('app.components', [_homeHome2['default'].name]);
-	
-	exports['default'] = componentModule;
-	module.exports = exports['default'];
-
-/***/ },
-/* 4 */
-/***/ function(module, exports, __webpack_require__) {
-
-	__webpack_require__(7);
+	__webpack_require__(4);
 	module.exports = angular;
 
 
 /***/ },
-/* 5 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * State-based routing for AngularJS
-	 * @version v0.2.15
-	 * @link http://angular-ui.github.com/
-	 * @license MIT License, http://www.opensource.org/licenses/MIT
-	 */
-	
-	/* commonjs package manager support (eg componentjs) */
-	if (typeof module !== "undefined" && typeof exports !== "undefined" && module.exports === exports){
-	  module.exports = 'ui.router';
-	}
-	
-	(function (window, angular, undefined) {
-	/*jshint globalstrict:true*/
-	/*global angular:false*/
-	'use strict';
-	
-	var isDefined = angular.isDefined,
-	    isFunction = angular.isFunction,
-	    isString = angular.isString,
-	    isObject = angular.isObject,
-	    isArray = angular.isArray,
-	    forEach = angular.forEach,
-	    extend = angular.extend,
-	    copy = angular.copy;
-	
-	function inherit(parent, extra) {
-	  return extend(new (extend(function() {}, { prototype: parent }))(), extra);
-	}
-	
-	function merge(dst) {
-	  forEach(arguments, function(obj) {
-	    if (obj !== dst) {
-	      forEach(obj, function(value, key) {
-	        if (!dst.hasOwnProperty(key)) dst[key] = value;
-	      });
-	    }
-	  });
-	  return dst;
-	}
-	
-	/**
-	 * Finds the common ancestor path between two states.
-	 *
-	 * @param {Object} first The first state.
-	 * @param {Object} second The second state.
-	 * @return {Array} Returns an array of state names in descending order, not including the root.
-	 */
-	function ancestors(first, second) {
-	  var path = [];
-	
-	  for (var n in first.path) {
-	    if (first.path[n] !== second.path[n]) break;
-	    path.push(first.path[n]);
-	  }
-	  return path;
-	}
-	
-	/**
-	 * IE8-safe wrapper for `Object.keys()`.
-	 *
-	 * @param {Object} object A JavaScript object.
-	 * @return {Array} Returns the keys of the object as an array.
-	 */
-	function objectKeys(object) {
-	  if (Object.keys) {
-	    return Object.keys(object);
-	  }
-	  var result = [];
-	
-	  forEach(object, function(val, key) {
-	    result.push(key);
-	  });
-	  return result;
-	}
-	
-	/**
-	 * IE8-safe wrapper for `Array.prototype.indexOf()`.
-	 *
-	 * @param {Array} array A JavaScript array.
-	 * @param {*} value A value to search the array for.
-	 * @return {Number} Returns the array index value of `value`, or `-1` if not present.
-	 */
-	function indexOf(array, value) {
-	  if (Array.prototype.indexOf) {
-	    return array.indexOf(value, Number(arguments[2]) || 0);
-	  }
-	  var len = array.length >>> 0, from = Number(arguments[2]) || 0;
-	  from = (from < 0) ? Math.ceil(from) : Math.floor(from);
-	
-	  if (from < 0) from += len;
-	
-	  for (; from < len; from++) {
-	    if (from in array && array[from] === value) return from;
-	  }
-	  return -1;
-	}
-	
-	/**
-	 * Merges a set of parameters with all parameters inherited between the common parents of the
-	 * current state and a given destination state.
-	 *
-	 * @param {Object} currentParams The value of the current state parameters ($stateParams).
-	 * @param {Object} newParams The set of parameters which will be composited with inherited params.
-	 * @param {Object} $current Internal definition of object representing the current state.
-	 * @param {Object} $to Internal definition of object representing state to transition to.
-	 */
-	function inheritParams(currentParams, newParams, $current, $to) {
-	  var parents = ancestors($current, $to), parentParams, inherited = {}, inheritList = [];
-	
-	  for (var i in parents) {
-	    if (!parents[i].params) continue;
-	    parentParams = objectKeys(parents[i].params);
-	    if (!parentParams.length) continue;
-	
-	    for (var j in parentParams) {
-	      if (indexOf(inheritList, parentParams[j]) >= 0) continue;
-	      inheritList.push(parentParams[j]);
-	      inherited[parentParams[j]] = currentParams[parentParams[j]];
-	    }
-	  }
-	  return extend({}, inherited, newParams);
-	}
-	
-	/**
-	 * Performs a non-strict comparison of the subset of two objects, defined by a list of keys.
-	 *
-	 * @param {Object} a The first object.
-	 * @param {Object} b The second object.
-	 * @param {Array} keys The list of keys within each object to compare. If the list is empty or not specified,
-	 *                     it defaults to the list of keys in `a`.
-	 * @return {Boolean} Returns `true` if the keys match, otherwise `false`.
-	 */
-	function equalForKeys(a, b, keys) {
-	  if (!keys) {
-	    keys = [];
-	    for (var n in a) keys.push(n); // Used instead of Object.keys() for IE8 compatibility
-	  }
-	
-	  for (var i=0; i<keys.length; i++) {
-	    var k = keys[i];
-	    if (a[k] != b[k]) return false; // Not '===', values aren't necessarily normalized
-	  }
-	  return true;
-	}
-	
-	/**
-	 * Returns the subset of an object, based on a list of keys.
-	 *
-	 * @param {Array} keys
-	 * @param {Object} values
-	 * @return {Boolean} Returns a subset of `values`.
-	 */
-	function filterByKeys(keys, values) {
-	  var filtered = {};
-	
-	  forEach(keys, function (name) {
-	    filtered[name] = values[name];
-	  });
-	  return filtered;
-	}
-	
-	// like _.indexBy
-	// when you know that your index values will be unique, or you want last-one-in to win
-	function indexBy(array, propName) {
-	  var result = {};
-	  forEach(array, function(item) {
-	    result[item[propName]] = item;
-	  });
-	  return result;
-	}
-	
-	// extracted from underscore.js
-	// Return a copy of the object only containing the whitelisted properties.
-	function pick(obj) {
-	  var copy = {};
-	  var keys = Array.prototype.concat.apply(Array.prototype, Array.prototype.slice.call(arguments, 1));
-	  forEach(keys, function(key) {
-	    if (key in obj) copy[key] = obj[key];
-	  });
-	  return copy;
-	}
-	
-	// extracted from underscore.js
-	// Return a copy of the object omitting the blacklisted properties.
-	function omit(obj) {
-	  var copy = {};
-	  var keys = Array.prototype.concat.apply(Array.prototype, Array.prototype.slice.call(arguments, 1));
-	  for (var key in obj) {
-	    if (indexOf(keys, key) == -1) copy[key] = obj[key];
-	  }
-	  return copy;
-	}
-	
-	function pluck(collection, key) {
-	  var result = isArray(collection) ? [] : {};
-	
-	  forEach(collection, function(val, i) {
-	    result[i] = isFunction(key) ? key(val) : val[key];
-	  });
-	  return result;
-	}
-	
-	function filter(collection, callback) {
-	  var array = isArray(collection);
-	  var result = array ? [] : {};
-	  forEach(collection, function(val, i) {
-	    if (callback(val, i)) {
-	      result[array ? result.length : i] = val;
-	    }
-	  });
-	  return result;
-	}
-	
-	function map(collection, callback) {
-	  var result = isArray(collection) ? [] : {};
-	
-	  forEach(collection, function(val, i) {
-	    result[i] = callback(val, i);
-	  });
-	  return result;
-	}
-	
-	/**
-	 * @ngdoc overview
-	 * @name ui.router.util
-	 *
-	 * @description
-	 * # ui.router.util sub-module
-	 *
-	 * This module is a dependency of other sub-modules. Do not include this module as a dependency
-	 * in your angular app (use {@link ui.router} module instead).
-	 *
-	 */
-	angular.module('ui.router.util', ['ng']);
-	
-	/**
-	 * @ngdoc overview
-	 * @name ui.router.router
-	 * 
-	 * @requires ui.router.util
-	 *
-	 * @description
-	 * # ui.router.router sub-module
-	 *
-	 * This module is a dependency of other sub-modules. Do not include this module as a dependency
-	 * in your angular app (use {@link ui.router} module instead).
-	 */
-	angular.module('ui.router.router', ['ui.router.util']);
-	
-	/**
-	 * @ngdoc overview
-	 * @name ui.router.state
-	 * 
-	 * @requires ui.router.router
-	 * @requires ui.router.util
-	 *
-	 * @description
-	 * # ui.router.state sub-module
-	 *
-	 * This module is a dependency of the main ui.router module. Do not include this module as a dependency
-	 * in your angular app (use {@link ui.router} module instead).
-	 * 
-	 */
-	angular.module('ui.router.state', ['ui.router.router', 'ui.router.util']);
-	
-	/**
-	 * @ngdoc overview
-	 * @name ui.router
-	 *
-	 * @requires ui.router.state
-	 *
-	 * @description
-	 * # ui.router
-	 * 
-	 * ## The main module for ui.router 
-	 * There are several sub-modules included with the ui.router module, however only this module is needed
-	 * as a dependency within your angular app. The other modules are for organization purposes. 
-	 *
-	 * The modules are:
-	 * * ui.router - the main "umbrella" module
-	 * * ui.router.router - 
-	 * 
-	 * *You'll need to include **only** this module as the dependency within your angular app.*
-	 * 
-	 * <pre>
-	 * <!doctype html>
-	 * <html ng-app="myApp">
-	 * <head>
-	 *   <script src="js/angular.js"></script>
-	 *   <!-- Include the ui-router script -->
-	 *   <script src="js/angular-ui-router.min.js"></script>
-	 *   <script>
-	 *     // ...and add 'ui.router' as a dependency
-	 *     var myApp = angular.module('myApp', ['ui.router']);
-	 *   </script>
-	 * </head>
-	 * <body>
-	 * </body>
-	 * </html>
-	 * </pre>
-	 */
-	angular.module('ui.router', ['ui.router.state']);
-	
-	angular.module('ui.router.compat', ['ui.router']);
-	
-	/**
-	 * @ngdoc object
-	 * @name ui.router.util.$resolve
-	 *
-	 * @requires $q
-	 * @requires $injector
-	 *
-	 * @description
-	 * Manages resolution of (acyclic) graphs of promises.
-	 */
-	$Resolve.$inject = ['$q', '$injector'];
-	function $Resolve(  $q,    $injector) {
-	  
-	  var VISIT_IN_PROGRESS = 1,
-	      VISIT_DONE = 2,
-	      NOTHING = {},
-	      NO_DEPENDENCIES = [],
-	      NO_LOCALS = NOTHING,
-	      NO_PARENT = extend($q.when(NOTHING), { $$promises: NOTHING, $$values: NOTHING });
-	  
-	
-	  /**
-	   * @ngdoc function
-	   * @name ui.router.util.$resolve#study
-	   * @methodOf ui.router.util.$resolve
-	   *
-	   * @description
-	   * Studies a set of invocables that are likely to be used multiple times.
-	   * <pre>
-	   * $resolve.study(invocables)(locals, parent, self)
-	   * </pre>
-	   * is equivalent to
-	   * <pre>
-	   * $resolve.resolve(invocables, locals, parent, self)
-	   * </pre>
-	   * but the former is more efficient (in fact `resolve` just calls `study` 
-	   * internally).
-	   *
-	   * @param {object} invocables Invocable objects
-	   * @return {function} a function to pass in locals, parent and self
-	   */
-	  this.study = function (invocables) {
-	    if (!isObject(invocables)) throw new Error("'invocables' must be an object");
-	    var invocableKeys = objectKeys(invocables || {});
-	    
-	    // Perform a topological sort of invocables to build an ordered plan
-	    var plan = [], cycle = [], visited = {};
-	    function visit(value, key) {
-	      if (visited[key] === VISIT_DONE) return;
-	      
-	      cycle.push(key);
-	      if (visited[key] === VISIT_IN_PROGRESS) {
-	        cycle.splice(0, indexOf(cycle, key));
-	        throw new Error("Cyclic dependency: " + cycle.join(" -> "));
-	      }
-	      visited[key] = VISIT_IN_PROGRESS;
-	      
-	      if (isString(value)) {
-	        plan.push(key, [ function() { return $injector.get(value); }], NO_DEPENDENCIES);
-	      } else {
-	        var params = $injector.annotate(value);
-	        forEach(params, function (param) {
-	          if (param !== key && invocables.hasOwnProperty(param)) visit(invocables[param], param);
-	        });
-	        plan.push(key, value, params);
-	      }
-	      
-	      cycle.pop();
-	      visited[key] = VISIT_DONE;
-	    }
-	    forEach(invocables, visit);
-	    invocables = cycle = visited = null; // plan is all that's required
-	    
-	    function isResolve(value) {
-	      return isObject(value) && value.then && value.$$promises;
-	    }
-	    
-	    return function (locals, parent, self) {
-	      if (isResolve(locals) && self === undefined) {
-	        self = parent; parent = locals; locals = null;
-	      }
-	      if (!locals) locals = NO_LOCALS;
-	      else if (!isObject(locals)) {
-	        throw new Error("'locals' must be an object");
-	      }       
-	      if (!parent) parent = NO_PARENT;
-	      else if (!isResolve(parent)) {
-	        throw new Error("'parent' must be a promise returned by $resolve.resolve()");
-	      }
-	      
-	      // To complete the overall resolution, we have to wait for the parent
-	      // promise and for the promise for each invokable in our plan.
-	      var resolution = $q.defer(),
-	          result = resolution.promise,
-	          promises = result.$$promises = {},
-	          values = extend({}, locals),
-	          wait = 1 + plan.length/3,
-	          merged = false;
-	          
-	      function done() {
-	        // Merge parent values we haven't got yet and publish our own $$values
-	        if (!--wait) {
-	          if (!merged) merge(values, parent.$$values); 
-	          result.$$values = values;
-	          result.$$promises = result.$$promises || true; // keep for isResolve()
-	          delete result.$$inheritedValues;
-	          resolution.resolve(values);
-	        }
-	      }
-	      
-	      function fail(reason) {
-	        result.$$failure = reason;
-	        resolution.reject(reason);
-	      }
-	
-	      // Short-circuit if parent has already failed
-	      if (isDefined(parent.$$failure)) {
-	        fail(parent.$$failure);
-	        return result;
-	      }
-	      
-	      if (parent.$$inheritedValues) {
-	        merge(values, omit(parent.$$inheritedValues, invocableKeys));
-	      }
-	
-	      // Merge parent values if the parent has already resolved, or merge
-	      // parent promises and wait if the parent resolve is still in progress.
-	      extend(promises, parent.$$promises);
-	      if (parent.$$values) {
-	        merged = merge(values, omit(parent.$$values, invocableKeys));
-	        result.$$inheritedValues = omit(parent.$$values, invocableKeys);
-	        done();
-	      } else {
-	        if (parent.$$inheritedValues) {
-	          result.$$inheritedValues = omit(parent.$$inheritedValues, invocableKeys);
-	        }        
-	        parent.then(done, fail);
-	      }
-	      
-	      // Process each invocable in the plan, but ignore any where a local of the same name exists.
-	      for (var i=0, ii=plan.length; i<ii; i+=3) {
-	        if (locals.hasOwnProperty(plan[i])) done();
-	        else invoke(plan[i], plan[i+1], plan[i+2]);
-	      }
-	      
-	      function invoke(key, invocable, params) {
-	        // Create a deferred for this invocation. Failures will propagate to the resolution as well.
-	        var invocation = $q.defer(), waitParams = 0;
-	        function onfailure(reason) {
-	          invocation.reject(reason);
-	          fail(reason);
-	        }
-	        // Wait for any parameter that we have a promise for (either from parent or from this
-	        // resolve; in that case study() will have made sure it's ordered before us in the plan).
-	        forEach(params, function (dep) {
-	          if (promises.hasOwnProperty(dep) && !locals.hasOwnProperty(dep)) {
-	            waitParams++;
-	            promises[dep].then(function (result) {
-	              values[dep] = result;
-	              if (!(--waitParams)) proceed();
-	            }, onfailure);
-	          }
-	        });
-	        if (!waitParams) proceed();
-	        function proceed() {
-	          if (isDefined(result.$$failure)) return;
-	          try {
-	            invocation.resolve($injector.invoke(invocable, self, values));
-	            invocation.promise.then(function (result) {
-	              values[key] = result;
-	              done();
-	            }, onfailure);
-	          } catch (e) {
-	            onfailure(e);
-	          }
-	        }
-	        // Publish promise synchronously; invocations further down in the plan may depend on it.
-	        promises[key] = invocation.promise;
-	      }
-	      
-	      return result;
-	    };
-	  };
-	  
-	  /**
-	   * @ngdoc function
-	   * @name ui.router.util.$resolve#resolve
-	   * @methodOf ui.router.util.$resolve
-	   *
-	   * @description
-	   * Resolves a set of invocables. An invocable is a function to be invoked via 
-	   * `$injector.invoke()`, and can have an arbitrary number of dependencies. 
-	   * An invocable can either return a value directly,
-	   * or a `$q` promise. If a promise is returned it will be resolved and the 
-	   * resulting value will be used instead. Dependencies of invocables are resolved 
-	   * (in this order of precedence)
-	   *
-	   * - from the specified `locals`
-	   * - from another invocable that is part of this `$resolve` call
-	   * - from an invocable that is inherited from a `parent` call to `$resolve` 
-	   *   (or recursively
-	   * - from any ancestor `$resolve` of that parent).
-	   *
-	   * The return value of `$resolve` is a promise for an object that contains 
-	   * (in this order of precedence)
-	   *
-	   * - any `locals` (if specified)
-	   * - the resolved return values of all injectables
-	   * - any values inherited from a `parent` call to `$resolve` (if specified)
-	   *
-	   * The promise will resolve after the `parent` promise (if any) and all promises 
-	   * returned by injectables have been resolved. If any invocable 
-	   * (or `$injector.invoke`) throws an exception, or if a promise returned by an 
-	   * invocable is rejected, the `$resolve` promise is immediately rejected with the 
-	   * same error. A rejection of a `parent` promise (if specified) will likewise be 
-	   * propagated immediately. Once the `$resolve` promise has been rejected, no 
-	   * further invocables will be called.
-	   * 
-	   * Cyclic dependencies between invocables are not permitted and will caues `$resolve`
-	   * to throw an error. As a special case, an injectable can depend on a parameter 
-	   * with the same name as the injectable, which will be fulfilled from the `parent` 
-	   * injectable of the same name. This allows inherited values to be decorated. 
-	   * Note that in this case any other injectable in the same `$resolve` with the same
-	   * dependency would see the decorated value, not the inherited value.
-	   *
-	   * Note that missing dependencies -- unlike cyclic dependencies -- will cause an 
-	   * (asynchronous) rejection of the `$resolve` promise rather than a (synchronous) 
-	   * exception.
-	   *
-	   * Invocables are invoked eagerly as soon as all dependencies are available. 
-	   * This is true even for dependencies inherited from a `parent` call to `$resolve`.
-	   *
-	   * As a special case, an invocable can be a string, in which case it is taken to 
-	   * be a service name to be passed to `$injector.get()`. This is supported primarily 
-	   * for backwards-compatibility with the `resolve` property of `$routeProvider` 
-	   * routes.
-	   *
-	   * @param {object} invocables functions to invoke or 
-	   * `$injector` services to fetch.
-	   * @param {object} locals  values to make available to the injectables
-	   * @param {object} parent  a promise returned by another call to `$resolve`.
-	   * @param {object} self  the `this` for the invoked methods
-	   * @return {object} Promise for an object that contains the resolved return value
-	   * of all invocables, as well as any inherited and local values.
-	   */
-	  this.resolve = function (invocables, locals, parent, self) {
-	    return this.study(invocables)(locals, parent, self);
-	  };
-	}
-	
-	angular.module('ui.router.util').service('$resolve', $Resolve);
-	
-	
-	/**
-	 * @ngdoc object
-	 * @name ui.router.util.$templateFactory
-	 *
-	 * @requires $http
-	 * @requires $templateCache
-	 * @requires $injector
-	 *
-	 * @description
-	 * Service. Manages loading of templates.
-	 */
-	$TemplateFactory.$inject = ['$http', '$templateCache', '$injector'];
-	function $TemplateFactory(  $http,   $templateCache,   $injector) {
-	
-	  /**
-	   * @ngdoc function
-	   * @name ui.router.util.$templateFactory#fromConfig
-	   * @methodOf ui.router.util.$templateFactory
-	   *
-	   * @description
-	   * Creates a template from a configuration object. 
-	   *
-	   * @param {object} config Configuration object for which to load a template. 
-	   * The following properties are search in the specified order, and the first one 
-	   * that is defined is used to create the template:
-	   *
-	   * @param {string|object} config.template html string template or function to 
-	   * load via {@link ui.router.util.$templateFactory#fromString fromString}.
-	   * @param {string|object} config.templateUrl url to load or a function returning 
-	   * the url to load via {@link ui.router.util.$templateFactory#fromUrl fromUrl}.
-	   * @param {Function} config.templateProvider function to invoke via 
-	   * {@link ui.router.util.$templateFactory#fromProvider fromProvider}.
-	   * @param {object} params  Parameters to pass to the template function.
-	   * @param {object} locals Locals to pass to `invoke` if the template is loaded 
-	   * via a `templateProvider`. Defaults to `{ params: params }`.
-	   *
-	   * @return {string|object}  The template html as a string, or a promise for 
-	   * that string,or `null` if no template is configured.
-	   */
-	  this.fromConfig = function (config, params, locals) {
-	    return (
-	      isDefined(config.template) ? this.fromString(config.template, params) :
-	      isDefined(config.templateUrl) ? this.fromUrl(config.templateUrl, params) :
-	      isDefined(config.templateProvider) ? this.fromProvider(config.templateProvider, params, locals) :
-	      null
-	    );
-	  };
-	
-	  /**
-	   * @ngdoc function
-	   * @name ui.router.util.$templateFactory#fromString
-	   * @methodOf ui.router.util.$templateFactory
-	   *
-	   * @description
-	   * Creates a template from a string or a function returning a string.
-	   *
-	   * @param {string|object} template html template as a string or function that 
-	   * returns an html template as a string.
-	   * @param {object} params Parameters to pass to the template function.
-	   *
-	   * @return {string|object} The template html as a string, or a promise for that 
-	   * string.
-	   */
-	  this.fromString = function (template, params) {
-	    return isFunction(template) ? template(params) : template;
-	  };
-	
-	  /**
-	   * @ngdoc function
-	   * @name ui.router.util.$templateFactory#fromUrl
-	   * @methodOf ui.router.util.$templateFactory
-	   * 
-	   * @description
-	   * Loads a template from the a URL via `$http` and `$templateCache`.
-	   *
-	   * @param {string|Function} url url of the template to load, or a function 
-	   * that returns a url.
-	   * @param {Object} params Parameters to pass to the url function.
-	   * @return {string|Promise.<string>} The template html as a string, or a promise 
-	   * for that string.
-	   */
-	  this.fromUrl = function (url, params) {
-	    if (isFunction(url)) url = url(params);
-	    if (url == null) return null;
-	    else return $http
-	        .get(url, { cache: $templateCache, headers: { Accept: 'text/html' }})
-	        .then(function(response) { return response.data; });
-	  };
-	
-	  /**
-	   * @ngdoc function
-	   * @name ui.router.util.$templateFactory#fromProvider
-	   * @methodOf ui.router.util.$templateFactory
-	   *
-	   * @description
-	   * Creates a template by invoking an injectable provider function.
-	   *
-	   * @param {Function} provider Function to invoke via `$injector.invoke`
-	   * @param {Object} params Parameters for the template.
-	   * @param {Object} locals Locals to pass to `invoke`. Defaults to 
-	   * `{ params: params }`.
-	   * @return {string|Promise.<string>} The template html as a string, or a promise 
-	   * for that string.
-	   */
-	  this.fromProvider = function (provider, params, locals) {
-	    return $injector.invoke(provider, null, locals || { params: params });
-	  };
-	}
-	
-	angular.module('ui.router.util').service('$templateFactory', $TemplateFactory);
-	
-	var $$UMFP; // reference to $UrlMatcherFactoryProvider
-	
-	/**
-	 * @ngdoc object
-	 * @name ui.router.util.type:UrlMatcher
-	 *
-	 * @description
-	 * Matches URLs against patterns and extracts named parameters from the path or the search
-	 * part of the URL. A URL pattern consists of a path pattern, optionally followed by '?' and a list
-	 * of search parameters. Multiple search parameter names are separated by '&'. Search parameters
-	 * do not influence whether or not a URL is matched, but their values are passed through into
-	 * the matched parameters returned by {@link ui.router.util.type:UrlMatcher#methods_exec exec}.
-	 *
-	 * Path parameter placeholders can be specified using simple colon/catch-all syntax or curly brace
-	 * syntax, which optionally allows a regular expression for the parameter to be specified:
-	 *
-	 * * `':'` name - colon placeholder
-	 * * `'*'` name - catch-all placeholder
-	 * * `'{' name '}'` - curly placeholder
-	 * * `'{' name ':' regexp|type '}'` - curly placeholder with regexp or type name. Should the
-	 *   regexp itself contain curly braces, they must be in matched pairs or escaped with a backslash.
-	 *
-	 * Parameter names may contain only word characters (latin letters, digits, and underscore) and
-	 * must be unique within the pattern (across both path and search parameters). For colon
-	 * placeholders or curly placeholders without an explicit regexp, a path parameter matches any
-	 * number of characters other than '/'. For catch-all placeholders the path parameter matches
-	 * any number of characters.
-	 *
-	 * Examples:
-	 *
-	 * * `'/hello/'` - Matches only if the path is exactly '/hello/'. There is no special treatment for
-	 *   trailing slashes, and patterns have to match the entire path, not just a prefix.
-	 * * `'/user/:id'` - Matches '/user/bob' or '/user/1234!!!' or even '/user/' but not '/user' or
-	 *   '/user/bob/details'. The second path segment will be captured as the parameter 'id'.
-	 * * `'/user/{id}'` - Same as the previous example, but using curly brace syntax.
-	 * * `'/user/{id:[^/]*}'` - Same as the previous example.
-	 * * `'/user/{id:[0-9a-fA-F]{1,8}}'` - Similar to the previous example, but only matches if the id
-	 *   parameter consists of 1 to 8 hex digits.
-	 * * `'/files/{path:.*}'` - Matches any URL starting with '/files/' and captures the rest of the
-	 *   path into the parameter 'path'.
-	 * * `'/files/*path'` - ditto.
-	 * * `'/calendar/{start:date}'` - Matches "/calendar/2014-11-12" (because the pattern defined
-	 *   in the built-in  `date` Type matches `2014-11-12`) and provides a Date object in $stateParams.start
-	 *
-	 * @param {string} pattern  The pattern to compile into a matcher.
-	 * @param {Object} config  A configuration object hash:
-	 * @param {Object=} parentMatcher Used to concatenate the pattern/config onto
-	 *   an existing UrlMatcher
-	 *
-	 * * `caseInsensitive` - `true` if URL matching should be case insensitive, otherwise `false`, the default value (for backward compatibility) is `false`.
-	 * * `strict` - `false` if matching against a URL with a trailing slash should be treated as equivalent to a URL without a trailing slash, the default value is `true`.
-	 *
-	 * @property {string} prefix  A static prefix of this pattern. The matcher guarantees that any
-	 *   URL matching this matcher (i.e. any string for which {@link ui.router.util.type:UrlMatcher#methods_exec exec()} returns
-	 *   non-null) will start with this prefix.
-	 *
-	 * @property {string} source  The pattern that was passed into the constructor
-	 *
-	 * @property {string} sourcePath  The path portion of the source property
-	 *
-	 * @property {string} sourceSearch  The search portion of the source property
-	 *
-	 * @property {string} regex  The constructed regex that will be used to match against the url when
-	 *   it is time to determine which url will match.
-	 *
-	 * @returns {Object}  New `UrlMatcher` object
-	 */
-	function UrlMatcher(pattern, config, parentMatcher) {
-	  config = extend({ params: {} }, isObject(config) ? config : {});
-	
-	  // Find all placeholders and create a compiled pattern, using either classic or curly syntax:
-	  //   '*' name
-	  //   ':' name
-	  //   '{' name '}'
-	  //   '{' name ':' regexp '}'
-	  // The regular expression is somewhat complicated due to the need to allow curly braces
-	  // inside the regular expression. The placeholder regexp breaks down as follows:
-	  //    ([:*])([\w\[\]]+)              - classic placeholder ($1 / $2) (search version has - for snake-case)
-	  //    \{([\w\[\]]+)(?:\:( ... ))?\}  - curly brace placeholder ($3) with optional regexp/type ... ($4) (search version has - for snake-case
-	  //    (?: ... | ... | ... )+         - the regexp consists of any number of atoms, an atom being either
-	  //    [^{}\\]+                       - anything other than curly braces or backslash
-	  //    \\.                            - a backslash escape
-	  //    \{(?:[^{}\\]+|\\.)*\}          - a matched set of curly braces containing other atoms
-	  var placeholder       = /([:*])([\w\[\]]+)|\{([\w\[\]]+)(?:\:((?:[^{}\\]+|\\.|\{(?:[^{}\\]+|\\.)*\})+))?\}/g,
-	      searchPlaceholder = /([:]?)([\w\[\]-]+)|\{([\w\[\]-]+)(?:\:((?:[^{}\\]+|\\.|\{(?:[^{}\\]+|\\.)*\})+))?\}/g,
-	      compiled = '^', last = 0, m,
-	      segments = this.segments = [],
-	      parentParams = parentMatcher ? parentMatcher.params : {},
-	      params = this.params = parentMatcher ? parentMatcher.params.$$new() : new $$UMFP.ParamSet(),
-	      paramNames = [];
-	
-	  function addParameter(id, type, config, location) {
-	    paramNames.push(id);
-	    if (parentParams[id]) return parentParams[id];
-	    if (!/^\w+(-+\w+)*(?:\[\])?$/.test(id)) throw new Error("Invalid parameter name '" + id + "' in pattern '" + pattern + "'");
-	    if (params[id]) throw new Error("Duplicate parameter name '" + id + "' in pattern '" + pattern + "'");
-	    params[id] = new $$UMFP.Param(id, type, config, location);
-	    return params[id];
-	  }
-	
-	  function quoteRegExp(string, pattern, squash, optional) {
-	    var surroundPattern = ['',''], result = string.replace(/[\\\[\]\^$*+?.()|{}]/g, "\\$&");
-	    if (!pattern) return result;
-	    switch(squash) {
-	      case false: surroundPattern = ['(', ')' + (optional ? "?" : "")]; break;
-	      case true:  surroundPattern = ['?(', ')?']; break;
-	      default:    surroundPattern = ['(' + squash + "|", ')?']; break;
-	    }
-	    return result + surroundPattern[0] + pattern + surroundPattern[1];
-	  }
-	
-	  this.source = pattern;
-	
-	  // Split into static segments separated by path parameter placeholders.
-	  // The number of segments is always 1 more than the number of parameters.
-	  function matchDetails(m, isSearch) {
-	    var id, regexp, segment, type, cfg, arrayMode;
-	    id          = m[2] || m[3]; // IE[78] returns '' for unmatched groups instead of null
-	    cfg         = config.params[id];
-	    segment     = pattern.substring(last, m.index);
-	    regexp      = isSearch ? m[4] : m[4] || (m[1] == '*' ? '.*' : null);
-	    type        = $$UMFP.type(regexp || "string") || inherit($$UMFP.type("string"), { pattern: new RegExp(regexp, config.caseInsensitive ? 'i' : undefined) });
-	    return {
-	      id: id, regexp: regexp, segment: segment, type: type, cfg: cfg
-	    };
-	  }
-	
-	  var p, param, segment;
-	  while ((m = placeholder.exec(pattern))) {
-	    p = matchDetails(m, false);
-	    if (p.segment.indexOf('?') >= 0) break; // we're into the search part
-	
-	    param = addParameter(p.id, p.type, p.cfg, "path");
-	    compiled += quoteRegExp(p.segment, param.type.pattern.source, param.squash, param.isOptional);
-	    segments.push(p.segment);
-	    last = placeholder.lastIndex;
-	  }
-	  segment = pattern.substring(last);
-	
-	  // Find any search parameter names and remove them from the last segment
-	  var i = segment.indexOf('?');
-	
-	  if (i >= 0) {
-	    var search = this.sourceSearch = segment.substring(i);
-	    segment = segment.substring(0, i);
-	    this.sourcePath = pattern.substring(0, last + i);
-	
-	    if (search.length > 0) {
-	      last = 0;
-	      while ((m = searchPlaceholder.exec(search))) {
-	        p = matchDetails(m, true);
-	        param = addParameter(p.id, p.type, p.cfg, "search");
-	        last = placeholder.lastIndex;
-	        // check if ?&
-	      }
-	    }
-	  } else {
-	    this.sourcePath = pattern;
-	    this.sourceSearch = '';
-	  }
-	
-	  compiled += quoteRegExp(segment) + (config.strict === false ? '\/?' : '') + '$';
-	  segments.push(segment);
-	
-	  this.regexp = new RegExp(compiled, config.caseInsensitive ? 'i' : undefined);
-	  this.prefix = segments[0];
-	  this.$$paramNames = paramNames;
-	}
-	
-	/**
-	 * @ngdoc function
-	 * @name ui.router.util.type:UrlMatcher#concat
-	 * @methodOf ui.router.util.type:UrlMatcher
-	 *
-	 * @description
-	 * Returns a new matcher for a pattern constructed by appending the path part and adding the
-	 * search parameters of the specified pattern to this pattern. The current pattern is not
-	 * modified. This can be understood as creating a pattern for URLs that are relative to (or
-	 * suffixes of) the current pattern.
-	 *
-	 * @example
-	 * The following two matchers are equivalent:
-	 * <pre>
-	 * new UrlMatcher('/user/{id}?q').concat('/details?date');
-	 * new UrlMatcher('/user/{id}/details?q&date');
-	 * </pre>
-	 *
-	 * @param {string} pattern  The pattern to append.
-	 * @param {Object} config  An object hash of the configuration for the matcher.
-	 * @returns {UrlMatcher}  A matcher for the concatenated pattern.
-	 */
-	UrlMatcher.prototype.concat = function (pattern, config) {
-	  // Because order of search parameters is irrelevant, we can add our own search
-	  // parameters to the end of the new pattern. Parse the new pattern by itself
-	  // and then join the bits together, but it's much easier to do this on a string level.
-	  var defaultConfig = {
-	    caseInsensitive: $$UMFP.caseInsensitive(),
-	    strict: $$UMFP.strictMode(),
-	    squash: $$UMFP.defaultSquashPolicy()
-	  };
-	  return new UrlMatcher(this.sourcePath + pattern + this.sourceSearch, extend(defaultConfig, config), this);
-	};
-	
-	UrlMatcher.prototype.toString = function () {
-	  return this.source;
-	};
-	
-	/**
-	 * @ngdoc function
-	 * @name ui.router.util.type:UrlMatcher#exec
-	 * @methodOf ui.router.util.type:UrlMatcher
-	 *
-	 * @description
-	 * Tests the specified path against this matcher, and returns an object containing the captured
-	 * parameter values, or null if the path does not match. The returned object contains the values
-	 * of any search parameters that are mentioned in the pattern, but their value may be null if
-	 * they are not present in `searchParams`. This means that search parameters are always treated
-	 * as optional.
-	 *
-	 * @example
-	 * <pre>
-	 * new UrlMatcher('/user/{id}?q&r').exec('/user/bob', {
-	 *   x: '1', q: 'hello'
-	 * });
-	 * // returns { id: 'bob', q: 'hello', r: null }
-	 * </pre>
-	 *
-	 * @param {string} path  The URL path to match, e.g. `$location.path()`.
-	 * @param {Object} searchParams  URL search parameters, e.g. `$location.search()`.
-	 * @returns {Object}  The captured parameter values.
-	 */
-	UrlMatcher.prototype.exec = function (path, searchParams) {
-	  var m = this.regexp.exec(path);
-	  if (!m) return null;
-	  searchParams = searchParams || {};
-	
-	  var paramNames = this.parameters(), nTotal = paramNames.length,
-	    nPath = this.segments.length - 1,
-	    values = {}, i, j, cfg, paramName;
-	
-	  if (nPath !== m.length - 1) throw new Error("Unbalanced capture group in route '" + this.source + "'");
-	
-	  function decodePathArray(string) {
-	    function reverseString(str) { return str.split("").reverse().join(""); }
-	    function unquoteDashes(str) { return str.replace(/\\-/g, "-"); }
-	
-	    var split = reverseString(string).split(/-(?!\\)/);
-	    var allReversed = map(split, reverseString);
-	    return map(allReversed, unquoteDashes).reverse();
-	  }
-	
-	  for (i = 0; i < nPath; i++) {
-	    paramName = paramNames[i];
-	    var param = this.params[paramName];
-	    var paramVal = m[i+1];
-	    // if the param value matches a pre-replace pair, replace the value before decoding.
-	    for (j = 0; j < param.replace; j++) {
-	      if (param.replace[j].from === paramVal) paramVal = param.replace[j].to;
-	    }
-	    if (paramVal && param.array === true) paramVal = decodePathArray(paramVal);
-	    values[paramName] = param.value(paramVal);
-	  }
-	  for (/**/; i < nTotal; i++) {
-	    paramName = paramNames[i];
-	    values[paramName] = this.params[paramName].value(searchParams[paramName]);
-	  }
-	
-	  return values;
-	};
-	
-	/**
-	 * @ngdoc function
-	 * @name ui.router.util.type:UrlMatcher#parameters
-	 * @methodOf ui.router.util.type:UrlMatcher
-	 *
-	 * @description
-	 * Returns the names of all path and search parameters of this pattern in an unspecified order.
-	 *
-	 * @returns {Array.<string>}  An array of parameter names. Must be treated as read-only. If the
-	 *    pattern has no parameters, an empty array is returned.
-	 */
-	UrlMatcher.prototype.parameters = function (param) {
-	  if (!isDefined(param)) return this.$$paramNames;
-	  return this.params[param] || null;
-	};
-	
-	/**
-	 * @ngdoc function
-	 * @name ui.router.util.type:UrlMatcher#validate
-	 * @methodOf ui.router.util.type:UrlMatcher
-	 *
-	 * @description
-	 * Checks an object hash of parameters to validate their correctness according to the parameter
-	 * types of this `UrlMatcher`.
-	 *
-	 * @param {Object} params The object hash of parameters to validate.
-	 * @returns {boolean} Returns `true` if `params` validates, otherwise `false`.
-	 */
-	UrlMatcher.prototype.validates = function (params) {
-	  return this.params.$$validates(params);
-	};
-	
-	/**
-	 * @ngdoc function
-	 * @name ui.router.util.type:UrlMatcher#format
-	 * @methodOf ui.router.util.type:UrlMatcher
-	 *
-	 * @description
-	 * Creates a URL that matches this pattern by substituting the specified values
-	 * for the path and search parameters. Null values for path parameters are
-	 * treated as empty strings.
-	 *
-	 * @example
-	 * <pre>
-	 * new UrlMatcher('/user/{id}?q').format({ id:'bob', q:'yes' });
-	 * // returns '/user/bob?q=yes'
-	 * </pre>
-	 *
-	 * @param {Object} values  the values to substitute for the parameters in this pattern.
-	 * @returns {string}  the formatted URL (path and optionally search part).
-	 */
-	UrlMatcher.prototype.format = function (values) {
-	  values = values || {};
-	  var segments = this.segments, params = this.parameters(), paramset = this.params;
-	  if (!this.validates(values)) return null;
-	
-	  var i, search = false, nPath = segments.length - 1, nTotal = params.length, result = segments[0];
-	
-	  function encodeDashes(str) { // Replace dashes with encoded "\-"
-	    return encodeURIComponent(str).replace(/-/g, function(c) { return '%5C%' + c.charCodeAt(0).toString(16).toUpperCase(); });
-	  }
-	
-	  for (i = 0; i < nTotal; i++) {
-	    var isPathParam = i < nPath;
-	    var name = params[i], param = paramset[name], value = param.value(values[name]);
-	    var isDefaultValue = param.isOptional && param.type.equals(param.value(), value);
-	    var squash = isDefaultValue ? param.squash : false;
-	    var encoded = param.type.encode(value);
-	
-	    if (isPathParam) {
-	      var nextSegment = segments[i + 1];
-	      if (squash === false) {
-	        if (encoded != null) {
-	          if (isArray(encoded)) {
-	            result += map(encoded, encodeDashes).join("-");
-	          } else {
-	            result += encodeURIComponent(encoded);
-	          }
-	        }
-	        result += nextSegment;
-	      } else if (squash === true) {
-	        var capture = result.match(/\/$/) ? /\/?(.*)/ : /(.*)/;
-	        result += nextSegment.match(capture)[1];
-	      } else if (isString(squash)) {
-	        result += squash + nextSegment;
-	      }
-	    } else {
-	      if (encoded == null || (isDefaultValue && squash !== false)) continue;
-	      if (!isArray(encoded)) encoded = [ encoded ];
-	      encoded = map(encoded, encodeURIComponent).join('&' + name + '=');
-	      result += (search ? '&' : '?') + (name + '=' + encoded);
-	      search = true;
-	    }
-	  }
-	
-	  return result;
-	};
-	
-	/**
-	 * @ngdoc object
-	 * @name ui.router.util.type:Type
-	 *
-	 * @description
-	 * Implements an interface to define custom parameter types that can be decoded from and encoded to
-	 * string parameters matched in a URL. Used by {@link ui.router.util.type:UrlMatcher `UrlMatcher`}
-	 * objects when matching or formatting URLs, or comparing or validating parameter values.
-	 *
-	 * See {@link ui.router.util.$urlMatcherFactory#methods_type `$urlMatcherFactory#type()`} for more
-	 * information on registering custom types.
-	 *
-	 * @param {Object} config  A configuration object which contains the custom type definition.  The object's
-	 *        properties will override the default methods and/or pattern in `Type`'s public interface.
-	 * @example
-	 * <pre>
-	 * {
-	 *   decode: function(val) { return parseInt(val, 10); },
-	 *   encode: function(val) { return val && val.toString(); },
-	 *   equals: function(a, b) { return this.is(a) && a === b; },
-	 *   is: function(val) { return angular.isNumber(val) isFinite(val) && val % 1 === 0; },
-	 *   pattern: /\d+/
-	 * }
-	 * </pre>
-	 *
-	 * @property {RegExp} pattern The regular expression pattern used to match values of this type when
-	 *           coming from a substring of a URL.
-	 *
-	 * @returns {Object}  Returns a new `Type` object.
-	 */
-	function Type(config) {
-	  extend(this, config);
-	}
-	
-	/**
-	 * @ngdoc function
-	 * @name ui.router.util.type:Type#is
-	 * @methodOf ui.router.util.type:Type
-	 *
-	 * @description
-	 * Detects whether a value is of a particular type. Accepts a native (decoded) value
-	 * and determines whether it matches the current `Type` object.
-	 *
-	 * @param {*} val  The value to check.
-	 * @param {string} key  Optional. If the type check is happening in the context of a specific
-	 *        {@link ui.router.util.type:UrlMatcher `UrlMatcher`} object, this is the name of the
-	 *        parameter in which `val` is stored. Can be used for meta-programming of `Type` objects.
-	 * @returns {Boolean}  Returns `true` if the value matches the type, otherwise `false`.
-	 */
-	Type.prototype.is = function(val, key) {
-	  return true;
-	};
-	
-	/**
-	 * @ngdoc function
-	 * @name ui.router.util.type:Type#encode
-	 * @methodOf ui.router.util.type:Type
-	 *
-	 * @description
-	 * Encodes a custom/native type value to a string that can be embedded in a URL. Note that the
-	 * return value does *not* need to be URL-safe (i.e. passed through `encodeURIComponent()`), it
-	 * only needs to be a representation of `val` that has been coerced to a string.
-	 *
-	 * @param {*} val  The value to encode.
-	 * @param {string} key  The name of the parameter in which `val` is stored. Can be used for
-	 *        meta-programming of `Type` objects.
-	 * @returns {string}  Returns a string representation of `val` that can be encoded in a URL.
-	 */
-	Type.prototype.encode = function(val, key) {
-	  return val;
-	};
-	
-	/**
-	 * @ngdoc function
-	 * @name ui.router.util.type:Type#decode
-	 * @methodOf ui.router.util.type:Type
-	 *
-	 * @description
-	 * Converts a parameter value (from URL string or transition param) to a custom/native value.
-	 *
-	 * @param {string} val  The URL parameter value to decode.
-	 * @param {string} key  The name of the parameter in which `val` is stored. Can be used for
-	 *        meta-programming of `Type` objects.
-	 * @returns {*}  Returns a custom representation of the URL parameter value.
-	 */
-	Type.prototype.decode = function(val, key) {
-	  return val;
-	};
-	
-	/**
-	 * @ngdoc function
-	 * @name ui.router.util.type:Type#equals
-	 * @methodOf ui.router.util.type:Type
-	 *
-	 * @description
-	 * Determines whether two decoded values are equivalent.
-	 *
-	 * @param {*} a  A value to compare against.
-	 * @param {*} b  A value to compare against.
-	 * @returns {Boolean}  Returns `true` if the values are equivalent/equal, otherwise `false`.
-	 */
-	Type.prototype.equals = function(a, b) {
-	  return a == b;
-	};
-	
-	Type.prototype.$subPattern = function() {
-	  var sub = this.pattern.toString();
-	  return sub.substr(1, sub.length - 2);
-	};
-	
-	Type.prototype.pattern = /.*/;
-	
-	Type.prototype.toString = function() { return "{Type:" + this.name + "}"; };
-	
-	/** Given an encoded string, or a decoded object, returns a decoded object */
-	Type.prototype.$normalize = function(val) {
-	  return this.is(val) ? val : this.decode(val);
-	};
-	
-	/*
-	 * Wraps an existing custom Type as an array of Type, depending on 'mode'.
-	 * e.g.:
-	 * - urlmatcher pattern "/path?{queryParam[]:int}"
-	 * - url: "/path?queryParam=1&queryParam=2
-	 * - $stateParams.queryParam will be [1, 2]
-	 * if `mode` is "auto", then
-	 * - url: "/path?queryParam=1 will create $stateParams.queryParam: 1
-	 * - url: "/path?queryParam=1&queryParam=2 will create $stateParams.queryParam: [1, 2]
-	 */
-	Type.prototype.$asArray = function(mode, isSearch) {
-	  if (!mode) return this;
-	  if (mode === "auto" && !isSearch) throw new Error("'auto' array mode is for query parameters only");
-	
-	  function ArrayType(type, mode) {
-	    function bindTo(type, callbackName) {
-	      return function() {
-	        return type[callbackName].apply(type, arguments);
-	      };
-	    }
-	
-	    // Wrap non-array value as array
-	    function arrayWrap(val) { return isArray(val) ? val : (isDefined(val) ? [ val ] : []); }
-	    // Unwrap array value for "auto" mode. Return undefined for empty array.
-	    function arrayUnwrap(val) {
-	      switch(val.length) {
-	        case 0: return undefined;
-	        case 1: return mode === "auto" ? val[0] : val;
-	        default: return val;
-	      }
-	    }
-	    function falsey(val) { return !val; }
-	
-	    // Wraps type (.is/.encode/.decode) functions to operate on each value of an array
-	    function arrayHandler(callback, allTruthyMode) {
-	      return function handleArray(val) {
-	        val = arrayWrap(val);
-	        var result = map(val, callback);
-	        if (allTruthyMode === true)
-	          return filter(result, falsey).length === 0;
-	        return arrayUnwrap(result);
-	      };
-	    }
-	
-	    // Wraps type (.equals) functions to operate on each value of an array
-	    function arrayEqualsHandler(callback) {
-	      return function handleArray(val1, val2) {
-	        var left = arrayWrap(val1), right = arrayWrap(val2);
-	        if (left.length !== right.length) return false;
-	        for (var i = 0; i < left.length; i++) {
-	          if (!callback(left[i], right[i])) return false;
-	        }
-	        return true;
-	      };
-	    }
-	
-	    this.encode = arrayHandler(bindTo(type, 'encode'));
-	    this.decode = arrayHandler(bindTo(type, 'decode'));
-	    this.is     = arrayHandler(bindTo(type, 'is'), true);
-	    this.equals = arrayEqualsHandler(bindTo(type, 'equals'));
-	    this.pattern = type.pattern;
-	    this.$normalize = arrayHandler(bindTo(type, '$normalize'));
-	    this.name = type.name;
-	    this.$arrayMode = mode;
-	  }
-	
-	  return new ArrayType(this, mode);
-	};
-	
-	
-	
-	/**
-	 * @ngdoc object
-	 * @name ui.router.util.$urlMatcherFactory
-	 *
-	 * @description
-	 * Factory for {@link ui.router.util.type:UrlMatcher `UrlMatcher`} instances. The factory
-	 * is also available to providers under the name `$urlMatcherFactoryProvider`.
-	 */
-	function $UrlMatcherFactory() {
-	  $$UMFP = this;
-	
-	  var isCaseInsensitive = false, isStrictMode = true, defaultSquashPolicy = false;
-	
-	  function valToString(val) { return val != null ? val.toString().replace(/\//g, "%2F") : val; }
-	  function valFromString(val) { return val != null ? val.toString().replace(/%2F/g, "/") : val; }
-	
-	  var $types = {}, enqueue = true, typeQueue = [], injector, defaultTypes = {
-	    string: {
-	      encode: valToString,
-	      decode: valFromString,
-	      // TODO: in 1.0, make string .is() return false if value is undefined/null by default.
-	      // In 0.2.x, string params are optional by default for backwards compat
-	      is: function(val) { return val == null || !isDefined(val) || typeof val === "string"; },
-	      pattern: /[^/]*/
-	    },
-	    int: {
-	      encode: valToString,
-	      decode: function(val) { return parseInt(val, 10); },
-	      is: function(val) { return isDefined(val) && this.decode(val.toString()) === val; },
-	      pattern: /\d+/
-	    },
-	    bool: {
-	      encode: function(val) { return val ? 1 : 0; },
-	      decode: function(val) { return parseInt(val, 10) !== 0; },
-	      is: function(val) { return val === true || val === false; },
-	      pattern: /0|1/
-	    },
-	    date: {
-	      encode: function (val) {
-	        if (!this.is(val))
-	          return undefined;
-	        return [ val.getFullYear(),
-	          ('0' + (val.getMonth() + 1)).slice(-2),
-	          ('0' + val.getDate()).slice(-2)
-	        ].join("-");
-	      },
-	      decode: function (val) {
-	        if (this.is(val)) return val;
-	        var match = this.capture.exec(val);
-	        return match ? new Date(match[1], match[2] - 1, match[3]) : undefined;
-	      },
-	      is: function(val) { return val instanceof Date && !isNaN(val.valueOf()); },
-	      equals: function (a, b) { return this.is(a) && this.is(b) && a.toISOString() === b.toISOString(); },
-	      pattern: /[0-9]{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[1-2][0-9]|3[0-1])/,
-	      capture: /([0-9]{4})-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])/
-	    },
-	    json: {
-	      encode: angular.toJson,
-	      decode: angular.fromJson,
-	      is: angular.isObject,
-	      equals: angular.equals,
-	      pattern: /[^/]*/
-	    },
-	    any: { // does not encode/decode
-	      encode: angular.identity,
-	      decode: angular.identity,
-	      equals: angular.equals,
-	      pattern: /.*/
-	    }
-	  };
-	
-	  function getDefaultConfig() {
-	    return {
-	      strict: isStrictMode,
-	      caseInsensitive: isCaseInsensitive
-	    };
-	  }
-	
-	  function isInjectable(value) {
-	    return (isFunction(value) || (isArray(value) && isFunction(value[value.length - 1])));
-	  }
-	
-	  /**
-	   * [Internal] Get the default value of a parameter, which may be an injectable function.
-	   */
-	  $UrlMatcherFactory.$$getDefaultValue = function(config) {
-	    if (!isInjectable(config.value)) return config.value;
-	    if (!injector) throw new Error("Injectable functions cannot be called at configuration time");
-	    return injector.invoke(config.value);
-	  };
-	
-	  /**
-	   * @ngdoc function
-	   * @name ui.router.util.$urlMatcherFactory#caseInsensitive
-	   * @methodOf ui.router.util.$urlMatcherFactory
-	   *
-	   * @description
-	   * Defines whether URL matching should be case sensitive (the default behavior), or not.
-	   *
-	   * @param {boolean} value `false` to match URL in a case sensitive manner; otherwise `true`;
-	   * @returns {boolean} the current value of caseInsensitive
-	   */
-	  this.caseInsensitive = function(value) {
-	    if (isDefined(value))
-	      isCaseInsensitive = value;
-	    return isCaseInsensitive;
-	  };
-	
-	  /**
-	   * @ngdoc function
-	   * @name ui.router.util.$urlMatcherFactory#strictMode
-	   * @methodOf ui.router.util.$urlMatcherFactory
-	   *
-	   * @description
-	   * Defines whether URLs should match trailing slashes, or not (the default behavior).
-	   *
-	   * @param {boolean=} value `false` to match trailing slashes in URLs, otherwise `true`.
-	   * @returns {boolean} the current value of strictMode
-	   */
-	  this.strictMode = function(value) {
-	    if (isDefined(value))
-	      isStrictMode = value;
-	    return isStrictMode;
-	  };
-	
-	  /**
-	   * @ngdoc function
-	   * @name ui.router.util.$urlMatcherFactory#defaultSquashPolicy
-	   * @methodOf ui.router.util.$urlMatcherFactory
-	   *
-	   * @description
-	   * Sets the default behavior when generating or matching URLs with default parameter values.
-	   *
-	   * @param {string} value A string that defines the default parameter URL squashing behavior.
-	   *    `nosquash`: When generating an href with a default parameter value, do not squash the parameter value from the URL
-	   *    `slash`: When generating an href with a default parameter value, squash (remove) the parameter value, and, if the
-	   *             parameter is surrounded by slashes, squash (remove) one slash from the URL
-	   *    any other string, e.g. "~": When generating an href with a default parameter value, squash (remove)
-	   *             the parameter value from the URL and replace it with this string.
-	   */
-	  this.defaultSquashPolicy = function(value) {
-	    if (!isDefined(value)) return defaultSquashPolicy;
-	    if (value !== true && value !== false && !isString(value))
-	      throw new Error("Invalid squash policy: " + value + ". Valid policies: false, true, arbitrary-string");
-	    defaultSquashPolicy = value;
-	    return value;
-	  };
-	
-	  /**
-	   * @ngdoc function
-	   * @name ui.router.util.$urlMatcherFactory#compile
-	   * @methodOf ui.router.util.$urlMatcherFactory
-	   *
-	   * @description
-	   * Creates a {@link ui.router.util.type:UrlMatcher `UrlMatcher`} for the specified pattern.
-	   *
-	   * @param {string} pattern  The URL pattern.
-	   * @param {Object} config  The config object hash.
-	   * @returns {UrlMatcher}  The UrlMatcher.
-	   */
-	  this.compile = function (pattern, config) {
-	    return new UrlMatcher(pattern, extend(getDefaultConfig(), config));
-	  };
-	
-	  /**
-	   * @ngdoc function
-	   * @name ui.router.util.$urlMatcherFactory#isMatcher
-	   * @methodOf ui.router.util.$urlMatcherFactory
-	   *
-	   * @description
-	   * Returns true if the specified object is a `UrlMatcher`, or false otherwise.
-	   *
-	   * @param {Object} object  The object to perform the type check against.
-	   * @returns {Boolean}  Returns `true` if the object matches the `UrlMatcher` interface, by
-	   *          implementing all the same methods.
-	   */
-	  this.isMatcher = function (o) {
-	    if (!isObject(o)) return false;
-	    var result = true;
-	
-	    forEach(UrlMatcher.prototype, function(val, name) {
-	      if (isFunction(val)) {
-	        result = result && (isDefined(o[name]) && isFunction(o[name]));
-	      }
-	    });
-	    return result;
-	  };
-	
-	  /**
-	   * @ngdoc function
-	   * @name ui.router.util.$urlMatcherFactory#type
-	   * @methodOf ui.router.util.$urlMatcherFactory
-	   *
-	   * @description
-	   * Registers a custom {@link ui.router.util.type:Type `Type`} object that can be used to
-	   * generate URLs with typed parameters.
-	   *
-	   * @param {string} name  The type name.
-	   * @param {Object|Function} definition   The type definition. See
-	   *        {@link ui.router.util.type:Type `Type`} for information on the values accepted.
-	   * @param {Object|Function} definitionFn (optional) A function that is injected before the app
-	   *        runtime starts.  The result of this function is merged into the existing `definition`.
-	   *        See {@link ui.router.util.type:Type `Type`} for information on the values accepted.
-	   *
-	   * @returns {Object}  Returns `$urlMatcherFactoryProvider`.
-	   *
-	   * @example
-	   * This is a simple example of a custom type that encodes and decodes items from an
-	   * array, using the array index as the URL-encoded value:
-	   *
-	   * <pre>
-	   * var list = ['John', 'Paul', 'George', 'Ringo'];
-	   *
-	   * $urlMatcherFactoryProvider.type('listItem', {
-	   *   encode: function(item) {
-	   *     // Represent the list item in the URL using its corresponding index
-	   *     return list.indexOf(item);
-	   *   },
-	   *   decode: function(item) {
-	   *     // Look up the list item by index
-	   *     return list[parseInt(item, 10)];
-	   *   },
-	   *   is: function(item) {
-	   *     // Ensure the item is valid by checking to see that it appears
-	   *     // in the list
-	   *     return list.indexOf(item) > -1;
-	   *   }
-	   * });
-	   *
-	   * $stateProvider.state('list', {
-	   *   url: "/list/{item:listItem}",
-	   *   controller: function($scope, $stateParams) {
-	   *     console.log($stateParams.item);
-	   *   }
-	   * });
-	   *
-	   * // ...
-	   *
-	   * // Changes URL to '/list/3', logs "Ringo" to the console
-	   * $state.go('list', { item: "Ringo" });
-	   * </pre>
-	   *
-	   * This is a more complex example of a type that relies on dependency injection to
-	   * interact with services, and uses the parameter name from the URL to infer how to
-	   * handle encoding and decoding parameter values:
-	   *
-	   * <pre>
-	   * // Defines a custom type that gets a value from a service,
-	   * // where each service gets different types of values from
-	   * // a backend API:
-	   * $urlMatcherFactoryProvider.type('dbObject', {}, function(Users, Posts) {
-	   *
-	   *   // Matches up services to URL parameter names
-	   *   var services = {
-	   *     user: Users,
-	   *     post: Posts
-	   *   };
-	   *
-	   *   return {
-	   *     encode: function(object) {
-	   *       // Represent the object in the URL using its unique ID
-	   *       return object.id;
-	   *     },
-	   *     decode: function(value, key) {
-	   *       // Look up the object by ID, using the parameter
-	   *       // name (key) to call the correct service
-	   *       return services[key].findById(value);
-	   *     },
-	   *     is: function(object, key) {
-	   *       // Check that object is a valid dbObject
-	   *       return angular.isObject(object) && object.id && services[key];
-	   *     }
-	   *     equals: function(a, b) {
-	   *       // Check the equality of decoded objects by comparing
-	   *       // their unique IDs
-	   *       return a.id === b.id;
-	   *     }
-	   *   };
-	   * });
-	   *
-	   * // In a config() block, you can then attach URLs with
-	   * // type-annotated parameters:
-	   * $stateProvider.state('users', {
-	   *   url: "/users",
-	   *   // ...
-	   * }).state('users.item', {
-	   *   url: "/{user:dbObject}",
-	   *   controller: function($scope, $stateParams) {
-	   *     // $stateParams.user will now be an object returned from
-	   *     // the Users service
-	   *   },
-	   *   // ...
-	   * });
-	   * </pre>
-	   */
-	  this.type = function (name, definition, definitionFn) {
-	    if (!isDefined(definition)) return $types[name];
-	    if ($types.hasOwnProperty(name)) throw new Error("A type named '" + name + "' has already been defined.");
-	
-	    $types[name] = new Type(extend({ name: name }, definition));
-	    if (definitionFn) {
-	      typeQueue.push({ name: name, def: definitionFn });
-	      if (!enqueue) flushTypeQueue();
-	    }
-	    return this;
-	  };
-	
-	  // `flushTypeQueue()` waits until `$urlMatcherFactory` is injected before invoking the queued `definitionFn`s
-	  function flushTypeQueue() {
-	    while(typeQueue.length) {
-	      var type = typeQueue.shift();
-	      if (type.pattern) throw new Error("You cannot override a type's .pattern at runtime.");
-	      angular.extend($types[type.name], injector.invoke(type.def));
-	    }
-	  }
-	
-	  // Register default types. Store them in the prototype of $types.
-	  forEach(defaultTypes, function(type, name) { $types[name] = new Type(extend({name: name}, type)); });
-	  $types = inherit($types, {});
-	
-	  /* No need to document $get, since it returns this */
-	  this.$get = ['$injector', function ($injector) {
-	    injector = $injector;
-	    enqueue = false;
-	    flushTypeQueue();
-	
-	    forEach(defaultTypes, function(type, name) {
-	      if (!$types[name]) $types[name] = new Type(type);
-	    });
-	    return this;
-	  }];
-	
-	  this.Param = function Param(id, type, config, location) {
-	    var self = this;
-	    config = unwrapShorthand(config);
-	    type = getType(config, type, location);
-	    var arrayMode = getArrayMode();
-	    type = arrayMode ? type.$asArray(arrayMode, location === "search") : type;
-	    if (type.name === "string" && !arrayMode && location === "path" && config.value === undefined)
-	      config.value = ""; // for 0.2.x; in 0.3.0+ do not automatically default to ""
-	    var isOptional = config.value !== undefined;
-	    var squash = getSquashPolicy(config, isOptional);
-	    var replace = getReplace(config, arrayMode, isOptional, squash);
-	
-	    function unwrapShorthand(config) {
-	      var keys = isObject(config) ? objectKeys(config) : [];
-	      var isShorthand = indexOf(keys, "value") === -1 && indexOf(keys, "type") === -1 &&
-	                        indexOf(keys, "squash") === -1 && indexOf(keys, "array") === -1;
-	      if (isShorthand) config = { value: config };
-	      config.$$fn = isInjectable(config.value) ? config.value : function () { return config.value; };
-	      return config;
-	    }
-	
-	    function getType(config, urlType, location) {
-	      if (config.type && urlType) throw new Error("Param '"+id+"' has two type configurations.");
-	      if (urlType) return urlType;
-	      if (!config.type) return (location === "config" ? $types.any : $types.string);
-	      return config.type instanceof Type ? config.type : new Type(config.type);
-	    }
-	
-	    // array config: param name (param[]) overrides default settings.  explicit config overrides param name.
-	    function getArrayMode() {
-	      var arrayDefaults = { array: (location === "search" ? "auto" : false) };
-	      var arrayParamNomenclature = id.match(/\[\]$/) ? { array: true } : {};
-	      return extend(arrayDefaults, arrayParamNomenclature, config).array;
-	    }
-	
-	    /**
-	     * returns false, true, or the squash value to indicate the "default parameter url squash policy".
-	     */
-	    function getSquashPolicy(config, isOptional) {
-	      var squash = config.squash;
-	      if (!isOptional || squash === false) return false;
-	      if (!isDefined(squash) || squash == null) return defaultSquashPolicy;
-	      if (squash === true || isString(squash)) return squash;
-	      throw new Error("Invalid squash policy: '" + squash + "'. Valid policies: false, true, or arbitrary string");
-	    }
-	
-	    function getReplace(config, arrayMode, isOptional, squash) {
-	      var replace, configuredKeys, defaultPolicy = [
-	        { from: "",   to: (isOptional || arrayMode ? undefined : "") },
-	        { from: null, to: (isOptional || arrayMode ? undefined : "") }
-	      ];
-	      replace = isArray(config.replace) ? config.replace : [];
-	      if (isString(squash))
-	        replace.push({ from: squash, to: undefined });
-	      configuredKeys = map(replace, function(item) { return item.from; } );
-	      return filter(defaultPolicy, function(item) { return indexOf(configuredKeys, item.from) === -1; }).concat(replace);
-	    }
-	
-	    /**
-	     * [Internal] Get the default value of a parameter, which may be an injectable function.
-	     */
-	    function $$getDefaultValue() {
-	      if (!injector) throw new Error("Injectable functions cannot be called at configuration time");
-	      var defaultValue = injector.invoke(config.$$fn);
-	      if (defaultValue !== null && defaultValue !== undefined && !self.type.is(defaultValue))
-	        throw new Error("Default value (" + defaultValue + ") for parameter '" + self.id + "' is not an instance of Type (" + self.type.name + ")");
-	      return defaultValue;
-	    }
-	
-	    /**
-	     * [Internal] Gets the decoded representation of a value if the value is defined, otherwise, returns the
-	     * default value, which may be the result of an injectable function.
-	     */
-	    function $value(value) {
-	      function hasReplaceVal(val) { return function(obj) { return obj.from === val; }; }
-	      function $replace(value) {
-	        var replacement = map(filter(self.replace, hasReplaceVal(value)), function(obj) { return obj.to; });
-	        return replacement.length ? replacement[0] : value;
-	      }
-	      value = $replace(value);
-	      return !isDefined(value) ? $$getDefaultValue() : self.type.$normalize(value);
-	    }
-	
-	    function toString() { return "{Param:" + id + " " + type + " squash: '" + squash + "' optional: " + isOptional + "}"; }
-	
-	    extend(this, {
-	      id: id,
-	      type: type,
-	      location: location,
-	      array: arrayMode,
-	      squash: squash,
-	      replace: replace,
-	      isOptional: isOptional,
-	      value: $value,
-	      dynamic: undefined,
-	      config: config,
-	      toString: toString
-	    });
-	  };
-	
-	  function ParamSet(params) {
-	    extend(this, params || {});
-	  }
-	
-	  ParamSet.prototype = {
-	    $$new: function() {
-	      return inherit(this, extend(new ParamSet(), { $$parent: this}));
-	    },
-	    $$keys: function () {
-	      var keys = [], chain = [], parent = this,
-	        ignore = objectKeys(ParamSet.prototype);
-	      while (parent) { chain.push(parent); parent = parent.$$parent; }
-	      chain.reverse();
-	      forEach(chain, function(paramset) {
-	        forEach(objectKeys(paramset), function(key) {
-	            if (indexOf(keys, key) === -1 && indexOf(ignore, key) === -1) keys.push(key);
-	        });
-	      });
-	      return keys;
-	    },
-	    $$values: function(paramValues) {
-	      var values = {}, self = this;
-	      forEach(self.$$keys(), function(key) {
-	        values[key] = self[key].value(paramValues && paramValues[key]);
-	      });
-	      return values;
-	    },
-	    $$equals: function(paramValues1, paramValues2) {
-	      var equal = true, self = this;
-	      forEach(self.$$keys(), function(key) {
-	        var left = paramValues1 && paramValues1[key], right = paramValues2 && paramValues2[key];
-	        if (!self[key].type.equals(left, right)) equal = false;
-	      });
-	      return equal;
-	    },
-	    $$validates: function $$validate(paramValues) {
-	      var keys = this.$$keys(), i, param, rawVal, normalized, encoded;
-	      for (i = 0; i < keys.length; i++) {
-	        param = this[keys[i]];
-	        rawVal = paramValues[keys[i]];
-	        if ((rawVal === undefined || rawVal === null) && param.isOptional)
-	          break; // There was no parameter value, but the param is optional
-	        normalized = param.type.$normalize(rawVal);
-	        if (!param.type.is(normalized))
-	          return false; // The value was not of the correct Type, and could not be decoded to the correct Type
-	        encoded = param.type.encode(normalized);
-	        if (angular.isString(encoded) && !param.type.pattern.exec(encoded))
-	          return false; // The value was of the correct type, but when encoded, did not match the Type's regexp
-	      }
-	      return true;
-	    },
-	    $$parent: undefined
-	  };
-	
-	  this.ParamSet = ParamSet;
-	}
-	
-	// Register as a provider so it's available to other providers
-	angular.module('ui.router.util').provider('$urlMatcherFactory', $UrlMatcherFactory);
-	angular.module('ui.router.util').run(['$urlMatcherFactory', function($urlMatcherFactory) { }]);
-	
-	/**
-	 * @ngdoc object
-	 * @name ui.router.router.$urlRouterProvider
-	 *
-	 * @requires ui.router.util.$urlMatcherFactoryProvider
-	 * @requires $locationProvider
-	 *
-	 * @description
-	 * `$urlRouterProvider` has the responsibility of watching `$location`. 
-	 * When `$location` changes it runs through a list of rules one by one until a 
-	 * match is found. `$urlRouterProvider` is used behind the scenes anytime you specify 
-	 * a url in a state configuration. All urls are compiled into a UrlMatcher object.
-	 *
-	 * There are several methods on `$urlRouterProvider` that make it useful to use directly
-	 * in your module config.
-	 */
-	$UrlRouterProvider.$inject = ['$locationProvider', '$urlMatcherFactoryProvider'];
-	function $UrlRouterProvider(   $locationProvider,   $urlMatcherFactory) {
-	  var rules = [], otherwise = null, interceptDeferred = false, listener;
-	
-	  // Returns a string that is a prefix of all strings matching the RegExp
-	  function regExpPrefix(re) {
-	    var prefix = /^\^((?:\\[^a-zA-Z0-9]|[^\\\[\]\^$*+?.()|{}]+)*)/.exec(re.source);
-	    return (prefix != null) ? prefix[1].replace(/\\(.)/g, "$1") : '';
-	  }
-	
-	  // Interpolates matched values into a String.replace()-style pattern
-	  function interpolate(pattern, match) {
-	    return pattern.replace(/\$(\$|\d{1,2})/, function (m, what) {
-	      return match[what === '$' ? 0 : Number(what)];
-	    });
-	  }
-	
-	  /**
-	   * @ngdoc function
-	   * @name ui.router.router.$urlRouterProvider#rule
-	   * @methodOf ui.router.router.$urlRouterProvider
-	   *
-	   * @description
-	   * Defines rules that are used by `$urlRouterProvider` to find matches for
-	   * specific URLs.
-	   *
-	   * @example
-	   * <pre>
-	   * var app = angular.module('app', ['ui.router.router']);
-	   *
-	   * app.config(function ($urlRouterProvider) {
-	   *   // Here's an example of how you might allow case insensitive urls
-	   *   $urlRouterProvider.rule(function ($injector, $location) {
-	   *     var path = $location.path(),
-	   *         normalized = path.toLowerCase();
-	   *
-	   *     if (path !== normalized) {
-	   *       return normalized;
-	   *     }
-	   *   });
-	   * });
-	   * </pre>
-	   *
-	   * @param {object} rule Handler function that takes `$injector` and `$location`
-	   * services as arguments. You can use them to return a valid path as a string.
-	   *
-	   * @return {object} `$urlRouterProvider` - `$urlRouterProvider` instance
-	   */
-	  this.rule = function (rule) {
-	    if (!isFunction(rule)) throw new Error("'rule' must be a function");
-	    rules.push(rule);
-	    return this;
-	  };
-	
-	  /**
-	   * @ngdoc object
-	   * @name ui.router.router.$urlRouterProvider#otherwise
-	   * @methodOf ui.router.router.$urlRouterProvider
-	   *
-	   * @description
-	   * Defines a path that is used when an invalid route is requested.
-	   *
-	   * @example
-	   * <pre>
-	   * var app = angular.module('app', ['ui.router.router']);
-	   *
-	   * app.config(function ($urlRouterProvider) {
-	   *   // if the path doesn't match any of the urls you configured
-	   *   // otherwise will take care of routing the user to the
-	   *   // specified url
-	   *   $urlRouterProvider.otherwise('/index');
-	   *
-	   *   // Example of using function rule as param
-	   *   $urlRouterProvider.otherwise(function ($injector, $location) {
-	   *     return '/a/valid/url';
-	   *   });
-	   * });
-	   * </pre>
-	   *
-	   * @param {string|object} rule The url path you want to redirect to or a function 
-	   * rule that returns the url path. The function version is passed two params: 
-	   * `$injector` and `$location` services, and must return a url string.
-	   *
-	   * @return {object} `$urlRouterProvider` - `$urlRouterProvider` instance
-	   */
-	  this.otherwise = function (rule) {
-	    if (isString(rule)) {
-	      var redirect = rule;
-	      rule = function () { return redirect; };
-	    }
-	    else if (!isFunction(rule)) throw new Error("'rule' must be a function");
-	    otherwise = rule;
-	    return this;
-	  };
-	
-	
-	  function handleIfMatch($injector, handler, match) {
-	    if (!match) return false;
-	    var result = $injector.invoke(handler, handler, { $match: match });
-	    return isDefined(result) ? result : true;
-	  }
-	
-	  /**
-	   * @ngdoc function
-	   * @name ui.router.router.$urlRouterProvider#when
-	   * @methodOf ui.router.router.$urlRouterProvider
-	   *
-	   * @description
-	   * Registers a handler for a given url matching. if handle is a string, it is
-	   * treated as a redirect, and is interpolated according to the syntax of match
-	   * (i.e. like `String.replace()` for `RegExp`, or like a `UrlMatcher` pattern otherwise).
-	   *
-	   * If the handler is a function, it is injectable. It gets invoked if `$location`
-	   * matches. You have the option of inject the match object as `$match`.
-	   *
-	   * The handler can return
-	   *
-	   * - **falsy** to indicate that the rule didn't match after all, then `$urlRouter`
-	   *   will continue trying to find another one that matches.
-	   * - **string** which is treated as a redirect and passed to `$location.url()`
-	   * - **void** or any **truthy** value tells `$urlRouter` that the url was handled.
-	   *
-	   * @example
-	   * <pre>
-	   * var app = angular.module('app', ['ui.router.router']);
-	   *
-	   * app.config(function ($urlRouterProvider) {
-	   *   $urlRouterProvider.when($state.url, function ($match, $stateParams) {
-	   *     if ($state.$current.navigable !== state ||
-	   *         !equalForKeys($match, $stateParams) {
-	   *      $state.transitionTo(state, $match, false);
-	   *     }
-	   *   });
-	   * });
-	   * </pre>
-	   *
-	   * @param {string|object} what The incoming path that you want to redirect.
-	   * @param {string|object} handler The path you want to redirect your user to.
-	   */
-	  this.when = function (what, handler) {
-	    var redirect, handlerIsString = isString(handler);
-	    if (isString(what)) what = $urlMatcherFactory.compile(what);
-	
-	    if (!handlerIsString && !isFunction(handler) && !isArray(handler))
-	      throw new Error("invalid 'handler' in when()");
-	
-	    var strategies = {
-	      matcher: function (what, handler) {
-	        if (handlerIsString) {
-	          redirect = $urlMatcherFactory.compile(handler);
-	          handler = ['$match', function ($match) { return redirect.format($match); }];
-	        }
-	        return extend(function ($injector, $location) {
-	          return handleIfMatch($injector, handler, what.exec($location.path(), $location.search()));
-	        }, {
-	          prefix: isString(what.prefix) ? what.prefix : ''
-	        });
-	      },
-	      regex: function (what, handler) {
-	        if (what.global || what.sticky) throw new Error("when() RegExp must not be global or sticky");
-	
-	        if (handlerIsString) {
-	          redirect = handler;
-	          handler = ['$match', function ($match) { return interpolate(redirect, $match); }];
-	        }
-	        return extend(function ($injector, $location) {
-	          return handleIfMatch($injector, handler, what.exec($location.path()));
-	        }, {
-	          prefix: regExpPrefix(what)
-	        });
-	      }
-	    };
-	
-	    var check = { matcher: $urlMatcherFactory.isMatcher(what), regex: what instanceof RegExp };
-	
-	    for (var n in check) {
-	      if (check[n]) return this.rule(strategies[n](what, handler));
-	    }
-	
-	    throw new Error("invalid 'what' in when()");
-	  };
-	
-	  /**
-	   * @ngdoc function
-	   * @name ui.router.router.$urlRouterProvider#deferIntercept
-	   * @methodOf ui.router.router.$urlRouterProvider
-	   *
-	   * @description
-	   * Disables (or enables) deferring location change interception.
-	   *
-	   * If you wish to customize the behavior of syncing the URL (for example, if you wish to
-	   * defer a transition but maintain the current URL), call this method at configuration time.
-	   * Then, at run time, call `$urlRouter.listen()` after you have configured your own
-	   * `$locationChangeSuccess` event handler.
-	   *
-	   * @example
-	   * <pre>
-	   * var app = angular.module('app', ['ui.router.router']);
-	   *
-	   * app.config(function ($urlRouterProvider) {
-	   *
-	   *   // Prevent $urlRouter from automatically intercepting URL changes;
-	   *   // this allows you to configure custom behavior in between
-	   *   // location changes and route synchronization:
-	   *   $urlRouterProvider.deferIntercept();
-	   *
-	   * }).run(function ($rootScope, $urlRouter, UserService) {
-	   *
-	   *   $rootScope.$on('$locationChangeSuccess', function(e) {
-	   *     // UserService is an example service for managing user state
-	   *     if (UserService.isLoggedIn()) return;
-	   *
-	   *     // Prevent $urlRouter's default handler from firing
-	   *     e.preventDefault();
-	   *
-	   *     UserService.handleLogin().then(function() {
-	   *       // Once the user has logged in, sync the current URL
-	   *       // to the router:
-	   *       $urlRouter.sync();
-	   *     });
-	   *   });
-	   *
-	   *   // Configures $urlRouter's listener *after* your custom listener
-	   *   $urlRouter.listen();
-	   * });
-	   * </pre>
-	   *
-	   * @param {boolean} defer Indicates whether to defer location change interception. Passing
-	            no parameter is equivalent to `true`.
-	   */
-	  this.deferIntercept = function (defer) {
-	    if (defer === undefined) defer = true;
-	    interceptDeferred = defer;
-	  };
-	
-	  /**
-	   * @ngdoc object
-	   * @name ui.router.router.$urlRouter
-	   *
-	   * @requires $location
-	   * @requires $rootScope
-	   * @requires $injector
-	   * @requires $browser
-	   *
-	   * @description
-	   *
-	   */
-	  this.$get = $get;
-	  $get.$inject = ['$location', '$rootScope', '$injector', '$browser'];
-	  function $get(   $location,   $rootScope,   $injector,   $browser) {
-	
-	    var baseHref = $browser.baseHref(), location = $location.url(), lastPushedUrl;
-	
-	    function appendBasePath(url, isHtml5, absolute) {
-	      if (baseHref === '/') return url;
-	      if (isHtml5) return baseHref.slice(0, -1) + url;
-	      if (absolute) return baseHref.slice(1) + url;
-	      return url;
-	    }
-	
-	    // TODO: Optimize groups of rules with non-empty prefix into some sort of decision tree
-	    function update(evt) {
-	      if (evt && evt.defaultPrevented) return;
-	      var ignoreUpdate = lastPushedUrl && $location.url() === lastPushedUrl;
-	      lastPushedUrl = undefined;
-	      // TODO: Re-implement this in 1.0 for https://github.com/angular-ui/ui-router/issues/1573
-	      //if (ignoreUpdate) return true;
-	
-	      function check(rule) {
-	        var handled = rule($injector, $location);
-	
-	        if (!handled) return false;
-	        if (isString(handled)) $location.replace().url(handled);
-	        return true;
-	      }
-	      var n = rules.length, i;
-	
-	      for (i = 0; i < n; i++) {
-	        if (check(rules[i])) return;
-	      }
-	      // always check otherwise last to allow dynamic updates to the set of rules
-	      if (otherwise) check(otherwise);
-	    }
-	
-	    function listen() {
-	      listener = listener || $rootScope.$on('$locationChangeSuccess', update);
-	      return listener;
-	    }
-	
-	    if (!interceptDeferred) listen();
-	
-	    return {
-	      /**
-	       * @ngdoc function
-	       * @name ui.router.router.$urlRouter#sync
-	       * @methodOf ui.router.router.$urlRouter
-	       *
-	       * @description
-	       * Triggers an update; the same update that happens when the address bar url changes, aka `$locationChangeSuccess`.
-	       * This method is useful when you need to use `preventDefault()` on the `$locationChangeSuccess` event,
-	       * perform some custom logic (route protection, auth, config, redirection, etc) and then finally proceed
-	       * with the transition by calling `$urlRouter.sync()`.
-	       *
-	       * @example
-	       * <pre>
-	       * angular.module('app', ['ui.router'])
-	       *   .run(function($rootScope, $urlRouter) {
-	       *     $rootScope.$on('$locationChangeSuccess', function(evt) {
-	       *       // Halt state change from even starting
-	       *       evt.preventDefault();
-	       *       // Perform custom logic
-	       *       var meetsRequirement = ...
-	       *       // Continue with the update and state transition if logic allows
-	       *       if (meetsRequirement) $urlRouter.sync();
-	       *     });
-	       * });
-	       * </pre>
-	       */
-	      sync: function() {
-	        update();
-	      },
-	
-	      listen: function() {
-	        return listen();
-	      },
-	
-	      update: function(read) {
-	        if (read) {
-	          location = $location.url();
-	          return;
-	        }
-	        if ($location.url() === location) return;
-	
-	        $location.url(location);
-	        $location.replace();
-	      },
-	
-	      push: function(urlMatcher, params, options) {
-	         var url = urlMatcher.format(params || {});
-	
-	        // Handle the special hash param, if needed
-	        if (url !== null && params && params['#']) {
-	            url += '#' + params['#'];
-	        }
-	
-	        $location.url(url);
-	        lastPushedUrl = options && options.$$avoidResync ? $location.url() : undefined;
-	        if (options && options.replace) $location.replace();
-	      },
-	
-	      /**
-	       * @ngdoc function
-	       * @name ui.router.router.$urlRouter#href
-	       * @methodOf ui.router.router.$urlRouter
-	       *
-	       * @description
-	       * A URL generation method that returns the compiled URL for a given
-	       * {@link ui.router.util.type:UrlMatcher `UrlMatcher`}, populated with the provided parameters.
-	       *
-	       * @example
-	       * <pre>
-	       * $bob = $urlRouter.href(new UrlMatcher("/about/:person"), {
-	       *   person: "bob"
-	       * });
-	       * // $bob == "/about/bob";
-	       * </pre>
-	       *
-	       * @param {UrlMatcher} urlMatcher The `UrlMatcher` object which is used as the template of the URL to generate.
-	       * @param {object=} params An object of parameter values to fill the matcher's required parameters.
-	       * @param {object=} options Options object. The options are:
-	       *
-	       * - **`absolute`** - {boolean=false},  If true will generate an absolute url, e.g. "http://www.example.com/fullurl".
-	       *
-	       * @returns {string} Returns the fully compiled URL, or `null` if `params` fail validation against `urlMatcher`
-	       */
-	      href: function(urlMatcher, params, options) {
-	        if (!urlMatcher.validates(params)) return null;
-	
-	        var isHtml5 = $locationProvider.html5Mode();
-	        if (angular.isObject(isHtml5)) {
-	          isHtml5 = isHtml5.enabled;
-	        }
-	        
-	        var url = urlMatcher.format(params);
-	        options = options || {};
-	
-	        if (!isHtml5 && url !== null) {
-	          url = "#" + $locationProvider.hashPrefix() + url;
-	        }
-	
-	        // Handle special hash param, if needed
-	        if (url !== null && params && params['#']) {
-	          url += '#' + params['#'];
-	        }
-	
-	        url = appendBasePath(url, isHtml5, options.absolute);
-	
-	        if (!options.absolute || !url) {
-	          return url;
-	        }
-	
-	        var slash = (!isHtml5 && url ? '/' : ''), port = $location.port();
-	        port = (port === 80 || port === 443 ? '' : ':' + port);
-	
-	        return [$location.protocol(), '://', $location.host(), port, slash, url].join('');
-	      }
-	    };
-	  }
-	}
-	
-	angular.module('ui.router.router').provider('$urlRouter', $UrlRouterProvider);
-	
-	/**
-	 * @ngdoc object
-	 * @name ui.router.state.$stateProvider
-	 *
-	 * @requires ui.router.router.$urlRouterProvider
-	 * @requires ui.router.util.$urlMatcherFactoryProvider
-	 *
-	 * @description
-	 * The new `$stateProvider` works similar to Angular's v1 router, but it focuses purely
-	 * on state.
-	 *
-	 * A state corresponds to a "place" in the application in terms of the overall UI and
-	 * navigation. A state describes (via the controller / template / view properties) what
-	 * the UI looks like and does at that place.
-	 *
-	 * States often have things in common, and the primary way of factoring out these
-	 * commonalities in this model is via the state hierarchy, i.e. parent/child states aka
-	 * nested states.
-	 *
-	 * The `$stateProvider` provides interfaces to declare these states for your app.
-	 */
-	$StateProvider.$inject = ['$urlRouterProvider', '$urlMatcherFactoryProvider'];
-	function $StateProvider(   $urlRouterProvider,   $urlMatcherFactory) {
-	
-	  var root, states = {}, $state, queue = {}, abstractKey = 'abstract';
-	
-	  // Builds state properties from definition passed to registerState()
-	  var stateBuilder = {
-	
-	    // Derive parent state from a hierarchical name only if 'parent' is not explicitly defined.
-	    // state.children = [];
-	    // if (parent) parent.children.push(state);
-	    parent: function(state) {
-	      if (isDefined(state.parent) && state.parent) return findState(state.parent);
-	      // regex matches any valid composite state name
-	      // would match "contact.list" but not "contacts"
-	      var compositeName = /^(.+)\.[^.]+$/.exec(state.name);
-	      return compositeName ? findState(compositeName[1]) : root;
-	    },
-	
-	    // inherit 'data' from parent and override by own values (if any)
-	    data: function(state) {
-	      if (state.parent && state.parent.data) {
-	        state.data = state.self.data = extend({}, state.parent.data, state.data);
-	      }
-	      return state.data;
-	    },
-	
-	    // Build a URLMatcher if necessary, either via a relative or absolute URL
-	    url: function(state) {
-	      var url = state.url, config = { params: state.params || {} };
-	
-	      if (isString(url)) {
-	        if (url.charAt(0) == '^') return $urlMatcherFactory.compile(url.substring(1), config);
-	        return (state.parent.navigable || root).url.concat(url, config);
-	      }
-	
-	      if (!url || $urlMatcherFactory.isMatcher(url)) return url;
-	      throw new Error("Invalid url '" + url + "' in state '" + state + "'");
-	    },
-	
-	    // Keep track of the closest ancestor state that has a URL (i.e. is navigable)
-	    navigable: function(state) {
-	      return state.url ? state : (state.parent ? state.parent.navigable : null);
-	    },
-	
-	    // Own parameters for this state. state.url.params is already built at this point. Create and add non-url params
-	    ownParams: function(state) {
-	      var params = state.url && state.url.params || new $$UMFP.ParamSet();
-	      forEach(state.params || {}, function(config, id) {
-	        if (!params[id]) params[id] = new $$UMFP.Param(id, null, config, "config");
-	      });
-	      return params;
-	    },
-	
-	    // Derive parameters for this state and ensure they're a super-set of parent's parameters
-	    params: function(state) {
-	      return state.parent && state.parent.params ? extend(state.parent.params.$$new(), state.ownParams) : new $$UMFP.ParamSet();
-	    },
-	
-	    // If there is no explicit multi-view configuration, make one up so we don't have
-	    // to handle both cases in the view directive later. Note that having an explicit
-	    // 'views' property will mean the default unnamed view properties are ignored. This
-	    // is also a good time to resolve view names to absolute names, so everything is a
-	    // straight lookup at link time.
-	    views: function(state) {
-	      var views = {};
-	
-	      forEach(isDefined(state.views) ? state.views : { '': state }, function (view, name) {
-	        if (name.indexOf('@') < 0) name += '@' + state.parent.name;
-	        views[name] = view;
-	      });
-	      return views;
-	    },
-	
-	    // Keep a full path from the root down to this state as this is needed for state activation.
-	    path: function(state) {
-	      return state.parent ? state.parent.path.concat(state) : []; // exclude root from path
-	    },
-	
-	    // Speed up $state.contains() as it's used a lot
-	    includes: function(state) {
-	      var includes = state.parent ? extend({}, state.parent.includes) : {};
-	      includes[state.name] = true;
-	      return includes;
-	    },
-	
-	    $delegates: {}
-	  };
-	
-	  function isRelative(stateName) {
-	    return stateName.indexOf(".") === 0 || stateName.indexOf("^") === 0;
-	  }
-	
-	  function findState(stateOrName, base) {
-	    if (!stateOrName) return undefined;
-	
-	    var isStr = isString(stateOrName),
-	        name  = isStr ? stateOrName : stateOrName.name,
-	        path  = isRelative(name);
-	
-	    if (path) {
-	      if (!base) throw new Error("No reference point given for path '"  + name + "'");
-	      base = findState(base);
-	      
-	      var rel = name.split("."), i = 0, pathLength = rel.length, current = base;
-	
-	      for (; i < pathLength; i++) {
-	        if (rel[i] === "" && i === 0) {
-	          current = base;
-	          continue;
-	        }
-	        if (rel[i] === "^") {
-	          if (!current.parent) throw new Error("Path '" + name + "' not valid for state '" + base.name + "'");
-	          current = current.parent;
-	          continue;
-	        }
-	        break;
-	      }
-	      rel = rel.slice(i).join(".");
-	      name = current.name + (current.name && rel ? "." : "") + rel;
-	    }
-	    var state = states[name];
-	
-	    if (state && (isStr || (!isStr && (state === stateOrName || state.self === stateOrName)))) {
-	      return state;
-	    }
-	    return undefined;
-	  }
-	
-	  function queueState(parentName, state) {
-	    if (!queue[parentName]) {
-	      queue[parentName] = [];
-	    }
-	    queue[parentName].push(state);
-	  }
-	
-	  function flushQueuedChildren(parentName) {
-	    var queued = queue[parentName] || [];
-	    while(queued.length) {
-	      registerState(queued.shift());
-	    }
-	  }
-	
-	  function registerState(state) {
-	    // Wrap a new object around the state so we can store our private details easily.
-	    state = inherit(state, {
-	      self: state,
-	      resolve: state.resolve || {},
-	      toString: function() { return this.name; }
-	    });
-	
-	    var name = state.name;
-	    if (!isString(name) || name.indexOf('@') >= 0) throw new Error("State must have a valid name");
-	    if (states.hasOwnProperty(name)) throw new Error("State '" + name + "'' is already defined");
-	
-	    // Get parent name
-	    var parentName = (name.indexOf('.') !== -1) ? name.substring(0, name.lastIndexOf('.'))
-	        : (isString(state.parent)) ? state.parent
-	        : (isObject(state.parent) && isString(state.parent.name)) ? state.parent.name
-	        : '';
-	
-	    // If parent is not registered yet, add state to queue and register later
-	    if (parentName && !states[parentName]) {
-	      return queueState(parentName, state.self);
-	    }
-	
-	    for (var key in stateBuilder) {
-	      if (isFunction(stateBuilder[key])) state[key] = stateBuilder[key](state, stateBuilder.$delegates[key]);
-	    }
-	    states[name] = state;
-	
-	    // Register the state in the global state list and with $urlRouter if necessary.
-	    if (!state[abstractKey] && state.url) {
-	      $urlRouterProvider.when(state.url, ['$match', '$stateParams', function ($match, $stateParams) {
-	        if ($state.$current.navigable != state || !equalForKeys($match, $stateParams)) {
-	          $state.transitionTo(state, $match, { inherit: true, location: false });
-	        }
-	      }]);
-	    }
-	
-	    // Register any queued children
-	    flushQueuedChildren(name);
-	
-	    return state;
-	  }
-	
-	  // Checks text to see if it looks like a glob.
-	  function isGlob (text) {
-	    return text.indexOf('*') > -1;
-	  }
-	
-	  // Returns true if glob matches current $state name.
-	  function doesStateMatchGlob (glob) {
-	    var globSegments = glob.split('.'),
-	        segments = $state.$current.name.split('.');
-	
-	    //match single stars
-	    for (var i = 0, l = globSegments.length; i < l; i++) {
-	      if (globSegments[i] === '*') {
-	        segments[i] = '*';
-	      }
-	    }
-	
-	    //match greedy starts
-	    if (globSegments[0] === '**') {
-	       segments = segments.slice(indexOf(segments, globSegments[1]));
-	       segments.unshift('**');
-	    }
-	    //match greedy ends
-	    if (globSegments[globSegments.length - 1] === '**') {
-	       segments.splice(indexOf(segments, globSegments[globSegments.length - 2]) + 1, Number.MAX_VALUE);
-	       segments.push('**');
-	    }
-	
-	    if (globSegments.length != segments.length) {
-	      return false;
-	    }
-	
-	    return segments.join('') === globSegments.join('');
-	  }
-	
-	
-	  // Implicit root state that is always active
-	  root = registerState({
-	    name: '',
-	    url: '^',
-	    views: null,
-	    'abstract': true
-	  });
-	  root.navigable = null;
-	
-	
-	  /**
-	   * @ngdoc function
-	   * @name ui.router.state.$stateProvider#decorator
-	   * @methodOf ui.router.state.$stateProvider
-	   *
-	   * @description
-	   * Allows you to extend (carefully) or override (at your own peril) the 
-	   * `stateBuilder` object used internally by `$stateProvider`. This can be used 
-	   * to add custom functionality to ui-router, for example inferring templateUrl 
-	   * based on the state name.
-	   *
-	   * When passing only a name, it returns the current (original or decorated) builder
-	   * function that matches `name`.
-	   *
-	   * The builder functions that can be decorated are listed below. Though not all
-	   * necessarily have a good use case for decoration, that is up to you to decide.
-	   *
-	   * In addition, users can attach custom decorators, which will generate new 
-	   * properties within the state's internal definition. There is currently no clear 
-	   * use-case for this beyond accessing internal states (i.e. $state.$current), 
-	   * however, expect this to become increasingly relevant as we introduce additional 
-	   * meta-programming features.
-	   *
-	   * **Warning**: Decorators should not be interdependent because the order of 
-	   * execution of the builder functions in non-deterministic. Builder functions 
-	   * should only be dependent on the state definition object and super function.
-	   *
-	   *
-	   * Existing builder functions and current return values:
-	   *
-	   * - **parent** `{object}` - returns the parent state object.
-	   * - **data** `{object}` - returns state data, including any inherited data that is not
-	   *   overridden by own values (if any).
-	   * - **url** `{object}` - returns a {@link ui.router.util.type:UrlMatcher UrlMatcher}
-	   *   or `null`.
-	   * - **navigable** `{object}` - returns closest ancestor state that has a URL (aka is 
-	   *   navigable).
-	   * - **params** `{object}` - returns an array of state params that are ensured to 
-	   *   be a super-set of parent's params.
-	   * - **views** `{object}` - returns a views object where each key is an absolute view 
-	   *   name (i.e. "viewName@stateName") and each value is the config object 
-	   *   (template, controller) for the view. Even when you don't use the views object 
-	   *   explicitly on a state config, one is still created for you internally.
-	   *   So by decorating this builder function you have access to decorating template 
-	   *   and controller properties.
-	   * - **ownParams** `{object}` - returns an array of params that belong to the state, 
-	   *   not including any params defined by ancestor states.
-	   * - **path** `{string}` - returns the full path from the root down to this state. 
-	   *   Needed for state activation.
-	   * - **includes** `{object}` - returns an object that includes every state that 
-	   *   would pass a `$state.includes()` test.
-	   *
-	   * @example
-	   * <pre>
-	   * // Override the internal 'views' builder with a function that takes the state
-	   * // definition, and a reference to the internal function being overridden:
-	   * $stateProvider.decorator('views', function (state, parent) {
-	   *   var result = {},
-	   *       views = parent(state);
-	   *
-	   *   angular.forEach(views, function (config, name) {
-	   *     var autoName = (state.name + '.' + name).replace('.', '/');
-	   *     config.templateUrl = config.templateUrl || '/partials/' + autoName + '.html';
-	   *     result[name] = config;
-	   *   });
-	   *   return result;
-	   * });
-	   *
-	   * $stateProvider.state('home', {
-	   *   views: {
-	   *     'contact.list': { controller: 'ListController' },
-	   *     'contact.item': { controller: 'ItemController' }
-	   *   }
-	   * });
-	   *
-	   * // ...
-	   *
-	   * $state.go('home');
-	   * // Auto-populates list and item views with /partials/home/contact/list.html,
-	   * // and /partials/home/contact/item.html, respectively.
-	   * </pre>
-	   *
-	   * @param {string} name The name of the builder function to decorate. 
-	   * @param {object} func A function that is responsible for decorating the original 
-	   * builder function. The function receives two parameters:
-	   *
-	   *   - `{object}` - state - The state config object.
-	   *   - `{object}` - super - The original builder function.
-	   *
-	   * @return {object} $stateProvider - $stateProvider instance
-	   */
-	  this.decorator = decorator;
-	  function decorator(name, func) {
-	    /*jshint validthis: true */
-	    if (isString(name) && !isDefined(func)) {
-	      return stateBuilder[name];
-	    }
-	    if (!isFunction(func) || !isString(name)) {
-	      return this;
-	    }
-	    if (stateBuilder[name] && !stateBuilder.$delegates[name]) {
-	      stateBuilder.$delegates[name] = stateBuilder[name];
-	    }
-	    stateBuilder[name] = func;
-	    return this;
-	  }
-	
-	  /**
-	   * @ngdoc function
-	   * @name ui.router.state.$stateProvider#state
-	   * @methodOf ui.router.state.$stateProvider
-	   *
-	   * @description
-	   * Registers a state configuration under a given state name. The stateConfig object
-	   * has the following acceptable properties.
-	   *
-	   * @param {string} name A unique state name, e.g. "home", "about", "contacts".
-	   * To create a parent/child state use a dot, e.g. "about.sales", "home.newest".
-	   * @param {object} stateConfig State configuration object.
-	   * @param {string|function=} stateConfig.template
-	   * <a id='template'></a>
-	   *   html template as a string or a function that returns
-	   *   an html template as a string which should be used by the uiView directives. This property 
-	   *   takes precedence over templateUrl.
-	   *   
-	   *   If `template` is a function, it will be called with the following parameters:
-	   *
-	   *   - {array.&lt;object&gt;} - state parameters extracted from the current $location.path() by
-	   *     applying the current state
-	   *
-	   * <pre>template:
-	   *   "<h1>inline template definition</h1>" +
-	   *   "<div ui-view></div>"</pre>
-	   * <pre>template: function(params) {
-	   *       return "<h1>generated template</h1>"; }</pre>
-	   * </div>
-	   *
-	   * @param {string|function=} stateConfig.templateUrl
-	   * <a id='templateUrl'></a>
-	   *
-	   *   path or function that returns a path to an html
-	   *   template that should be used by uiView.
-	   *   
-	   *   If `templateUrl` is a function, it will be called with the following parameters:
-	   *
-	   *   - {array.&lt;object&gt;} - state parameters extracted from the current $location.path() by 
-	   *     applying the current state
-	   *
-	   * <pre>templateUrl: "home.html"</pre>
-	   * <pre>templateUrl: function(params) {
-	   *     return myTemplates[params.pageId]; }</pre>
-	   *
-	   * @param {function=} stateConfig.templateProvider
-	   * <a id='templateProvider'></a>
-	   *    Provider function that returns HTML content string.
-	   * <pre> templateProvider:
-	   *       function(MyTemplateService, params) {
-	   *         return MyTemplateService.getTemplate(params.pageId);
-	   *       }</pre>
-	   *
-	   * @param {string|function=} stateConfig.controller
-	   * <a id='controller'></a>
-	   *
-	   *  Controller fn that should be associated with newly
-	   *   related scope or the name of a registered controller if passed as a string.
-	   *   Optionally, the ControllerAs may be declared here.
-	   * <pre>controller: "MyRegisteredController"</pre>
-	   * <pre>controller:
-	   *     "MyRegisteredController as fooCtrl"}</pre>
-	   * <pre>controller: function($scope, MyService) {
-	   *     $scope.data = MyService.getData(); }</pre>
-	   *
-	   * @param {function=} stateConfig.controllerProvider
-	   * <a id='controllerProvider'></a>
-	   *
-	   * Injectable provider function that returns the actual controller or string.
-	   * <pre>controllerProvider:
-	   *   function(MyResolveData) {
-	   *     if (MyResolveData.foo)
-	   *       return "FooCtrl"
-	   *     else if (MyResolveData.bar)
-	   *       return "BarCtrl";
-	   *     else return function($scope) {
-	   *       $scope.baz = "Qux";
-	   *     }
-	   *   }</pre>
-	   *
-	   * @param {string=} stateConfig.controllerAs
-	   * <a id='controllerAs'></a>
-	   * 
-	   * A controller alias name. If present the controller will be
-	   *   published to scope under the controllerAs name.
-	   * <pre>controllerAs: "myCtrl"</pre>
-	   *
-	   * @param {string|object=} stateConfig.parent
-	   * <a id='parent'></a>
-	   * Optionally specifies the parent state of this state.
-	   *
-	   * <pre>parent: 'parentState'</pre>
-	   * <pre>parent: parentState // JS variable</pre>
-	   *
-	   * @param {object=} stateConfig.resolve
-	   * <a id='resolve'></a>
-	   *
-	   * An optional map&lt;string, function&gt; of dependencies which
-	   *   should be injected into the controller. If any of these dependencies are promises, 
-	   *   the router will wait for them all to be resolved before the controller is instantiated.
-	   *   If all the promises are resolved successfully, the $stateChangeSuccess event is fired
-	   *   and the values of the resolved promises are injected into any controllers that reference them.
-	   *   If any  of the promises are rejected the $stateChangeError event is fired.
-	   *
-	   *   The map object is:
-	   *   
-	   *   - key - {string}: name of dependency to be injected into controller
-	   *   - factory - {string|function}: If string then it is alias for service. Otherwise if function, 
-	   *     it is injected and return value it treated as dependency. If result is a promise, it is 
-	   *     resolved before its value is injected into controller.
-	   *
-	   * <pre>resolve: {
-	   *     myResolve1:
-	   *       function($http, $stateParams) {
-	   *         return $http.get("/api/foos/"+stateParams.fooID);
-	   *       }
-	   *     }</pre>
-	   *
-	   * @param {string=} stateConfig.url
-	   * <a id='url'></a>
-	   *
-	   *   A url fragment with optional parameters. When a state is navigated or
-	   *   transitioned to, the `$stateParams` service will be populated with any 
-	   *   parameters that were passed.
-	   *
-	   *   (See {@link ui.router.util.type:UrlMatcher UrlMatcher} `UrlMatcher`} for
-	   *   more details on acceptable patterns )
-	   *
-	   * examples:
-	   * <pre>url: "/home"
-	   * url: "/users/:userid"
-	   * url: "/books/{bookid:[a-zA-Z_-]}"
-	   * url: "/books/{categoryid:int}"
-	   * url: "/books/{publishername:string}/{categoryid:int}"
-	   * url: "/messages?before&after"
-	   * url: "/messages?{before:date}&{after:date}"
-	   * url: "/messages/:mailboxid?{before:date}&{after:date}"
-	   * </pre>
-	   *
-	   * @param {object=} stateConfig.views
-	   * <a id='views'></a>
-	   * an optional map&lt;string, object&gt; which defined multiple views, or targets views
-	   * manually/explicitly.
-	   *
-	   * Examples:
-	   *
-	   * Targets three named `ui-view`s in the parent state's template
-	   * <pre>views: {
-	   *     header: {
-	   *       controller: "headerCtrl",
-	   *       templateUrl: "header.html"
-	   *     }, body: {
-	   *       controller: "bodyCtrl",
-	   *       templateUrl: "body.html"
-	   *     }, footer: {
-	   *       controller: "footCtrl",
-	   *       templateUrl: "footer.html"
-	   *     }
-	   *   }</pre>
-	   *
-	   * Targets named `ui-view="header"` from grandparent state 'top''s template, and named `ui-view="body" from parent state's template.
-	   * <pre>views: {
-	   *     'header@top': {
-	   *       controller: "msgHeaderCtrl",
-	   *       templateUrl: "msgHeader.html"
-	   *     }, 'body': {
-	   *       controller: "messagesCtrl",
-	   *       templateUrl: "messages.html"
-	   *     }
-	   *   }</pre>
-	   *
-	   * @param {boolean=} [stateConfig.abstract=false]
-	   * <a id='abstract'></a>
-	   * An abstract state will never be directly activated,
-	   *   but can provide inherited properties to its common children states.
-	   * <pre>abstract: true</pre>
-	   *
-	   * @param {function=} stateConfig.onEnter
-	   * <a id='onEnter'></a>
-	   *
-	   * Callback function for when a state is entered. Good way
-	   *   to trigger an action or dispatch an event, such as opening a dialog.
-	   * If minifying your scripts, make sure to explictly annotate this function,
-	   * because it won't be automatically annotated by your build tools.
-	   *
-	   * <pre>onEnter: function(MyService, $stateParams) {
-	   *     MyService.foo($stateParams.myParam);
-	   * }</pre>
-	   *
-	   * @param {function=} stateConfig.onExit
-	   * <a id='onExit'></a>
-	   *
-	   * Callback function for when a state is exited. Good way to
-	   *   trigger an action or dispatch an event, such as opening a dialog.
-	   * If minifying your scripts, make sure to explictly annotate this function,
-	   * because it won't be automatically annotated by your build tools.
-	   *
-	   * <pre>onExit: function(MyService, $stateParams) {
-	   *     MyService.cleanup($stateParams.myParam);
-	   * }</pre>
-	   *
-	   * @param {boolean=} [stateConfig.reloadOnSearch=true]
-	   * <a id='reloadOnSearch'></a>
-	   *
-	   * If `false`, will not retrigger the same state
-	   *   just because a search/query parameter has changed (via $location.search() or $location.hash()). 
-	   *   Useful for when you'd like to modify $location.search() without triggering a reload.
-	   * <pre>reloadOnSearch: false</pre>
-	   *
-	   * @param {object=} stateConfig.data
-	   * <a id='data'></a>
-	   *
-	   * Arbitrary data object, useful for custom configuration.  The parent state's `data` is
-	   *   prototypally inherited.  In other words, adding a data property to a state adds it to
-	   *   the entire subtree via prototypal inheritance.
-	   *
-	   * <pre>data: {
-	   *     requiredRole: 'foo'
-	   * } </pre>
-	   *
-	   * @param {object=} stateConfig.params
-	   * <a id='params'></a>
-	   *
-	   * A map which optionally configures parameters declared in the `url`, or
-	   *   defines additional non-url parameters.  For each parameter being
-	   *   configured, add a configuration object keyed to the name of the parameter.
-	   *
-	   *   Each parameter configuration object may contain the following properties:
-	   *
-	   *   - ** value ** - {object|function=}: specifies the default value for this
-	   *     parameter.  This implicitly sets this parameter as optional.
-	   *
-	   *     When UI-Router routes to a state and no value is
-	   *     specified for this parameter in the URL or transition, the
-	   *     default value will be used instead.  If `value` is a function,
-	   *     it will be injected and invoked, and the return value used.
-	   *
-	   *     *Note*: `undefined` is treated as "no default value" while `null`
-	   *     is treated as "the default value is `null`".
-	   *
-	   *     *Shorthand*: If you only need to configure the default value of the
-	   *     parameter, you may use a shorthand syntax.   In the **`params`**
-	   *     map, instead mapping the param name to a full parameter configuration
-	   *     object, simply set map it to the default parameter value, e.g.:
-	   *
-	   * <pre>// define a parameter's default value
-	   * params: {
-	   *     param1: { value: "defaultValue" }
-	   * }
-	   * // shorthand default values
-	   * params: {
-	   *     param1: "defaultValue",
-	   *     param2: "param2Default"
-	   * }</pre>
-	   *
-	   *   - ** array ** - {boolean=}: *(default: false)* If true, the param value will be
-	   *     treated as an array of values.  If you specified a Type, the value will be
-	   *     treated as an array of the specified Type.  Note: query parameter values
-	   *     default to a special `"auto"` mode.
-	   *
-	   *     For query parameters in `"auto"` mode, if multiple  values for a single parameter
-	   *     are present in the URL (e.g.: `/foo?bar=1&bar=2&bar=3`) then the values
-	   *     are mapped to an array (e.g.: `{ foo: [ '1', '2', '3' ] }`).  However, if
-	   *     only one value is present (e.g.: `/foo?bar=1`) then the value is treated as single
-	   *     value (e.g.: `{ foo: '1' }`).
-	   *
-	   * <pre>params: {
-	   *     param1: { array: true }
-	   * }</pre>
-	   *
-	   *   - ** squash ** - {bool|string=}: `squash` configures how a default parameter value is represented in the URL when
-	   *     the current parameter value is the same as the default value. If `squash` is not set, it uses the
-	   *     configured default squash policy.
-	   *     (See {@link ui.router.util.$urlMatcherFactory#methods_defaultSquashPolicy `defaultSquashPolicy()`})
-	   *
-	   *   There are three squash settings:
-	   *
-	   *     - false: The parameter's default value is not squashed.  It is encoded and included in the URL
-	   *     - true: The parameter's default value is omitted from the URL.  If the parameter is preceeded and followed
-	   *       by slashes in the state's `url` declaration, then one of those slashes are omitted.
-	   *       This can allow for cleaner looking URLs.
-	   *     - `"<arbitrary string>"`: The parameter's default value is replaced with an arbitrary placeholder of  your choice.
-	   *
-	   * <pre>params: {
-	   *     param1: {
-	   *       value: "defaultId",
-	   *       squash: true
-	   * } }
-	   * // squash "defaultValue" to "~"
-	   * params: {
-	   *     param1: {
-	   *       value: "defaultValue",
-	   *       squash: "~"
-	   * } }
-	   * </pre>
-	   *
-	   *
-	   * @example
-	   * <pre>
-	   * // Some state name examples
-	   *
-	   * // stateName can be a single top-level name (must be unique).
-	   * $stateProvider.state("home", {});
-	   *
-	   * // Or it can be a nested state name. This state is a child of the
-	   * // above "home" state.
-	   * $stateProvider.state("home.newest", {});
-	   *
-	   * // Nest states as deeply as needed.
-	   * $stateProvider.state("home.newest.abc.xyz.inception", {});
-	   *
-	   * // state() returns $stateProvider, so you can chain state declarations.
-	   * $stateProvider
-	   *   .state("home", {})
-	   *   .state("about", {})
-	   *   .state("contacts", {});
-	   * </pre>
-	   *
-	   */
-	  this.state = state;
-	  function state(name, definition) {
-	    /*jshint validthis: true */
-	    if (isObject(name)) definition = name;
-	    else definition.name = name;
-	    registerState(definition);
-	    return this;
-	  }
-	
-	  /**
-	   * @ngdoc object
-	   * @name ui.router.state.$state
-	   *
-	   * @requires $rootScope
-	   * @requires $q
-	   * @requires ui.router.state.$view
-	   * @requires $injector
-	   * @requires ui.router.util.$resolve
-	   * @requires ui.router.state.$stateParams
-	   * @requires ui.router.router.$urlRouter
-	   *
-	   * @property {object} params A param object, e.g. {sectionId: section.id)}, that 
-	   * you'd like to test against the current active state.
-	   * @property {object} current A reference to the state's config object. However 
-	   * you passed it in. Useful for accessing custom data.
-	   * @property {object} transition Currently pending transition. A promise that'll 
-	   * resolve or reject.
-	   *
-	   * @description
-	   * `$state` service is responsible for representing states as well as transitioning
-	   * between them. It also provides interfaces to ask for current state or even states
-	   * you're coming from.
-	   */
-	  this.$get = $get;
-	  $get.$inject = ['$rootScope', '$q', '$view', '$injector', '$resolve', '$stateParams', '$urlRouter', '$location', '$urlMatcherFactory'];
-	  function $get(   $rootScope,   $q,   $view,   $injector,   $resolve,   $stateParams,   $urlRouter,   $location,   $urlMatcherFactory) {
-	
-	    var TransitionSuperseded = $q.reject(new Error('transition superseded'));
-	    var TransitionPrevented = $q.reject(new Error('transition prevented'));
-	    var TransitionAborted = $q.reject(new Error('transition aborted'));
-	    var TransitionFailed = $q.reject(new Error('transition failed'));
-	
-	    // Handles the case where a state which is the target of a transition is not found, and the user
-	    // can optionally retry or defer the transition
-	    function handleRedirect(redirect, state, params, options) {
-	      /**
-	       * @ngdoc event
-	       * @name ui.router.state.$state#$stateNotFound
-	       * @eventOf ui.router.state.$state
-	       * @eventType broadcast on root scope
-	       * @description
-	       * Fired when a requested state **cannot be found** using the provided state name during transition.
-	       * The event is broadcast allowing any handlers a single chance to deal with the error (usually by
-	       * lazy-loading the unfound state). A special `unfoundState` object is passed to the listener handler,
-	       * you can see its three properties in the example. You can use `event.preventDefault()` to abort the
-	       * transition and the promise returned from `go` will be rejected with a `'transition aborted'` value.
-	       *
-	       * @param {Object} event Event object.
-	       * @param {Object} unfoundState Unfound State information. Contains: `to, toParams, options` properties.
-	       * @param {State} fromState Current state object.
-	       * @param {Object} fromParams Current state params.
-	       *
-	       * @example
-	       *
-	       * <pre>
-	       * // somewhere, assume lazy.state has not been defined
-	       * $state.go("lazy.state", {a:1, b:2}, {inherit:false});
-	       *
-	       * // somewhere else
-	       * $scope.$on('$stateNotFound',
-	       * function(event, unfoundState, fromState, fromParams){
-	       *     console.log(unfoundState.to); // "lazy.state"
-	       *     console.log(unfoundState.toParams); // {a:1, b:2}
-	       *     console.log(unfoundState.options); // {inherit:false} + default options
-	       * })
-	       * </pre>
-	       */
-	      var evt = $rootScope.$broadcast('$stateNotFound', redirect, state, params);
-	
-	      if (evt.defaultPrevented) {
-	        $urlRouter.update();
-	        return TransitionAborted;
-	      }
-	
-	      if (!evt.retry) {
-	        return null;
-	      }
-	
-	      // Allow the handler to return a promise to defer state lookup retry
-	      if (options.$retry) {
-	        $urlRouter.update();
-	        return TransitionFailed;
-	      }
-	      var retryTransition = $state.transition = $q.when(evt.retry);
-	
-	      retryTransition.then(function() {
-	        if (retryTransition !== $state.transition) return TransitionSuperseded;
-	        redirect.options.$retry = true;
-	        return $state.transitionTo(redirect.to, redirect.toParams, redirect.options);
-	      }, function() {
-	        return TransitionAborted;
-	      });
-	      $urlRouter.update();
-	
-	      return retryTransition;
-	    }
-	
-	    root.locals = { resolve: null, globals: { $stateParams: {} } };
-	
-	    $state = {
-	      params: {},
-	      current: root.self,
-	      $current: root,
-	      transition: null
-	    };
-	
-	    /**
-	     * @ngdoc function
-	     * @name ui.router.state.$state#reload
-	     * @methodOf ui.router.state.$state
-	     *
-	     * @description
-	     * A method that force reloads the current state. All resolves are re-resolved,
-	     * controllers reinstantiated, and events re-fired.
-	     *
-	     * @example
-	     * <pre>
-	     * var app angular.module('app', ['ui.router']);
-	     *
-	     * app.controller('ctrl', function ($scope, $state) {
-	     *   $scope.reload = function(){
-	     *     $state.reload();
-	     *   }
-	     * });
-	     * </pre>
-	     *
-	     * `reload()` is just an alias for:
-	     * <pre>
-	     * $state.transitionTo($state.current, $stateParams, { 
-	     *   reload: true, inherit: false, notify: true
-	     * });
-	     * </pre>
-	     *
-	     * @param {string=|object=} state - A state name or a state object, which is the root of the resolves to be re-resolved.
-	     * @example
-	     * <pre>
-	     * //assuming app application consists of 3 states: 'contacts', 'contacts.detail', 'contacts.detail.item' 
-	     * //and current state is 'contacts.detail.item'
-	     * var app angular.module('app', ['ui.router']);
-	     *
-	     * app.controller('ctrl', function ($scope, $state) {
-	     *   $scope.reload = function(){
-	     *     //will reload 'contact.detail' and 'contact.detail.item' states
-	     *     $state.reload('contact.detail');
-	     *   }
-	     * });
-	     * </pre>
-	     *
-	     * `reload()` is just an alias for:
-	     * <pre>
-	     * $state.transitionTo($state.current, $stateParams, { 
-	     *   reload: true, inherit: false, notify: true
-	     * });
-	     * </pre>
-	
-	     * @returns {promise} A promise representing the state of the new transition. See
-	     * {@link ui.router.state.$state#methods_go $state.go}.
-	     */
-	    $state.reload = function reload(state) {
-	      return $state.transitionTo($state.current, $stateParams, { reload: state || true, inherit: false, notify: true});
-	    };
-	
-	    /**
-	     * @ngdoc function
-	     * @name ui.router.state.$state#go
-	     * @methodOf ui.router.state.$state
-	     *
-	     * @description
-	     * Convenience method for transitioning to a new state. `$state.go` calls 
-	     * `$state.transitionTo` internally but automatically sets options to 
-	     * `{ location: true, inherit: true, relative: $state.$current, notify: true }`. 
-	     * This allows you to easily use an absolute or relative to path and specify 
-	     * only the parameters you'd like to update (while letting unspecified parameters 
-	     * inherit from the currently active ancestor states).
-	     *
-	     * @example
-	     * <pre>
-	     * var app = angular.module('app', ['ui.router']);
-	     *
-	     * app.controller('ctrl', function ($scope, $state) {
-	     *   $scope.changeState = function () {
-	     *     $state.go('contact.detail');
-	     *   };
-	     * });
-	     * </pre>
-	     * <img src='../ngdoc_assets/StateGoExamples.png'/>
-	     *
-	     * @param {string} to Absolute state name or relative state path. Some examples:
-	     *
-	     * - `$state.go('contact.detail')` - will go to the `contact.detail` state
-	     * - `$state.go('^')` - will go to a parent state
-	     * - `$state.go('^.sibling')` - will go to a sibling state
-	     * - `$state.go('.child.grandchild')` - will go to grandchild state
-	     *
-	     * @param {object=} params A map of the parameters that will be sent to the state, 
-	     * will populate $stateParams. Any parameters that are not specified will be inherited from currently 
-	     * defined parameters. This allows, for example, going to a sibling state that shares parameters
-	     * specified in a parent state. Parameter inheritance only works between common ancestor states, I.e.
-	     * transitioning to a sibling will get you the parameters for all parents, transitioning to a child
-	     * will get you all current parameters, etc.
-	     * @param {object=} options Options object. The options are:
-	     *
-	     * - **`location`** - {boolean=true|string=} - If `true` will update the url in the location bar, if `false`
-	     *    will not. If string, must be `"replace"`, which will update url and also replace last history record.
-	     * - **`inherit`** - {boolean=true}, If `true` will inherit url parameters from current url.
-	     * - **`relative`** - {object=$state.$current}, When transitioning with relative path (e.g '^'), 
-	     *    defines which state to be relative from.
-	     * - **`notify`** - {boolean=true}, If `true` will broadcast $stateChangeStart and $stateChangeSuccess events.
-	     * - **`reload`** (v0.2.5) - {boolean=false}, If `true` will force transition even if the state or params 
-	     *    have not changed, aka a reload of the same state. It differs from reloadOnSearch because you'd
-	     *    use this when you want to force a reload when *everything* is the same, including search params.
-	     *
-	     * @returns {promise} A promise representing the state of the new transition.
-	     *
-	     * Possible success values:
-	     *
-	     * - $state.current
-	     *
-	     * <br/>Possible rejection values:
-	     *
-	     * - 'transition superseded' - when a newer transition has been started after this one
-	     * - 'transition prevented' - when `event.preventDefault()` has been called in a `$stateChangeStart` listener
-	     * - 'transition aborted' - when `event.preventDefault()` has been called in a `$stateNotFound` listener or
-	     *   when a `$stateNotFound` `event.retry` promise errors.
-	     * - 'transition failed' - when a state has been unsuccessfully found after 2 tries.
-	     * - *resolve error* - when an error has occurred with a `resolve`
-	     *
-	     */
-	    $state.go = function go(to, params, options) {
-	      return $state.transitionTo(to, params, extend({ inherit: true, relative: $state.$current }, options));
-	    };
-	
-	    /**
-	     * @ngdoc function
-	     * @name ui.router.state.$state#transitionTo
-	     * @methodOf ui.router.state.$state
-	     *
-	     * @description
-	     * Low-level method for transitioning to a new state. {@link ui.router.state.$state#methods_go $state.go}
-	     * uses `transitionTo` internally. `$state.go` is recommended in most situations.
-	     *
-	     * @example
-	     * <pre>
-	     * var app = angular.module('app', ['ui.router']);
-	     *
-	     * app.controller('ctrl', function ($scope, $state) {
-	     *   $scope.changeState = function () {
-	     *     $state.transitionTo('contact.detail');
-	     *   };
-	     * });
-	     * </pre>
-	     *
-	     * @param {string} to State name.
-	     * @param {object=} toParams A map of the parameters that will be sent to the state,
-	     * will populate $stateParams.
-	     * @param {object=} options Options object. The options are:
-	     *
-	     * - **`location`** - {boolean=true|string=} - If `true` will update the url in the location bar, if `false`
-	     *    will not. If string, must be `"replace"`, which will update url and also replace last history record.
-	     * - **`inherit`** - {boolean=false}, If `true` will inherit url parameters from current url.
-	     * - **`relative`** - {object=}, When transitioning with relative path (e.g '^'), 
-	     *    defines which state to be relative from.
-	     * - **`notify`** - {boolean=true}, If `true` will broadcast $stateChangeStart and $stateChangeSuccess events.
-	     * - **`reload`** (v0.2.5) - {boolean=false|string=|object=}, If `true` will force transition even if the state or params 
-	     *    have not changed, aka a reload of the same state. It differs from reloadOnSearch because you'd
-	     *    use this when you want to force a reload when *everything* is the same, including search params.
-	     *    if String, then will reload the state with the name given in reload, and any children.
-	     *    if Object, then a stateObj is expected, will reload the state found in stateObj, and any children.
-	     *
-	     * @returns {promise} A promise representing the state of the new transition. See
-	     * {@link ui.router.state.$state#methods_go $state.go}.
-	     */
-	    $state.transitionTo = function transitionTo(to, toParams, options) {
-	      toParams = toParams || {};
-	      options = extend({
-	        location: true, inherit: false, relative: null, notify: true, reload: false, $retry: false
-	      }, options || {});
-	
-	      var from = $state.$current, fromParams = $state.params, fromPath = from.path;
-	      var evt, toState = findState(to, options.relative);
-	
-	      // Store the hash param for later (since it will be stripped out by various methods)
-	      var hash = toParams['#'];
-	
-	      if (!isDefined(toState)) {
-	        var redirect = { to: to, toParams: toParams, options: options };
-	        var redirectResult = handleRedirect(redirect, from.self, fromParams, options);
-	
-	        if (redirectResult) {
-	          return redirectResult;
-	        }
-	
-	        // Always retry once if the $stateNotFound was not prevented
-	        // (handles either redirect changed or state lazy-definition)
-	        to = redirect.to;
-	        toParams = redirect.toParams;
-	        options = redirect.options;
-	        toState = findState(to, options.relative);
-	
-	        if (!isDefined(toState)) {
-	          if (!options.relative) throw new Error("No such state '" + to + "'");
-	          throw new Error("Could not resolve '" + to + "' from state '" + options.relative + "'");
-	        }
-	      }
-	      if (toState[abstractKey]) throw new Error("Cannot transition to abstract state '" + to + "'");
-	      if (options.inherit) toParams = inheritParams($stateParams, toParams || {}, $state.$current, toState);
-	      if (!toState.params.$$validates(toParams)) return TransitionFailed;
-	
-	      toParams = toState.params.$$values(toParams);
-	      to = toState;
-	
-	      var toPath = to.path;
-	
-	      // Starting from the root of the path, keep all levels that haven't changed
-	      var keep = 0, state = toPath[keep], locals = root.locals, toLocals = [];
-	
-	      if (!options.reload) {
-	        while (state && state === fromPath[keep] && state.ownParams.$$equals(toParams, fromParams)) {
-	          locals = toLocals[keep] = state.locals;
-	          keep++;
-	          state = toPath[keep];
-	        }
-	      } else if (isString(options.reload) || isObject(options.reload)) {
-	        if (isObject(options.reload) && !options.reload.name) {
-	          throw new Error('Invalid reload state object');
-	        }
-	        
-	        var reloadState = options.reload === true ? fromPath[0] : findState(options.reload);
-	        if (options.reload && !reloadState) {
-	          throw new Error("No such reload state '" + (isString(options.reload) ? options.reload : options.reload.name) + "'");
-	        }
-	
-	        while (state && state === fromPath[keep] && state !== reloadState) {
-	          locals = toLocals[keep] = state.locals;
-	          keep++;
-	          state = toPath[keep];
-	        }
-	      }
-	
-	      // If we're going to the same state and all locals are kept, we've got nothing to do.
-	      // But clear 'transition', as we still want to cancel any other pending transitions.
-	      // TODO: We may not want to bump 'transition' if we're called from a location change
-	      // that we've initiated ourselves, because we might accidentally abort a legitimate
-	      // transition initiated from code?
-	      if (shouldSkipReload(to, toParams, from, fromParams, locals, options)) {
-	        if (hash) toParams['#'] = hash;
-	        $state.params = toParams;
-	        copy($state.params, $stateParams);
-	        if (options.location && to.navigable && to.navigable.url) {
-	          $urlRouter.push(to.navigable.url, toParams, {
-	            $$avoidResync: true, replace: options.location === 'replace'
-	          });
-	          $urlRouter.update(true);
-	        }
-	        $state.transition = null;
-	        return $q.when($state.current);
-	      }
-	
-	      // Filter parameters before we pass them to event handlers etc.
-	      toParams = filterByKeys(to.params.$$keys(), toParams || {});
-	
-	      // Broadcast start event and cancel the transition if requested
-	      if (options.notify) {
-	        /**
-	         * @ngdoc event
-	         * @name ui.router.state.$state#$stateChangeStart
-	         * @eventOf ui.router.state.$state
-	         * @eventType broadcast on root scope
-	         * @description
-	         * Fired when the state transition **begins**. You can use `event.preventDefault()`
-	         * to prevent the transition from happening and then the transition promise will be
-	         * rejected with a `'transition prevented'` value.
-	         *
-	         * @param {Object} event Event object.
-	         * @param {State} toState The state being transitioned to.
-	         * @param {Object} toParams The params supplied to the `toState`.
-	         * @param {State} fromState The current state, pre-transition.
-	         * @param {Object} fromParams The params supplied to the `fromState`.
-	         *
-	         * @example
-	         *
-	         * <pre>
-	         * $rootScope.$on('$stateChangeStart',
-	         * function(event, toState, toParams, fromState, fromParams){
-	         *     event.preventDefault();
-	         *     // transitionTo() promise will be rejected with
-	         *     // a 'transition prevented' error
-	         * })
-	         * </pre>
-	         */
-	        if ($rootScope.$broadcast('$stateChangeStart', to.self, toParams, from.self, fromParams).defaultPrevented) {
-	          $rootScope.$broadcast('$stateChangeCancel', to.self, toParams, from.self, fromParams);
-	          $urlRouter.update();
-	          return TransitionPrevented;
-	        }
-	      }
-	
-	      // Resolve locals for the remaining states, but don't update any global state just
-	      // yet -- if anything fails to resolve the current state needs to remain untouched.
-	      // We also set up an inheritance chain for the locals here. This allows the view directive
-	      // to quickly look up the correct definition for each view in the current state. Even
-	      // though we create the locals object itself outside resolveState(), it is initially
-	      // empty and gets filled asynchronously. We need to keep track of the promise for the
-	      // (fully resolved) current locals, and pass this down the chain.
-	      var resolved = $q.when(locals);
-	
-	      for (var l = keep; l < toPath.length; l++, state = toPath[l]) {
-	        locals = toLocals[l] = inherit(locals);
-	        resolved = resolveState(state, toParams, state === to, resolved, locals, options);
-	      }
-	
-	      // Once everything is resolved, we are ready to perform the actual transition
-	      // and return a promise for the new state. We also keep track of what the
-	      // current promise is, so that we can detect overlapping transitions and
-	      // keep only the outcome of the last transition.
-	      var transition = $state.transition = resolved.then(function () {
-	        var l, entering, exiting;
-	
-	        if ($state.transition !== transition) return TransitionSuperseded;
-	
-	        // Exit 'from' states not kept
-	        for (l = fromPath.length - 1; l >= keep; l--) {
-	          exiting = fromPath[l];
-	          if (exiting.self.onExit) {
-	            $injector.invoke(exiting.self.onExit, exiting.self, exiting.locals.globals);
-	          }
-	          exiting.locals = null;
-	        }
-	
-	        // Enter 'to' states not kept
-	        for (l = keep; l < toPath.length; l++) {
-	          entering = toPath[l];
-	          entering.locals = toLocals[l];
-	          if (entering.self.onEnter) {
-	            $injector.invoke(entering.self.onEnter, entering.self, entering.locals.globals);
-	          }
-	        }
-	
-	        // Re-add the saved hash before we start returning things
-	        if (hash) toParams['#'] = hash;
-	
-	        // Run it again, to catch any transitions in callbacks
-	        if ($state.transition !== transition) return TransitionSuperseded;
-	
-	        // Update globals in $state
-	        $state.$current = to;
-	        $state.current = to.self;
-	        $state.params = toParams;
-	        copy($state.params, $stateParams);
-	        $state.transition = null;
-	
-	        if (options.location && to.navigable) {
-	          $urlRouter.push(to.navigable.url, to.navigable.locals.globals.$stateParams, {
-	            $$avoidResync: true, replace: options.location === 'replace'
-	          });
-	        }
-	
-	        if (options.notify) {
-	        /**
-	         * @ngdoc event
-	         * @name ui.router.state.$state#$stateChangeSuccess
-	         * @eventOf ui.router.state.$state
-	         * @eventType broadcast on root scope
-	         * @description
-	         * Fired once the state transition is **complete**.
-	         *
-	         * @param {Object} event Event object.
-	         * @param {State} toState The state being transitioned to.
-	         * @param {Object} toParams The params supplied to the `toState`.
-	         * @param {State} fromState The current state, pre-transition.
-	         * @param {Object} fromParams The params supplied to the `fromState`.
-	         */
-	          $rootScope.$broadcast('$stateChangeSuccess', to.self, toParams, from.self, fromParams);
-	        }
-	        $urlRouter.update(true);
-	
-	        return $state.current;
-	      }, function (error) {
-	        if ($state.transition !== transition) return TransitionSuperseded;
-	
-	        $state.transition = null;
-	        /**
-	         * @ngdoc event
-	         * @name ui.router.state.$state#$stateChangeError
-	         * @eventOf ui.router.state.$state
-	         * @eventType broadcast on root scope
-	         * @description
-	         * Fired when an **error occurs** during transition. It's important to note that if you
-	         * have any errors in your resolve functions (javascript errors, non-existent services, etc)
-	         * they will not throw traditionally. You must listen for this $stateChangeError event to
-	         * catch **ALL** errors.
-	         *
-	         * @param {Object} event Event object.
-	         * @param {State} toState The state being transitioned to.
-	         * @param {Object} toParams The params supplied to the `toState`.
-	         * @param {State} fromState The current state, pre-transition.
-	         * @param {Object} fromParams The params supplied to the `fromState`.
-	         * @param {Error} error The resolve error object.
-	         */
-	        evt = $rootScope.$broadcast('$stateChangeError', to.self, toParams, from.self, fromParams, error);
-	
-	        if (!evt.defaultPrevented) {
-	            $urlRouter.update();
-	        }
-	
-	        return $q.reject(error);
-	      });
-	
-	      return transition;
-	    };
-	
-	    /**
-	     * @ngdoc function
-	     * @name ui.router.state.$state#is
-	     * @methodOf ui.router.state.$state
-	     *
-	     * @description
-	     * Similar to {@link ui.router.state.$state#methods_includes $state.includes},
-	     * but only checks for the full state name. If params is supplied then it will be
-	     * tested for strict equality against the current active params object, so all params
-	     * must match with none missing and no extras.
-	     *
-	     * @example
-	     * <pre>
-	     * $state.$current.name = 'contacts.details.item';
-	     *
-	     * // absolute name
-	     * $state.is('contact.details.item'); // returns true
-	     * $state.is(contactDetailItemStateObject); // returns true
-	     *
-	     * // relative name (. and ^), typically from a template
-	     * // E.g. from the 'contacts.details' template
-	     * <div ng-class="{highlighted: $state.is('.item')}">Item</div>
-	     * </pre>
-	     *
-	     * @param {string|object} stateOrName The state name (absolute or relative) or state object you'd like to check.
-	     * @param {object=} params A param object, e.g. `{sectionId: section.id}`, that you'd like
-	     * to test against the current active state.
-	     * @param {object=} options An options object.  The options are:
-	     *
-	     * - **`relative`** - {string|object} -  If `stateOrName` is a relative state name and `options.relative` is set, .is will
-	     * test relative to `options.relative` state (or name).
-	     *
-	     * @returns {boolean} Returns true if it is the state.
-	     */
-	    $state.is = function is(stateOrName, params, options) {
-	      options = extend({ relative: $state.$current }, options || {});
-	      var state = findState(stateOrName, options.relative);
-	
-	      if (!isDefined(state)) { return undefined; }
-	      if ($state.$current !== state) { return false; }
-	      return params ? equalForKeys(state.params.$$values(params), $stateParams) : true;
-	    };
-	
-	    /**
-	     * @ngdoc function
-	     * @name ui.router.state.$state#includes
-	     * @methodOf ui.router.state.$state
-	     *
-	     * @description
-	     * A method to determine if the current active state is equal to or is the child of the
-	     * state stateName. If any params are passed then they will be tested for a match as well.
-	     * Not all the parameters need to be passed, just the ones you'd like to test for equality.
-	     *
-	     * @example
-	     * Partial and relative names
-	     * <pre>
-	     * $state.$current.name = 'contacts.details.item';
-	     *
-	     * // Using partial names
-	     * $state.includes("contacts"); // returns true
-	     * $state.includes("contacts.details"); // returns true
-	     * $state.includes("contacts.details.item"); // returns true
-	     * $state.includes("contacts.list"); // returns false
-	     * $state.includes("about"); // returns false
-	     *
-	     * // Using relative names (. and ^), typically from a template
-	     * // E.g. from the 'contacts.details' template
-	     * <div ng-class="{highlighted: $state.includes('.item')}">Item</div>
-	     * </pre>
-	     *
-	     * Basic globbing patterns
-	     * <pre>
-	     * $state.$current.name = 'contacts.details.item.url';
-	     *
-	     * $state.includes("*.details.*.*"); // returns true
-	     * $state.includes("*.details.**"); // returns true
-	     * $state.includes("**.item.**"); // returns true
-	     * $state.includes("*.details.item.url"); // returns true
-	     * $state.includes("*.details.*.url"); // returns true
-	     * $state.includes("*.details.*"); // returns false
-	     * $state.includes("item.**"); // returns false
-	     * </pre>
-	     *
-	     * @param {string} stateOrName A partial name, relative name, or glob pattern
-	     * to be searched for within the current state name.
-	     * @param {object=} params A param object, e.g. `{sectionId: section.id}`,
-	     * that you'd like to test against the current active state.
-	     * @param {object=} options An options object.  The options are:
-	     *
-	     * - **`relative`** - {string|object=} -  If `stateOrName` is a relative state reference and `options.relative` is set,
-	     * .includes will test relative to `options.relative` state (or name).
-	     *
-	     * @returns {boolean} Returns true if it does include the state
-	     */
-	    $state.includes = function includes(stateOrName, params, options) {
-	      options = extend({ relative: $state.$current }, options || {});
-	      if (isString(stateOrName) && isGlob(stateOrName)) {
-	        if (!doesStateMatchGlob(stateOrName)) {
-	          return false;
-	        }
-	        stateOrName = $state.$current.name;
-	      }
-	
-	      var state = findState(stateOrName, options.relative);
-	      if (!isDefined(state)) { return undefined; }
-	      if (!isDefined($state.$current.includes[state.name])) { return false; }
-	      return params ? equalForKeys(state.params.$$values(params), $stateParams, objectKeys(params)) : true;
-	    };
-	
-	
-	    /**
-	     * @ngdoc function
-	     * @name ui.router.state.$state#href
-	     * @methodOf ui.router.state.$state
-	     *
-	     * @description
-	     * A url generation method that returns the compiled url for the given state populated with the given params.
-	     *
-	     * @example
-	     * <pre>
-	     * expect($state.href("about.person", { person: "bob" })).toEqual("/about/bob");
-	     * </pre>
-	     *
-	     * @param {string|object} stateOrName The state name or state object you'd like to generate a url from.
-	     * @param {object=} params An object of parameter values to fill the state's required parameters.
-	     * @param {object=} options Options object. The options are:
-	     *
-	     * - **`lossy`** - {boolean=true} -  If true, and if there is no url associated with the state provided in the
-	     *    first parameter, then the constructed href url will be built from the first navigable ancestor (aka
-	     *    ancestor with a valid url).
-	     * - **`inherit`** - {boolean=true}, If `true` will inherit url parameters from current url.
-	     * - **`relative`** - {object=$state.$current}, When transitioning with relative path (e.g '^'), 
-	     *    defines which state to be relative from.
-	     * - **`absolute`** - {boolean=false},  If true will generate an absolute url, e.g. "http://www.example.com/fullurl".
-	     * 
-	     * @returns {string} compiled state url
-	     */
-	    $state.href = function href(stateOrName, params, options) {
-	      options = extend({
-	        lossy:    true,
-	        inherit:  true,
-	        absolute: false,
-	        relative: $state.$current
-	      }, options || {});
-	
-	      var state = findState(stateOrName, options.relative);
-	
-	      if (!isDefined(state)) return null;
-	      if (options.inherit) params = inheritParams($stateParams, params || {}, $state.$current, state);
-	      
-	      var nav = (state && options.lossy) ? state.navigable : state;
-	
-	      if (!nav || nav.url === undefined || nav.url === null) {
-	        return null;
-	      }
-	      return $urlRouter.href(nav.url, filterByKeys(state.params.$$keys().concat('#'), params || {}), {
-	        absolute: options.absolute
-	      });
-	    };
-	
-	    /**
-	     * @ngdoc function
-	     * @name ui.router.state.$state#get
-	     * @methodOf ui.router.state.$state
-	     *
-	     * @description
-	     * Returns the state configuration object for any specific state or all states.
-	     *
-	     * @param {string|object=} stateOrName (absolute or relative) If provided, will only get the config for
-	     * the requested state. If not provided, returns an array of ALL state configs.
-	     * @param {string|object=} context When stateOrName is a relative state reference, the state will be retrieved relative to context.
-	     * @returns {Object|Array} State configuration object or array of all objects.
-	     */
-	    $state.get = function (stateOrName, context) {
-	      if (arguments.length === 0) return map(objectKeys(states), function(name) { return states[name].self; });
-	      var state = findState(stateOrName, context || $state.$current);
-	      return (state && state.self) ? state.self : null;
-	    };
-	
-	    function resolveState(state, params, paramsAreFiltered, inherited, dst, options) {
-	      // Make a restricted $stateParams with only the parameters that apply to this state if
-	      // necessary. In addition to being available to the controller and onEnter/onExit callbacks,
-	      // we also need $stateParams to be available for any $injector calls we make during the
-	      // dependency resolution process.
-	      var $stateParams = (paramsAreFiltered) ? params : filterByKeys(state.params.$$keys(), params);
-	      var locals = { $stateParams: $stateParams };
-	
-	      // Resolve 'global' dependencies for the state, i.e. those not specific to a view.
-	      // We're also including $stateParams in this; that way the parameters are restricted
-	      // to the set that should be visible to the state, and are independent of when we update
-	      // the global $state and $stateParams values.
-	      dst.resolve = $resolve.resolve(state.resolve, locals, dst.resolve, state);
-	      var promises = [dst.resolve.then(function (globals) {
-	        dst.globals = globals;
-	      })];
-	      if (inherited) promises.push(inherited);
-	
-	      function resolveViews() {
-	        var viewsPromises = [];
-	
-	        // Resolve template and dependencies for all views.
-	        forEach(state.views, function (view, name) {
-	          var injectables = (view.resolve && view.resolve !== state.resolve ? view.resolve : {});
-	          injectables.$template = [ function () {
-	            return $view.load(name, { view: view, locals: dst.globals, params: $stateParams, notify: options.notify }) || '';
-	          }];
-	
-	          viewsPromises.push($resolve.resolve(injectables, dst.globals, dst.resolve, state).then(function (result) {
-	            // References to the controller (only instantiated at link time)
-	            if (isFunction(view.controllerProvider) || isArray(view.controllerProvider)) {
-	              var injectLocals = angular.extend({}, injectables, dst.globals);
-	              result.$$controller = $injector.invoke(view.controllerProvider, null, injectLocals);
-	            } else {
-	              result.$$controller = view.controller;
-	            }
-	            // Provide access to the state itself for internal use
-	            result.$$state = state;
-	            result.$$controllerAs = view.controllerAs;
-	            dst[name] = result;
-	          }));
-	        });
-	
-	        return $q.all(viewsPromises).then(function(){
-	          return dst.globals;
-	        });
-	      }
-	
-	      // Wait for all the promises and then return the activation object
-	      return $q.all(promises).then(resolveViews).then(function (values) {
-	        return dst;
-	      });
-	    }
-	
-	    return $state;
-	  }
-	
-	  function shouldSkipReload(to, toParams, from, fromParams, locals, options) {
-	    // Return true if there are no differences in non-search (path/object) params, false if there are differences
-	    function nonSearchParamsEqual(fromAndToState, fromParams, toParams) {
-	      // Identify whether all the parameters that differ between `fromParams` and `toParams` were search params.
-	      function notSearchParam(key) {
-	        return fromAndToState.params[key].location != "search";
-	      }
-	      var nonQueryParamKeys = fromAndToState.params.$$keys().filter(notSearchParam);
-	      var nonQueryParams = pick.apply({}, [fromAndToState.params].concat(nonQueryParamKeys));
-	      var nonQueryParamSet = new $$UMFP.ParamSet(nonQueryParams);
-	      return nonQueryParamSet.$$equals(fromParams, toParams);
-	    }
-	
-	    // If reload was not explicitly requested
-	    // and we're transitioning to the same state we're already in
-	    // and    the locals didn't change
-	    //     or they changed in a way that doesn't merit reloading
-	    //        (reloadOnParams:false, or reloadOnSearch.false and only search params changed)
-	    // Then return true.
-	    if (!options.reload && to === from &&
-	      (locals === from.locals || (to.self.reloadOnSearch === false && nonSearchParamsEqual(from, fromParams, toParams)))) {
-	      return true;
-	    }
-	  }
-	}
-	
-	angular.module('ui.router.state')
-	  .value('$stateParams', {})
-	  .provider('$state', $StateProvider);
-	
-	
-	$ViewProvider.$inject = [];
-	function $ViewProvider() {
-	
-	  this.$get = $get;
-	  /**
-	   * @ngdoc object
-	   * @name ui.router.state.$view
-	   *
-	   * @requires ui.router.util.$templateFactory
-	   * @requires $rootScope
-	   *
-	   * @description
-	   *
-	   */
-	  $get.$inject = ['$rootScope', '$templateFactory'];
-	  function $get(   $rootScope,   $templateFactory) {
-	    return {
-	      // $view.load('full.viewName', { template: ..., controller: ..., resolve: ..., async: false, params: ... })
-	      /**
-	       * @ngdoc function
-	       * @name ui.router.state.$view#load
-	       * @methodOf ui.router.state.$view
-	       *
-	       * @description
-	       *
-	       * @param {string} name name
-	       * @param {object} options option object.
-	       */
-	      load: function load(name, options) {
-	        var result, defaults = {
-	          template: null, controller: null, view: null, locals: null, notify: true, async: true, params: {}
-	        };
-	        options = extend(defaults, options);
-	
-	        if (options.view) {
-	          result = $templateFactory.fromConfig(options.view, options.params, options.locals);
-	        }
-	        if (result && options.notify) {
-	        /**
-	         * @ngdoc event
-	         * @name ui.router.state.$state#$viewContentLoading
-	         * @eventOf ui.router.state.$view
-	         * @eventType broadcast on root scope
-	         * @description
-	         *
-	         * Fired once the view **begins loading**, *before* the DOM is rendered.
-	         *
-	         * @param {Object} event Event object.
-	         * @param {Object} viewConfig The view config properties (template, controller, etc).
-	         *
-	         * @example
-	         *
-	         * <pre>
-	         * $scope.$on('$viewContentLoading',
-	         * function(event, viewConfig){
-	         *     // Access to all the view config properties.
-	         *     // and one special property 'targetView'
-	         *     // viewConfig.targetView
-	         * });
-	         * </pre>
-	         */
-	          $rootScope.$broadcast('$viewContentLoading', options);
-	        }
-	        return result;
-	      }
-	    };
-	  }
-	}
-	
-	angular.module('ui.router.state').provider('$view', $ViewProvider);
-	
-	/**
-	 * @ngdoc object
-	 * @name ui.router.state.$uiViewScrollProvider
-	 *
-	 * @description
-	 * Provider that returns the {@link ui.router.state.$uiViewScroll} service function.
-	 */
-	function $ViewScrollProvider() {
-	
-	  var useAnchorScroll = false;
-	
-	  /**
-	   * @ngdoc function
-	   * @name ui.router.state.$uiViewScrollProvider#useAnchorScroll
-	   * @methodOf ui.router.state.$uiViewScrollProvider
-	   *
-	   * @description
-	   * Reverts back to using the core [`$anchorScroll`](http://docs.angularjs.org/api/ng.$anchorScroll) service for
-	   * scrolling based on the url anchor.
-	   */
-	  this.useAnchorScroll = function () {
-	    useAnchorScroll = true;
-	  };
-	
-	  /**
-	   * @ngdoc object
-	   * @name ui.router.state.$uiViewScroll
-	   *
-	   * @requires $anchorScroll
-	   * @requires $timeout
-	   *
-	   * @description
-	   * When called with a jqLite element, it scrolls the element into view (after a
-	   * `$timeout` so the DOM has time to refresh).
-	   *
-	   * If you prefer to rely on `$anchorScroll` to scroll the view to the anchor,
-	   * this can be enabled by calling {@link ui.router.state.$uiViewScrollProvider#methods_useAnchorScroll `$uiViewScrollProvider.useAnchorScroll()`}.
-	   */
-	  this.$get = ['$anchorScroll', '$timeout', function ($anchorScroll, $timeout) {
-	    if (useAnchorScroll) {
-	      return $anchorScroll;
-	    }
-	
-	    return function ($element) {
-	      return $timeout(function () {
-	        $element[0].scrollIntoView();
-	      }, 0, false);
-	    };
-	  }];
-	}
-	
-	angular.module('ui.router.state').provider('$uiViewScroll', $ViewScrollProvider);
-	
-	/**
-	 * @ngdoc directive
-	 * @name ui.router.state.directive:ui-view
-	 *
-	 * @requires ui.router.state.$state
-	 * @requires $compile
-	 * @requires $controller
-	 * @requires $injector
-	 * @requires ui.router.state.$uiViewScroll
-	 * @requires $document
-	 *
-	 * @restrict ECA
-	 *
-	 * @description
-	 * The ui-view directive tells $state where to place your templates.
-	 *
-	 * @param {string=} name A view name. The name should be unique amongst the other views in the
-	 * same state. You can have views of the same name that live in different states.
-	 *
-	 * @param {string=} autoscroll It allows you to set the scroll behavior of the browser window
-	 * when a view is populated. By default, $anchorScroll is overridden by ui-router's custom scroll
-	 * service, {@link ui.router.state.$uiViewScroll}. This custom service let's you
-	 * scroll ui-view elements into view when they are populated during a state activation.
-	 *
-	 * *Note: To revert back to old [`$anchorScroll`](http://docs.angularjs.org/api/ng.$anchorScroll)
-	 * functionality, call `$uiViewScrollProvider.useAnchorScroll()`.*
-	 *
-	 * @param {string=} onload Expression to evaluate whenever the view updates.
-	 * 
-	 * @example
-	 * A view can be unnamed or named. 
-	 * <pre>
-	 * <!-- Unnamed -->
-	 * <div ui-view></div> 
-	 * 
-	 * <!-- Named -->
-	 * <div ui-view="viewName"></div>
-	 * </pre>
-	 *
-	 * You can only have one unnamed view within any template (or root html). If you are only using a 
-	 * single view and it is unnamed then you can populate it like so:
-	 * <pre>
-	 * <div ui-view></div> 
-	 * $stateProvider.state("home", {
-	 *   template: "<h1>HELLO!</h1>"
-	 * })
-	 * </pre>
-	 * 
-	 * The above is a convenient shortcut equivalent to specifying your view explicitly with the {@link ui.router.state.$stateProvider#views `views`}
-	 * config property, by name, in this case an empty name:
-	 * <pre>
-	 * $stateProvider.state("home", {
-	 *   views: {
-	 *     "": {
-	 *       template: "<h1>HELLO!</h1>"
-	 *     }
-	 *   }    
-	 * })
-	 * </pre>
-	 * 
-	 * But typically you'll only use the views property if you name your view or have more than one view 
-	 * in the same template. There's not really a compelling reason to name a view if its the only one, 
-	 * but you could if you wanted, like so:
-	 * <pre>
-	 * <div ui-view="main"></div>
-	 * </pre> 
-	 * <pre>
-	 * $stateProvider.state("home", {
-	 *   views: {
-	 *     "main": {
-	 *       template: "<h1>HELLO!</h1>"
-	 *     }
-	 *   }    
-	 * })
-	 * </pre>
-	 * 
-	 * Really though, you'll use views to set up multiple views:
-	 * <pre>
-	 * <div ui-view></div>
-	 * <div ui-view="chart"></div> 
-	 * <div ui-view="data"></div> 
-	 * </pre>
-	 * 
-	 * <pre>
-	 * $stateProvider.state("home", {
-	 *   views: {
-	 *     "": {
-	 *       template: "<h1>HELLO!</h1>"
-	 *     },
-	 *     "chart": {
-	 *       template: "<chart_thing/>"
-	 *     },
-	 *     "data": {
-	 *       template: "<data_thing/>"
-	 *     }
-	 *   }    
-	 * })
-	 * </pre>
-	 *
-	 * Examples for `autoscroll`:
-	 *
-	 * <pre>
-	 * <!-- If autoscroll present with no expression,
-	 *      then scroll ui-view into view -->
-	 * <ui-view autoscroll/>
-	 *
-	 * <!-- If autoscroll present with valid expression,
-	 *      then scroll ui-view into view if expression evaluates to true -->
-	 * <ui-view autoscroll='true'/>
-	 * <ui-view autoscroll='false'/>
-	 * <ui-view autoscroll='scopeVariable'/>
-	 * </pre>
-	 */
-	$ViewDirective.$inject = ['$state', '$injector', '$uiViewScroll', '$interpolate'];
-	function $ViewDirective(   $state,   $injector,   $uiViewScroll,   $interpolate) {
-	
-	  function getService() {
-	    return ($injector.has) ? function(service) {
-	      return $injector.has(service) ? $injector.get(service) : null;
-	    } : function(service) {
-	      try {
-	        return $injector.get(service);
-	      } catch (e) {
-	        return null;
-	      }
-	    };
-	  }
-	
-	  var service = getService(),
-	      $animator = service('$animator'),
-	      $animate = service('$animate');
-	
-	  // Returns a set of DOM manipulation functions based on which Angular version
-	  // it should use
-	  function getRenderer(attrs, scope) {
-	    var statics = function() {
-	      return {
-	        enter: function (element, target, cb) { target.after(element); cb(); },
-	        leave: function (element, cb) { element.remove(); cb(); }
-	      };
-	    };
-	
-	    if ($animate) {
-	      return {
-	        enter: function(element, target, cb) {
-	          var promise = $animate.enter(element, null, target, cb);
-	          if (promise && promise.then) promise.then(cb);
-	        },
-	        leave: function(element, cb) {
-	          var promise = $animate.leave(element, cb);
-	          if (promise && promise.then) promise.then(cb);
-	        }
-	      };
-	    }
-	
-	    if ($animator) {
-	      var animate = $animator && $animator(scope, attrs);
-	
-	      return {
-	        enter: function(element, target, cb) {animate.enter(element, null, target); cb(); },
-	        leave: function(element, cb) { animate.leave(element); cb(); }
-	      };
-	    }
-	
-	    return statics();
-	  }
-	
-	  var directive = {
-	    restrict: 'ECA',
-	    terminal: true,
-	    priority: 400,
-	    transclude: 'element',
-	    compile: function (tElement, tAttrs, $transclude) {
-	      return function (scope, $element, attrs) {
-	        var previousEl, currentEl, currentScope, latestLocals,
-	            onloadExp     = attrs.onload || '',
-	            autoScrollExp = attrs.autoscroll,
-	            renderer      = getRenderer(attrs, scope);
-	
-	        scope.$on('$stateChangeSuccess', function() {
-	          updateView(false);
-	        });
-	        scope.$on('$viewContentLoading', function() {
-	          updateView(false);
-	        });
-	
-	        updateView(true);
-	
-	        function cleanupLastView() {
-	          if (previousEl) {
-	            previousEl.remove();
-	            previousEl = null;
-	          }
-	
-	          if (currentScope) {
-	            currentScope.$destroy();
-	            currentScope = null;
-	          }
-	
-	          if (currentEl) {
-	            renderer.leave(currentEl, function() {
-	              previousEl = null;
-	            });
-	
-	            previousEl = currentEl;
-	            currentEl = null;
-	          }
-	        }
-	
-	        function updateView(firstTime) {
-	          var newScope,
-	              name            = getUiViewName(scope, attrs, $element, $interpolate),
-	              previousLocals  = name && $state.$current && $state.$current.locals[name];
-	
-	          if (!firstTime && previousLocals === latestLocals) return; // nothing to do
-	          newScope = scope.$new();
-	          latestLocals = $state.$current.locals[name];
-	
-	          var clone = $transclude(newScope, function(clone) {
-	            renderer.enter(clone, $element, function onUiViewEnter() {
-	              if(currentScope) {
-	                currentScope.$emit('$viewContentAnimationEnded');
-	              }
-	
-	              if (angular.isDefined(autoScrollExp) && !autoScrollExp || scope.$eval(autoScrollExp)) {
-	                $uiViewScroll(clone);
-	              }
-	            });
-	            cleanupLastView();
-	          });
-	
-	          currentEl = clone;
-	          currentScope = newScope;
-	          /**
-	           * @ngdoc event
-	           * @name ui.router.state.directive:ui-view#$viewContentLoaded
-	           * @eventOf ui.router.state.directive:ui-view
-	           * @eventType emits on ui-view directive scope
-	           * @description           *
-	           * Fired once the view is **loaded**, *after* the DOM is rendered.
-	           *
-	           * @param {Object} event Event object.
-	           */
-	          currentScope.$emit('$viewContentLoaded');
-	          currentScope.$eval(onloadExp);
-	        }
-	      };
-	    }
-	  };
-	
-	  return directive;
-	}
-	
-	$ViewDirectiveFill.$inject = ['$compile', '$controller', '$state', '$interpolate'];
-	function $ViewDirectiveFill (  $compile,   $controller,   $state,   $interpolate) {
-	  return {
-	    restrict: 'ECA',
-	    priority: -400,
-	    compile: function (tElement) {
-	      var initial = tElement.html();
-	      return function (scope, $element, attrs) {
-	        var current = $state.$current,
-	            name = getUiViewName(scope, attrs, $element, $interpolate),
-	            locals  = current && current.locals[name];
-	
-	        if (! locals) {
-	          return;
-	        }
-	
-	        $element.data('$uiView', { name: name, state: locals.$$state });
-	        $element.html(locals.$template ? locals.$template : initial);
-	
-	        var link = $compile($element.contents());
-	
-	        if (locals.$$controller) {
-	          locals.$scope = scope;
-	          locals.$element = $element;
-	          var controller = $controller(locals.$$controller, locals);
-	          if (locals.$$controllerAs) {
-	            scope[locals.$$controllerAs] = controller;
-	          }
-	          $element.data('$ngControllerController', controller);
-	          $element.children().data('$ngControllerController', controller);
-	        }
-	
-	        link(scope);
-	      };
-	    }
-	  };
-	}
-	
-	/**
-	 * Shared ui-view code for both directives:
-	 * Given scope, element, and its attributes, return the view's name
-	 */
-	function getUiViewName(scope, attrs, element, $interpolate) {
-	  var name = $interpolate(attrs.uiView || attrs.name || '')(scope);
-	  var inherited = element.inheritedData('$uiView');
-	  return name.indexOf('@') >= 0 ?  name :  (name + '@' + (inherited ? inherited.state.name : ''));
-	}
-	
-	angular.module('ui.router.state').directive('uiView', $ViewDirective);
-	angular.module('ui.router.state').directive('uiView', $ViewDirectiveFill);
-	
-	function parseStateRef(ref, current) {
-	  var preparsed = ref.match(/^\s*({[^}]*})\s*$/), parsed;
-	  if (preparsed) ref = current + '(' + preparsed[1] + ')';
-	  parsed = ref.replace(/\n/g, " ").match(/^([^(]+?)\s*(\((.*)\))?$/);
-	  if (!parsed || parsed.length !== 4) throw new Error("Invalid state ref '" + ref + "'");
-	  return { state: parsed[1], paramExpr: parsed[3] || null };
-	}
-	
-	function stateContext(el) {
-	  var stateData = el.parent().inheritedData('$uiView');
-	
-	  if (stateData && stateData.state && stateData.state.name) {
-	    return stateData.state;
-	  }
-	}
-	
-	/**
-	 * @ngdoc directive
-	 * @name ui.router.state.directive:ui-sref
-	 *
-	 * @requires ui.router.state.$state
-	 * @requires $timeout
-	 *
-	 * @restrict A
-	 *
-	 * @description
-	 * A directive that binds a link (`<a>` tag) to a state. If the state has an associated 
-	 * URL, the directive will automatically generate & update the `href` attribute via 
-	 * the {@link ui.router.state.$state#methods_href $state.href()} method. Clicking 
-	 * the link will trigger a state transition with optional parameters. 
-	 *
-	 * Also middle-clicking, right-clicking, and ctrl-clicking on the link will be 
-	 * handled natively by the browser.
-	 *
-	 * You can also use relative state paths within ui-sref, just like the relative 
-	 * paths passed to `$state.go()`. You just need to be aware that the path is relative
-	 * to the state that the link lives in, in other words the state that loaded the 
-	 * template containing the link.
-	 *
-	 * You can specify options to pass to {@link ui.router.state.$state#go $state.go()}
-	 * using the `ui-sref-opts` attribute. Options are restricted to `location`, `inherit`,
-	 * and `reload`.
-	 *
-	 * @example
-	 * Here's an example of how you'd use ui-sref and how it would compile. If you have the 
-	 * following template:
-	 * <pre>
-	 * <a ui-sref="home">Home</a> | <a ui-sref="about">About</a> | <a ui-sref="{page: 2}">Next page</a>
-	 * 
-	 * <ul>
-	 *     <li ng-repeat="contact in contacts">
-	 *         <a ui-sref="contacts.detail({ id: contact.id })">{{ contact.name }}</a>
-	 *     </li>
-	 * </ul>
-	 * </pre>
-	 * 
-	 * Then the compiled html would be (assuming Html5Mode is off and current state is contacts):
-	 * <pre>
-	 * <a href="#/home" ui-sref="home">Home</a> | <a href="#/about" ui-sref="about">About</a> | <a href="#/contacts?page=2" ui-sref="{page: 2}">Next page</a>
-	 * 
-	 * <ul>
-	 *     <li ng-repeat="contact in contacts">
-	 *         <a href="#/contacts/1" ui-sref="contacts.detail({ id: contact.id })">Joe</a>
-	 *     </li>
-	 *     <li ng-repeat="contact in contacts">
-	 *         <a href="#/contacts/2" ui-sref="contacts.detail({ id: contact.id })">Alice</a>
-	 *     </li>
-	 *     <li ng-repeat="contact in contacts">
-	 *         <a href="#/contacts/3" ui-sref="contacts.detail({ id: contact.id })">Bob</a>
-	 *     </li>
-	 * </ul>
-	 *
-	 * <a ui-sref="home" ui-sref-opts="{reload: true}">Home</a>
-	 * </pre>
-	 *
-	 * @param {string} ui-sref 'stateName' can be any valid absolute or relative state
-	 * @param {Object} ui-sref-opts options to pass to {@link ui.router.state.$state#go $state.go()}
-	 */
-	$StateRefDirective.$inject = ['$state', '$timeout'];
-	function $StateRefDirective($state, $timeout) {
-	  var allowedOptions = ['location', 'inherit', 'reload', 'absolute'];
-	
-	  return {
-	    restrict: 'A',
-	    require: ['?^uiSrefActive', '?^uiSrefActiveEq'],
-	    link: function(scope, element, attrs, uiSrefActive) {
-	      var ref = parseStateRef(attrs.uiSref, $state.current.name);
-	      var params = null, url = null, base = stateContext(element) || $state.$current;
-	      // SVGAElement does not use the href attribute, but rather the 'xlinkHref' attribute.
-	      var hrefKind = Object.prototype.toString.call(element.prop('href')) === '[object SVGAnimatedString]' ?
-	                 'xlink:href' : 'href';
-	      var newHref = null, isAnchor = element.prop("tagName").toUpperCase() === "A";
-	      var isForm = element[0].nodeName === "FORM";
-	      var attr = isForm ? "action" : hrefKind, nav = true;
-	
-	      var options = { relative: base, inherit: true };
-	      var optionsOverride = scope.$eval(attrs.uiSrefOpts) || {};
-	
-	      angular.forEach(allowedOptions, function(option) {
-	        if (option in optionsOverride) {
-	          options[option] = optionsOverride[option];
-	        }
-	      });
-	
-	      var update = function(newVal) {
-	        if (newVal) params = angular.copy(newVal);
-	        if (!nav) return;
-	
-	        newHref = $state.href(ref.state, params, options);
-	
-	        var activeDirective = uiSrefActive[1] || uiSrefActive[0];
-	        if (activeDirective) {
-	          activeDirective.$$addStateInfo(ref.state, params);
-	        }
-	        if (newHref === null) {
-	          nav = false;
-	          return false;
-	        }
-	        attrs.$set(attr, newHref);
-	      };
-	
-	      if (ref.paramExpr) {
-	        scope.$watch(ref.paramExpr, function(newVal, oldVal) {
-	          if (newVal !== params) update(newVal);
-	        }, true);
-	        params = angular.copy(scope.$eval(ref.paramExpr));
-	      }
-	      update();
-	
-	      if (isForm) return;
-	
-	      element.bind("click", function(e) {
-	        var button = e.which || e.button;
-	        if ( !(button > 1 || e.ctrlKey || e.metaKey || e.shiftKey || element.attr('target')) ) {
-	          // HACK: This is to allow ng-clicks to be processed before the transition is initiated:
-	          var transition = $timeout(function() {
-	            $state.go(ref.state, params, options);
-	          });
-	          e.preventDefault();
-	
-	          // if the state has no URL, ignore one preventDefault from the <a> directive.
-	          var ignorePreventDefaultCount = isAnchor && !newHref ? 1: 0;
-	          e.preventDefault = function() {
-	            if (ignorePreventDefaultCount-- <= 0)
-	              $timeout.cancel(transition);
-	          };
-	        }
-	      });
-	    }
-	  };
-	}
-	
-	/**
-	 * @ngdoc directive
-	 * @name ui.router.state.directive:ui-sref-active
-	 *
-	 * @requires ui.router.state.$state
-	 * @requires ui.router.state.$stateParams
-	 * @requires $interpolate
-	 *
-	 * @restrict A
-	 *
-	 * @description
-	 * A directive working alongside ui-sref to add classes to an element when the
-	 * related ui-sref directive's state is active, and removing them when it is inactive.
-	 * The primary use-case is to simplify the special appearance of navigation menus
-	 * relying on `ui-sref`, by having the "active" state's menu button appear different,
-	 * distinguishing it from the inactive menu items.
-	 *
-	 * ui-sref-active can live on the same element as ui-sref or on a parent element. The first
-	 * ui-sref-active found at the same level or above the ui-sref will be used.
-	 *
-	 * Will activate when the ui-sref's target state or any child state is active. If you
-	 * need to activate only when the ui-sref target state is active and *not* any of
-	 * it's children, then you will use
-	 * {@link ui.router.state.directive:ui-sref-active-eq ui-sref-active-eq}
-	 *
-	 * @example
-	 * Given the following template:
-	 * <pre>
-	 * <ul>
-	 *   <li ui-sref-active="active" class="item">
-	 *     <a href ui-sref="app.user({user: 'bilbobaggins'})">@bilbobaggins</a>
-	 *   </li>
-	 * </ul>
-	 * </pre>
-	 *
-	 *
-	 * When the app state is "app.user" (or any children states), and contains the state parameter "user" with value "bilbobaggins",
-	 * the resulting HTML will appear as (note the 'active' class):
-	 * <pre>
-	 * <ul>
-	 *   <li ui-sref-active="active" class="item active">
-	 *     <a ui-sref="app.user({user: 'bilbobaggins'})" href="/users/bilbobaggins">@bilbobaggins</a>
-	 *   </li>
-	 * </ul>
-	 * </pre>
-	 *
-	 * The class name is interpolated **once** during the directives link time (any further changes to the
-	 * interpolated value are ignored).
-	 *
-	 * Multiple classes may be specified in a space-separated format:
-	 * <pre>
-	 * <ul>
-	 *   <li ui-sref-active='class1 class2 class3'>
-	 *     <a ui-sref="app.user">link</a>
-	 *   </li>
-	 * </ul>
-	 * </pre>
-	 */
-	
-	/**
-	 * @ngdoc directive
-	 * @name ui.router.state.directive:ui-sref-active-eq
-	 *
-	 * @requires ui.router.state.$state
-	 * @requires ui.router.state.$stateParams
-	 * @requires $interpolate
-	 *
-	 * @restrict A
-	 *
-	 * @description
-	 * The same as {@link ui.router.state.directive:ui-sref-active ui-sref-active} but will only activate
-	 * when the exact target state used in the `ui-sref` is active; no child states.
-	 *
-	 */
-	$StateRefActiveDirective.$inject = ['$state', '$stateParams', '$interpolate'];
-	function $StateRefActiveDirective($state, $stateParams, $interpolate) {
-	  return  {
-	    restrict: "A",
-	    controller: ['$scope', '$element', '$attrs', function ($scope, $element, $attrs) {
-	      var states = [], activeClass;
-	
-	      // There probably isn't much point in $observing this
-	      // uiSrefActive and uiSrefActiveEq share the same directive object with some
-	      // slight difference in logic routing
-	      activeClass = $interpolate($attrs.uiSrefActiveEq || $attrs.uiSrefActive || '', false)($scope);
-	
-	      // Allow uiSref to communicate with uiSrefActive[Equals]
-	      this.$$addStateInfo = function (newState, newParams) {
-	        var state = $state.get(newState, stateContext($element));
-	
-	        states.push({
-	          state: state || { name: newState },
-	          params: newParams
-	        });
-	
-	        update();
-	      };
-	
-	      $scope.$on('$stateChangeSuccess', update);
-	
-	      // Update route state
-	      function update() {
-	        if (anyMatch()) {
-	          $element.addClass(activeClass);
-	        } else {
-	          $element.removeClass(activeClass);
-	        }
-	      }
-	
-	      function anyMatch() {
-	        for (var i = 0; i < states.length; i++) {
-	          if (isMatch(states[i].state, states[i].params)) {
-	            return true;
-	          }
-	        }
-	        return false;
-	      }
-	
-	      function isMatch(state, params) {
-	        if (typeof $attrs.uiSrefActiveEq !== 'undefined') {
-	          return $state.is(state.name, params);
-	        } else {
-	          return $state.includes(state.name, params);
-	        }
-	      }
-	    }]
-	  };
-	}
-	
-	angular.module('ui.router.state')
-	  .directive('uiSref', $StateRefDirective)
-	  .directive('uiSrefActive', $StateRefActiveDirective)
-	  .directive('uiSrefActiveEq', $StateRefActiveDirective);
-	
-	/**
-	 * @ngdoc filter
-	 * @name ui.router.state.filter:isState
-	 *
-	 * @requires ui.router.state.$state
-	 *
-	 * @description
-	 * Translates to {@link ui.router.state.$state#methods_is $state.is("stateName")}.
-	 */
-	$IsStateFilter.$inject = ['$state'];
-	function $IsStateFilter($state) {
-	  var isFilter = function (state) {
-	    return $state.is(state);
-	  };
-	  isFilter.$stateful = true;
-	  return isFilter;
-	}
-	
-	/**
-	 * @ngdoc filter
-	 * @name ui.router.state.filter:includedByState
-	 *
-	 * @requires ui.router.state.$state
-	 *
-	 * @description
-	 * Translates to {@link ui.router.state.$state#methods_includes $state.includes('fullOrPartialStateName')}.
-	 */
-	$IncludedByStateFilter.$inject = ['$state'];
-	function $IncludedByStateFilter($state) {
-	  var includesFilter = function (state) {
-	    return $state.includes(state);
-	  };
-	  includesFilter.$stateful = true;
-	  return  includesFilter;
-	}
-	
-	angular.module('ui.router.state')
-	  .filter('isState', $IsStateFilter)
-	  .filter('includedByState', $IncludedByStateFilter);
-	})(window, window.angular);
-
-/***/ },
-/* 6 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, '__esModule', {
-	    value: true
-	});
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-	
-	var _angular = __webpack_require__(4);
-	
-	var _angular2 = _interopRequireDefault(_angular);
-	
-	var _zPresentComponentJs = __webpack_require__(13);
-	
-	var _zPresentComponentJs2 = _interopRequireDefault(_zPresentComponentJs);
-	
-	var _zSlideZSlideComponentJs = __webpack_require__(14);
-	
-	var _zSlideZSlideComponentJs2 = _interopRequireDefault(_zSlideZSlideComponentJs);
-	
-	var _angularSanitize = __webpack_require__(18);
-	
-	var _angularSanitize2 = _interopRequireDefault(_angularSanitize);
-	
-	var zPresentModule = _angular2['default'].module('zPresent', [_angularSanitize2['default']]).directive('zPresent', _zPresentComponentJs2['default']).directive('zSlide', _zSlideZSlideComponentJs2['default']);
-	exports['default'] = zPresentModule;
-	module.exports = exports['default'];
-
-/***/ },
-/* 7 */
-/***/ function(module, exports, __webpack_require__) {
+/* 4 */
+/***/ function(module, exports) {
 
 	/**
 	 * @license AngularJS v1.4.0
@@ -32702,7 +28251,4382 @@
 	!window.angular.$$csp() && window.angular.element(document).find('head').prepend('<style type="text/css">@charset "UTF-8";[ng\\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide:not(.ng-hide-animate){display:none !important;}ng\\:form{display:block;}.ng-animate-shim{visibility:hidden;}.ng-anchor{position:absolute;}</style>');
 
 /***/ },
-/* 8 */
+/* 5 */
+/***/ function(module, exports) {
+
+	/**
+	 * State-based routing for AngularJS
+	 * @version v0.2.15
+	 * @link http://angular-ui.github.com/
+	 * @license MIT License, http://www.opensource.org/licenses/MIT
+	 */
+	
+	/* commonjs package manager support (eg componentjs) */
+	if (typeof module !== "undefined" && typeof exports !== "undefined" && module.exports === exports){
+	  module.exports = 'ui.router';
+	}
+	
+	(function (window, angular, undefined) {
+	/*jshint globalstrict:true*/
+	/*global angular:false*/
+	'use strict';
+	
+	var isDefined = angular.isDefined,
+	    isFunction = angular.isFunction,
+	    isString = angular.isString,
+	    isObject = angular.isObject,
+	    isArray = angular.isArray,
+	    forEach = angular.forEach,
+	    extend = angular.extend,
+	    copy = angular.copy;
+	
+	function inherit(parent, extra) {
+	  return extend(new (extend(function() {}, { prototype: parent }))(), extra);
+	}
+	
+	function merge(dst) {
+	  forEach(arguments, function(obj) {
+	    if (obj !== dst) {
+	      forEach(obj, function(value, key) {
+	        if (!dst.hasOwnProperty(key)) dst[key] = value;
+	      });
+	    }
+	  });
+	  return dst;
+	}
+	
+	/**
+	 * Finds the common ancestor path between two states.
+	 *
+	 * @param {Object} first The first state.
+	 * @param {Object} second The second state.
+	 * @return {Array} Returns an array of state names in descending order, not including the root.
+	 */
+	function ancestors(first, second) {
+	  var path = [];
+	
+	  for (var n in first.path) {
+	    if (first.path[n] !== second.path[n]) break;
+	    path.push(first.path[n]);
+	  }
+	  return path;
+	}
+	
+	/**
+	 * IE8-safe wrapper for `Object.keys()`.
+	 *
+	 * @param {Object} object A JavaScript object.
+	 * @return {Array} Returns the keys of the object as an array.
+	 */
+	function objectKeys(object) {
+	  if (Object.keys) {
+	    return Object.keys(object);
+	  }
+	  var result = [];
+	
+	  forEach(object, function(val, key) {
+	    result.push(key);
+	  });
+	  return result;
+	}
+	
+	/**
+	 * IE8-safe wrapper for `Array.prototype.indexOf()`.
+	 *
+	 * @param {Array} array A JavaScript array.
+	 * @param {*} value A value to search the array for.
+	 * @return {Number} Returns the array index value of `value`, or `-1` if not present.
+	 */
+	function indexOf(array, value) {
+	  if (Array.prototype.indexOf) {
+	    return array.indexOf(value, Number(arguments[2]) || 0);
+	  }
+	  var len = array.length >>> 0, from = Number(arguments[2]) || 0;
+	  from = (from < 0) ? Math.ceil(from) : Math.floor(from);
+	
+	  if (from < 0) from += len;
+	
+	  for (; from < len; from++) {
+	    if (from in array && array[from] === value) return from;
+	  }
+	  return -1;
+	}
+	
+	/**
+	 * Merges a set of parameters with all parameters inherited between the common parents of the
+	 * current state and a given destination state.
+	 *
+	 * @param {Object} currentParams The value of the current state parameters ($stateParams).
+	 * @param {Object} newParams The set of parameters which will be composited with inherited params.
+	 * @param {Object} $current Internal definition of object representing the current state.
+	 * @param {Object} $to Internal definition of object representing state to transition to.
+	 */
+	function inheritParams(currentParams, newParams, $current, $to) {
+	  var parents = ancestors($current, $to), parentParams, inherited = {}, inheritList = [];
+	
+	  for (var i in parents) {
+	    if (!parents[i].params) continue;
+	    parentParams = objectKeys(parents[i].params);
+	    if (!parentParams.length) continue;
+	
+	    for (var j in parentParams) {
+	      if (indexOf(inheritList, parentParams[j]) >= 0) continue;
+	      inheritList.push(parentParams[j]);
+	      inherited[parentParams[j]] = currentParams[parentParams[j]];
+	    }
+	  }
+	  return extend({}, inherited, newParams);
+	}
+	
+	/**
+	 * Performs a non-strict comparison of the subset of two objects, defined by a list of keys.
+	 *
+	 * @param {Object} a The first object.
+	 * @param {Object} b The second object.
+	 * @param {Array} keys The list of keys within each object to compare. If the list is empty or not specified,
+	 *                     it defaults to the list of keys in `a`.
+	 * @return {Boolean} Returns `true` if the keys match, otherwise `false`.
+	 */
+	function equalForKeys(a, b, keys) {
+	  if (!keys) {
+	    keys = [];
+	    for (var n in a) keys.push(n); // Used instead of Object.keys() for IE8 compatibility
+	  }
+	
+	  for (var i=0; i<keys.length; i++) {
+	    var k = keys[i];
+	    if (a[k] != b[k]) return false; // Not '===', values aren't necessarily normalized
+	  }
+	  return true;
+	}
+	
+	/**
+	 * Returns the subset of an object, based on a list of keys.
+	 *
+	 * @param {Array} keys
+	 * @param {Object} values
+	 * @return {Boolean} Returns a subset of `values`.
+	 */
+	function filterByKeys(keys, values) {
+	  var filtered = {};
+	
+	  forEach(keys, function (name) {
+	    filtered[name] = values[name];
+	  });
+	  return filtered;
+	}
+	
+	// like _.indexBy
+	// when you know that your index values will be unique, or you want last-one-in to win
+	function indexBy(array, propName) {
+	  var result = {};
+	  forEach(array, function(item) {
+	    result[item[propName]] = item;
+	  });
+	  return result;
+	}
+	
+	// extracted from underscore.js
+	// Return a copy of the object only containing the whitelisted properties.
+	function pick(obj) {
+	  var copy = {};
+	  var keys = Array.prototype.concat.apply(Array.prototype, Array.prototype.slice.call(arguments, 1));
+	  forEach(keys, function(key) {
+	    if (key in obj) copy[key] = obj[key];
+	  });
+	  return copy;
+	}
+	
+	// extracted from underscore.js
+	// Return a copy of the object omitting the blacklisted properties.
+	function omit(obj) {
+	  var copy = {};
+	  var keys = Array.prototype.concat.apply(Array.prototype, Array.prototype.slice.call(arguments, 1));
+	  for (var key in obj) {
+	    if (indexOf(keys, key) == -1) copy[key] = obj[key];
+	  }
+	  return copy;
+	}
+	
+	function pluck(collection, key) {
+	  var result = isArray(collection) ? [] : {};
+	
+	  forEach(collection, function(val, i) {
+	    result[i] = isFunction(key) ? key(val) : val[key];
+	  });
+	  return result;
+	}
+	
+	function filter(collection, callback) {
+	  var array = isArray(collection);
+	  var result = array ? [] : {};
+	  forEach(collection, function(val, i) {
+	    if (callback(val, i)) {
+	      result[array ? result.length : i] = val;
+	    }
+	  });
+	  return result;
+	}
+	
+	function map(collection, callback) {
+	  var result = isArray(collection) ? [] : {};
+	
+	  forEach(collection, function(val, i) {
+	    result[i] = callback(val, i);
+	  });
+	  return result;
+	}
+	
+	/**
+	 * @ngdoc overview
+	 * @name ui.router.util
+	 *
+	 * @description
+	 * # ui.router.util sub-module
+	 *
+	 * This module is a dependency of other sub-modules. Do not include this module as a dependency
+	 * in your angular app (use {@link ui.router} module instead).
+	 *
+	 */
+	angular.module('ui.router.util', ['ng']);
+	
+	/**
+	 * @ngdoc overview
+	 * @name ui.router.router
+	 * 
+	 * @requires ui.router.util
+	 *
+	 * @description
+	 * # ui.router.router sub-module
+	 *
+	 * This module is a dependency of other sub-modules. Do not include this module as a dependency
+	 * in your angular app (use {@link ui.router} module instead).
+	 */
+	angular.module('ui.router.router', ['ui.router.util']);
+	
+	/**
+	 * @ngdoc overview
+	 * @name ui.router.state
+	 * 
+	 * @requires ui.router.router
+	 * @requires ui.router.util
+	 *
+	 * @description
+	 * # ui.router.state sub-module
+	 *
+	 * This module is a dependency of the main ui.router module. Do not include this module as a dependency
+	 * in your angular app (use {@link ui.router} module instead).
+	 * 
+	 */
+	angular.module('ui.router.state', ['ui.router.router', 'ui.router.util']);
+	
+	/**
+	 * @ngdoc overview
+	 * @name ui.router
+	 *
+	 * @requires ui.router.state
+	 *
+	 * @description
+	 * # ui.router
+	 * 
+	 * ## The main module for ui.router 
+	 * There are several sub-modules included with the ui.router module, however only this module is needed
+	 * as a dependency within your angular app. The other modules are for organization purposes. 
+	 *
+	 * The modules are:
+	 * * ui.router - the main "umbrella" module
+	 * * ui.router.router - 
+	 * 
+	 * *You'll need to include **only** this module as the dependency within your angular app.*
+	 * 
+	 * <pre>
+	 * <!doctype html>
+	 * <html ng-app="myApp">
+	 * <head>
+	 *   <script src="js/angular.js"></script>
+	 *   <!-- Include the ui-router script -->
+	 *   <script src="js/angular-ui-router.min.js"></script>
+	 *   <script>
+	 *     // ...and add 'ui.router' as a dependency
+	 *     var myApp = angular.module('myApp', ['ui.router']);
+	 *   </script>
+	 * </head>
+	 * <body>
+	 * </body>
+	 * </html>
+	 * </pre>
+	 */
+	angular.module('ui.router', ['ui.router.state']);
+	
+	angular.module('ui.router.compat', ['ui.router']);
+	
+	/**
+	 * @ngdoc object
+	 * @name ui.router.util.$resolve
+	 *
+	 * @requires $q
+	 * @requires $injector
+	 *
+	 * @description
+	 * Manages resolution of (acyclic) graphs of promises.
+	 */
+	$Resolve.$inject = ['$q', '$injector'];
+	function $Resolve(  $q,    $injector) {
+	  
+	  var VISIT_IN_PROGRESS = 1,
+	      VISIT_DONE = 2,
+	      NOTHING = {},
+	      NO_DEPENDENCIES = [],
+	      NO_LOCALS = NOTHING,
+	      NO_PARENT = extend($q.when(NOTHING), { $$promises: NOTHING, $$values: NOTHING });
+	  
+	
+	  /**
+	   * @ngdoc function
+	   * @name ui.router.util.$resolve#study
+	   * @methodOf ui.router.util.$resolve
+	   *
+	   * @description
+	   * Studies a set of invocables that are likely to be used multiple times.
+	   * <pre>
+	   * $resolve.study(invocables)(locals, parent, self)
+	   * </pre>
+	   * is equivalent to
+	   * <pre>
+	   * $resolve.resolve(invocables, locals, parent, self)
+	   * </pre>
+	   * but the former is more efficient (in fact `resolve` just calls `study` 
+	   * internally).
+	   *
+	   * @param {object} invocables Invocable objects
+	   * @return {function} a function to pass in locals, parent and self
+	   */
+	  this.study = function (invocables) {
+	    if (!isObject(invocables)) throw new Error("'invocables' must be an object");
+	    var invocableKeys = objectKeys(invocables || {});
+	    
+	    // Perform a topological sort of invocables to build an ordered plan
+	    var plan = [], cycle = [], visited = {};
+	    function visit(value, key) {
+	      if (visited[key] === VISIT_DONE) return;
+	      
+	      cycle.push(key);
+	      if (visited[key] === VISIT_IN_PROGRESS) {
+	        cycle.splice(0, indexOf(cycle, key));
+	        throw new Error("Cyclic dependency: " + cycle.join(" -> "));
+	      }
+	      visited[key] = VISIT_IN_PROGRESS;
+	      
+	      if (isString(value)) {
+	        plan.push(key, [ function() { return $injector.get(value); }], NO_DEPENDENCIES);
+	      } else {
+	        var params = $injector.annotate(value);
+	        forEach(params, function (param) {
+	          if (param !== key && invocables.hasOwnProperty(param)) visit(invocables[param], param);
+	        });
+	        plan.push(key, value, params);
+	      }
+	      
+	      cycle.pop();
+	      visited[key] = VISIT_DONE;
+	    }
+	    forEach(invocables, visit);
+	    invocables = cycle = visited = null; // plan is all that's required
+	    
+	    function isResolve(value) {
+	      return isObject(value) && value.then && value.$$promises;
+	    }
+	    
+	    return function (locals, parent, self) {
+	      if (isResolve(locals) && self === undefined) {
+	        self = parent; parent = locals; locals = null;
+	      }
+	      if (!locals) locals = NO_LOCALS;
+	      else if (!isObject(locals)) {
+	        throw new Error("'locals' must be an object");
+	      }       
+	      if (!parent) parent = NO_PARENT;
+	      else if (!isResolve(parent)) {
+	        throw new Error("'parent' must be a promise returned by $resolve.resolve()");
+	      }
+	      
+	      // To complete the overall resolution, we have to wait for the parent
+	      // promise and for the promise for each invokable in our plan.
+	      var resolution = $q.defer(),
+	          result = resolution.promise,
+	          promises = result.$$promises = {},
+	          values = extend({}, locals),
+	          wait = 1 + plan.length/3,
+	          merged = false;
+	          
+	      function done() {
+	        // Merge parent values we haven't got yet and publish our own $$values
+	        if (!--wait) {
+	          if (!merged) merge(values, parent.$$values); 
+	          result.$$values = values;
+	          result.$$promises = result.$$promises || true; // keep for isResolve()
+	          delete result.$$inheritedValues;
+	          resolution.resolve(values);
+	        }
+	      }
+	      
+	      function fail(reason) {
+	        result.$$failure = reason;
+	        resolution.reject(reason);
+	      }
+	
+	      // Short-circuit if parent has already failed
+	      if (isDefined(parent.$$failure)) {
+	        fail(parent.$$failure);
+	        return result;
+	      }
+	      
+	      if (parent.$$inheritedValues) {
+	        merge(values, omit(parent.$$inheritedValues, invocableKeys));
+	      }
+	
+	      // Merge parent values if the parent has already resolved, or merge
+	      // parent promises and wait if the parent resolve is still in progress.
+	      extend(promises, parent.$$promises);
+	      if (parent.$$values) {
+	        merged = merge(values, omit(parent.$$values, invocableKeys));
+	        result.$$inheritedValues = omit(parent.$$values, invocableKeys);
+	        done();
+	      } else {
+	        if (parent.$$inheritedValues) {
+	          result.$$inheritedValues = omit(parent.$$inheritedValues, invocableKeys);
+	        }        
+	        parent.then(done, fail);
+	      }
+	      
+	      // Process each invocable in the plan, but ignore any where a local of the same name exists.
+	      for (var i=0, ii=plan.length; i<ii; i+=3) {
+	        if (locals.hasOwnProperty(plan[i])) done();
+	        else invoke(plan[i], plan[i+1], plan[i+2]);
+	      }
+	      
+	      function invoke(key, invocable, params) {
+	        // Create a deferred for this invocation. Failures will propagate to the resolution as well.
+	        var invocation = $q.defer(), waitParams = 0;
+	        function onfailure(reason) {
+	          invocation.reject(reason);
+	          fail(reason);
+	        }
+	        // Wait for any parameter that we have a promise for (either from parent or from this
+	        // resolve; in that case study() will have made sure it's ordered before us in the plan).
+	        forEach(params, function (dep) {
+	          if (promises.hasOwnProperty(dep) && !locals.hasOwnProperty(dep)) {
+	            waitParams++;
+	            promises[dep].then(function (result) {
+	              values[dep] = result;
+	              if (!(--waitParams)) proceed();
+	            }, onfailure);
+	          }
+	        });
+	        if (!waitParams) proceed();
+	        function proceed() {
+	          if (isDefined(result.$$failure)) return;
+	          try {
+	            invocation.resolve($injector.invoke(invocable, self, values));
+	            invocation.promise.then(function (result) {
+	              values[key] = result;
+	              done();
+	            }, onfailure);
+	          } catch (e) {
+	            onfailure(e);
+	          }
+	        }
+	        // Publish promise synchronously; invocations further down in the plan may depend on it.
+	        promises[key] = invocation.promise;
+	      }
+	      
+	      return result;
+	    };
+	  };
+	  
+	  /**
+	   * @ngdoc function
+	   * @name ui.router.util.$resolve#resolve
+	   * @methodOf ui.router.util.$resolve
+	   *
+	   * @description
+	   * Resolves a set of invocables. An invocable is a function to be invoked via 
+	   * `$injector.invoke()`, and can have an arbitrary number of dependencies. 
+	   * An invocable can either return a value directly,
+	   * or a `$q` promise. If a promise is returned it will be resolved and the 
+	   * resulting value will be used instead. Dependencies of invocables are resolved 
+	   * (in this order of precedence)
+	   *
+	   * - from the specified `locals`
+	   * - from another invocable that is part of this `$resolve` call
+	   * - from an invocable that is inherited from a `parent` call to `$resolve` 
+	   *   (or recursively
+	   * - from any ancestor `$resolve` of that parent).
+	   *
+	   * The return value of `$resolve` is a promise for an object that contains 
+	   * (in this order of precedence)
+	   *
+	   * - any `locals` (if specified)
+	   * - the resolved return values of all injectables
+	   * - any values inherited from a `parent` call to `$resolve` (if specified)
+	   *
+	   * The promise will resolve after the `parent` promise (if any) and all promises 
+	   * returned by injectables have been resolved. If any invocable 
+	   * (or `$injector.invoke`) throws an exception, or if a promise returned by an 
+	   * invocable is rejected, the `$resolve` promise is immediately rejected with the 
+	   * same error. A rejection of a `parent` promise (if specified) will likewise be 
+	   * propagated immediately. Once the `$resolve` promise has been rejected, no 
+	   * further invocables will be called.
+	   * 
+	   * Cyclic dependencies between invocables are not permitted and will caues `$resolve`
+	   * to throw an error. As a special case, an injectable can depend on a parameter 
+	   * with the same name as the injectable, which will be fulfilled from the `parent` 
+	   * injectable of the same name. This allows inherited values to be decorated. 
+	   * Note that in this case any other injectable in the same `$resolve` with the same
+	   * dependency would see the decorated value, not the inherited value.
+	   *
+	   * Note that missing dependencies -- unlike cyclic dependencies -- will cause an 
+	   * (asynchronous) rejection of the `$resolve` promise rather than a (synchronous) 
+	   * exception.
+	   *
+	   * Invocables are invoked eagerly as soon as all dependencies are available. 
+	   * This is true even for dependencies inherited from a `parent` call to `$resolve`.
+	   *
+	   * As a special case, an invocable can be a string, in which case it is taken to 
+	   * be a service name to be passed to `$injector.get()`. This is supported primarily 
+	   * for backwards-compatibility with the `resolve` property of `$routeProvider` 
+	   * routes.
+	   *
+	   * @param {object} invocables functions to invoke or 
+	   * `$injector` services to fetch.
+	   * @param {object} locals  values to make available to the injectables
+	   * @param {object} parent  a promise returned by another call to `$resolve`.
+	   * @param {object} self  the `this` for the invoked methods
+	   * @return {object} Promise for an object that contains the resolved return value
+	   * of all invocables, as well as any inherited and local values.
+	   */
+	  this.resolve = function (invocables, locals, parent, self) {
+	    return this.study(invocables)(locals, parent, self);
+	  };
+	}
+	
+	angular.module('ui.router.util').service('$resolve', $Resolve);
+	
+	
+	/**
+	 * @ngdoc object
+	 * @name ui.router.util.$templateFactory
+	 *
+	 * @requires $http
+	 * @requires $templateCache
+	 * @requires $injector
+	 *
+	 * @description
+	 * Service. Manages loading of templates.
+	 */
+	$TemplateFactory.$inject = ['$http', '$templateCache', '$injector'];
+	function $TemplateFactory(  $http,   $templateCache,   $injector) {
+	
+	  /**
+	   * @ngdoc function
+	   * @name ui.router.util.$templateFactory#fromConfig
+	   * @methodOf ui.router.util.$templateFactory
+	   *
+	   * @description
+	   * Creates a template from a configuration object. 
+	   *
+	   * @param {object} config Configuration object for which to load a template. 
+	   * The following properties are search in the specified order, and the first one 
+	   * that is defined is used to create the template:
+	   *
+	   * @param {string|object} config.template html string template or function to 
+	   * load via {@link ui.router.util.$templateFactory#fromString fromString}.
+	   * @param {string|object} config.templateUrl url to load or a function returning 
+	   * the url to load via {@link ui.router.util.$templateFactory#fromUrl fromUrl}.
+	   * @param {Function} config.templateProvider function to invoke via 
+	   * {@link ui.router.util.$templateFactory#fromProvider fromProvider}.
+	   * @param {object} params  Parameters to pass to the template function.
+	   * @param {object} locals Locals to pass to `invoke` if the template is loaded 
+	   * via a `templateProvider`. Defaults to `{ params: params }`.
+	   *
+	   * @return {string|object}  The template html as a string, or a promise for 
+	   * that string,or `null` if no template is configured.
+	   */
+	  this.fromConfig = function (config, params, locals) {
+	    return (
+	      isDefined(config.template) ? this.fromString(config.template, params) :
+	      isDefined(config.templateUrl) ? this.fromUrl(config.templateUrl, params) :
+	      isDefined(config.templateProvider) ? this.fromProvider(config.templateProvider, params, locals) :
+	      null
+	    );
+	  };
+	
+	  /**
+	   * @ngdoc function
+	   * @name ui.router.util.$templateFactory#fromString
+	   * @methodOf ui.router.util.$templateFactory
+	   *
+	   * @description
+	   * Creates a template from a string or a function returning a string.
+	   *
+	   * @param {string|object} template html template as a string or function that 
+	   * returns an html template as a string.
+	   * @param {object} params Parameters to pass to the template function.
+	   *
+	   * @return {string|object} The template html as a string, or a promise for that 
+	   * string.
+	   */
+	  this.fromString = function (template, params) {
+	    return isFunction(template) ? template(params) : template;
+	  };
+	
+	  /**
+	   * @ngdoc function
+	   * @name ui.router.util.$templateFactory#fromUrl
+	   * @methodOf ui.router.util.$templateFactory
+	   * 
+	   * @description
+	   * Loads a template from the a URL via `$http` and `$templateCache`.
+	   *
+	   * @param {string|Function} url url of the template to load, or a function 
+	   * that returns a url.
+	   * @param {Object} params Parameters to pass to the url function.
+	   * @return {string|Promise.<string>} The template html as a string, or a promise 
+	   * for that string.
+	   */
+	  this.fromUrl = function (url, params) {
+	    if (isFunction(url)) url = url(params);
+	    if (url == null) return null;
+	    else return $http
+	        .get(url, { cache: $templateCache, headers: { Accept: 'text/html' }})
+	        .then(function(response) { return response.data; });
+	  };
+	
+	  /**
+	   * @ngdoc function
+	   * @name ui.router.util.$templateFactory#fromProvider
+	   * @methodOf ui.router.util.$templateFactory
+	   *
+	   * @description
+	   * Creates a template by invoking an injectable provider function.
+	   *
+	   * @param {Function} provider Function to invoke via `$injector.invoke`
+	   * @param {Object} params Parameters for the template.
+	   * @param {Object} locals Locals to pass to `invoke`. Defaults to 
+	   * `{ params: params }`.
+	   * @return {string|Promise.<string>} The template html as a string, or a promise 
+	   * for that string.
+	   */
+	  this.fromProvider = function (provider, params, locals) {
+	    return $injector.invoke(provider, null, locals || { params: params });
+	  };
+	}
+	
+	angular.module('ui.router.util').service('$templateFactory', $TemplateFactory);
+	
+	var $$UMFP; // reference to $UrlMatcherFactoryProvider
+	
+	/**
+	 * @ngdoc object
+	 * @name ui.router.util.type:UrlMatcher
+	 *
+	 * @description
+	 * Matches URLs against patterns and extracts named parameters from the path or the search
+	 * part of the URL. A URL pattern consists of a path pattern, optionally followed by '?' and a list
+	 * of search parameters. Multiple search parameter names are separated by '&'. Search parameters
+	 * do not influence whether or not a URL is matched, but their values are passed through into
+	 * the matched parameters returned by {@link ui.router.util.type:UrlMatcher#methods_exec exec}.
+	 *
+	 * Path parameter placeholders can be specified using simple colon/catch-all syntax or curly brace
+	 * syntax, which optionally allows a regular expression for the parameter to be specified:
+	 *
+	 * * `':'` name - colon placeholder
+	 * * `'*'` name - catch-all placeholder
+	 * * `'{' name '}'` - curly placeholder
+	 * * `'{' name ':' regexp|type '}'` - curly placeholder with regexp or type name. Should the
+	 *   regexp itself contain curly braces, they must be in matched pairs or escaped with a backslash.
+	 *
+	 * Parameter names may contain only word characters (latin letters, digits, and underscore) and
+	 * must be unique within the pattern (across both path and search parameters). For colon
+	 * placeholders or curly placeholders without an explicit regexp, a path parameter matches any
+	 * number of characters other than '/'. For catch-all placeholders the path parameter matches
+	 * any number of characters.
+	 *
+	 * Examples:
+	 *
+	 * * `'/hello/'` - Matches only if the path is exactly '/hello/'. There is no special treatment for
+	 *   trailing slashes, and patterns have to match the entire path, not just a prefix.
+	 * * `'/user/:id'` - Matches '/user/bob' or '/user/1234!!!' or even '/user/' but not '/user' or
+	 *   '/user/bob/details'. The second path segment will be captured as the parameter 'id'.
+	 * * `'/user/{id}'` - Same as the previous example, but using curly brace syntax.
+	 * * `'/user/{id:[^/]*}'` - Same as the previous example.
+	 * * `'/user/{id:[0-9a-fA-F]{1,8}}'` - Similar to the previous example, but only matches if the id
+	 *   parameter consists of 1 to 8 hex digits.
+	 * * `'/files/{path:.*}'` - Matches any URL starting with '/files/' and captures the rest of the
+	 *   path into the parameter 'path'.
+	 * * `'/files/*path'` - ditto.
+	 * * `'/calendar/{start:date}'` - Matches "/calendar/2014-11-12" (because the pattern defined
+	 *   in the built-in  `date` Type matches `2014-11-12`) and provides a Date object in $stateParams.start
+	 *
+	 * @param {string} pattern  The pattern to compile into a matcher.
+	 * @param {Object} config  A configuration object hash:
+	 * @param {Object=} parentMatcher Used to concatenate the pattern/config onto
+	 *   an existing UrlMatcher
+	 *
+	 * * `caseInsensitive` - `true` if URL matching should be case insensitive, otherwise `false`, the default value (for backward compatibility) is `false`.
+	 * * `strict` - `false` if matching against a URL with a trailing slash should be treated as equivalent to a URL without a trailing slash, the default value is `true`.
+	 *
+	 * @property {string} prefix  A static prefix of this pattern. The matcher guarantees that any
+	 *   URL matching this matcher (i.e. any string for which {@link ui.router.util.type:UrlMatcher#methods_exec exec()} returns
+	 *   non-null) will start with this prefix.
+	 *
+	 * @property {string} source  The pattern that was passed into the constructor
+	 *
+	 * @property {string} sourcePath  The path portion of the source property
+	 *
+	 * @property {string} sourceSearch  The search portion of the source property
+	 *
+	 * @property {string} regex  The constructed regex that will be used to match against the url when
+	 *   it is time to determine which url will match.
+	 *
+	 * @returns {Object}  New `UrlMatcher` object
+	 */
+	function UrlMatcher(pattern, config, parentMatcher) {
+	  config = extend({ params: {} }, isObject(config) ? config : {});
+	
+	  // Find all placeholders and create a compiled pattern, using either classic or curly syntax:
+	  //   '*' name
+	  //   ':' name
+	  //   '{' name '}'
+	  //   '{' name ':' regexp '}'
+	  // The regular expression is somewhat complicated due to the need to allow curly braces
+	  // inside the regular expression. The placeholder regexp breaks down as follows:
+	  //    ([:*])([\w\[\]]+)              - classic placeholder ($1 / $2) (search version has - for snake-case)
+	  //    \{([\w\[\]]+)(?:\:( ... ))?\}  - curly brace placeholder ($3) with optional regexp/type ... ($4) (search version has - for snake-case
+	  //    (?: ... | ... | ... )+         - the regexp consists of any number of atoms, an atom being either
+	  //    [^{}\\]+                       - anything other than curly braces or backslash
+	  //    \\.                            - a backslash escape
+	  //    \{(?:[^{}\\]+|\\.)*\}          - a matched set of curly braces containing other atoms
+	  var placeholder       = /([:*])([\w\[\]]+)|\{([\w\[\]]+)(?:\:((?:[^{}\\]+|\\.|\{(?:[^{}\\]+|\\.)*\})+))?\}/g,
+	      searchPlaceholder = /([:]?)([\w\[\]-]+)|\{([\w\[\]-]+)(?:\:((?:[^{}\\]+|\\.|\{(?:[^{}\\]+|\\.)*\})+))?\}/g,
+	      compiled = '^', last = 0, m,
+	      segments = this.segments = [],
+	      parentParams = parentMatcher ? parentMatcher.params : {},
+	      params = this.params = parentMatcher ? parentMatcher.params.$$new() : new $$UMFP.ParamSet(),
+	      paramNames = [];
+	
+	  function addParameter(id, type, config, location) {
+	    paramNames.push(id);
+	    if (parentParams[id]) return parentParams[id];
+	    if (!/^\w+(-+\w+)*(?:\[\])?$/.test(id)) throw new Error("Invalid parameter name '" + id + "' in pattern '" + pattern + "'");
+	    if (params[id]) throw new Error("Duplicate parameter name '" + id + "' in pattern '" + pattern + "'");
+	    params[id] = new $$UMFP.Param(id, type, config, location);
+	    return params[id];
+	  }
+	
+	  function quoteRegExp(string, pattern, squash, optional) {
+	    var surroundPattern = ['',''], result = string.replace(/[\\\[\]\^$*+?.()|{}]/g, "\\$&");
+	    if (!pattern) return result;
+	    switch(squash) {
+	      case false: surroundPattern = ['(', ')' + (optional ? "?" : "")]; break;
+	      case true:  surroundPattern = ['?(', ')?']; break;
+	      default:    surroundPattern = ['(' + squash + "|", ')?']; break;
+	    }
+	    return result + surroundPattern[0] + pattern + surroundPattern[1];
+	  }
+	
+	  this.source = pattern;
+	
+	  // Split into static segments separated by path parameter placeholders.
+	  // The number of segments is always 1 more than the number of parameters.
+	  function matchDetails(m, isSearch) {
+	    var id, regexp, segment, type, cfg, arrayMode;
+	    id          = m[2] || m[3]; // IE[78] returns '' for unmatched groups instead of null
+	    cfg         = config.params[id];
+	    segment     = pattern.substring(last, m.index);
+	    regexp      = isSearch ? m[4] : m[4] || (m[1] == '*' ? '.*' : null);
+	    type        = $$UMFP.type(regexp || "string") || inherit($$UMFP.type("string"), { pattern: new RegExp(regexp, config.caseInsensitive ? 'i' : undefined) });
+	    return {
+	      id: id, regexp: regexp, segment: segment, type: type, cfg: cfg
+	    };
+	  }
+	
+	  var p, param, segment;
+	  while ((m = placeholder.exec(pattern))) {
+	    p = matchDetails(m, false);
+	    if (p.segment.indexOf('?') >= 0) break; // we're into the search part
+	
+	    param = addParameter(p.id, p.type, p.cfg, "path");
+	    compiled += quoteRegExp(p.segment, param.type.pattern.source, param.squash, param.isOptional);
+	    segments.push(p.segment);
+	    last = placeholder.lastIndex;
+	  }
+	  segment = pattern.substring(last);
+	
+	  // Find any search parameter names and remove them from the last segment
+	  var i = segment.indexOf('?');
+	
+	  if (i >= 0) {
+	    var search = this.sourceSearch = segment.substring(i);
+	    segment = segment.substring(0, i);
+	    this.sourcePath = pattern.substring(0, last + i);
+	
+	    if (search.length > 0) {
+	      last = 0;
+	      while ((m = searchPlaceholder.exec(search))) {
+	        p = matchDetails(m, true);
+	        param = addParameter(p.id, p.type, p.cfg, "search");
+	        last = placeholder.lastIndex;
+	        // check if ?&
+	      }
+	    }
+	  } else {
+	    this.sourcePath = pattern;
+	    this.sourceSearch = '';
+	  }
+	
+	  compiled += quoteRegExp(segment) + (config.strict === false ? '\/?' : '') + '$';
+	  segments.push(segment);
+	
+	  this.regexp = new RegExp(compiled, config.caseInsensitive ? 'i' : undefined);
+	  this.prefix = segments[0];
+	  this.$$paramNames = paramNames;
+	}
+	
+	/**
+	 * @ngdoc function
+	 * @name ui.router.util.type:UrlMatcher#concat
+	 * @methodOf ui.router.util.type:UrlMatcher
+	 *
+	 * @description
+	 * Returns a new matcher for a pattern constructed by appending the path part and adding the
+	 * search parameters of the specified pattern to this pattern. The current pattern is not
+	 * modified. This can be understood as creating a pattern for URLs that are relative to (or
+	 * suffixes of) the current pattern.
+	 *
+	 * @example
+	 * The following two matchers are equivalent:
+	 * <pre>
+	 * new UrlMatcher('/user/{id}?q').concat('/details?date');
+	 * new UrlMatcher('/user/{id}/details?q&date');
+	 * </pre>
+	 *
+	 * @param {string} pattern  The pattern to append.
+	 * @param {Object} config  An object hash of the configuration for the matcher.
+	 * @returns {UrlMatcher}  A matcher for the concatenated pattern.
+	 */
+	UrlMatcher.prototype.concat = function (pattern, config) {
+	  // Because order of search parameters is irrelevant, we can add our own search
+	  // parameters to the end of the new pattern. Parse the new pattern by itself
+	  // and then join the bits together, but it's much easier to do this on a string level.
+	  var defaultConfig = {
+	    caseInsensitive: $$UMFP.caseInsensitive(),
+	    strict: $$UMFP.strictMode(),
+	    squash: $$UMFP.defaultSquashPolicy()
+	  };
+	  return new UrlMatcher(this.sourcePath + pattern + this.sourceSearch, extend(defaultConfig, config), this);
+	};
+	
+	UrlMatcher.prototype.toString = function () {
+	  return this.source;
+	};
+	
+	/**
+	 * @ngdoc function
+	 * @name ui.router.util.type:UrlMatcher#exec
+	 * @methodOf ui.router.util.type:UrlMatcher
+	 *
+	 * @description
+	 * Tests the specified path against this matcher, and returns an object containing the captured
+	 * parameter values, or null if the path does not match. The returned object contains the values
+	 * of any search parameters that are mentioned in the pattern, but their value may be null if
+	 * they are not present in `searchParams`. This means that search parameters are always treated
+	 * as optional.
+	 *
+	 * @example
+	 * <pre>
+	 * new UrlMatcher('/user/{id}?q&r').exec('/user/bob', {
+	 *   x: '1', q: 'hello'
+	 * });
+	 * // returns { id: 'bob', q: 'hello', r: null }
+	 * </pre>
+	 *
+	 * @param {string} path  The URL path to match, e.g. `$location.path()`.
+	 * @param {Object} searchParams  URL search parameters, e.g. `$location.search()`.
+	 * @returns {Object}  The captured parameter values.
+	 */
+	UrlMatcher.prototype.exec = function (path, searchParams) {
+	  var m = this.regexp.exec(path);
+	  if (!m) return null;
+	  searchParams = searchParams || {};
+	
+	  var paramNames = this.parameters(), nTotal = paramNames.length,
+	    nPath = this.segments.length - 1,
+	    values = {}, i, j, cfg, paramName;
+	
+	  if (nPath !== m.length - 1) throw new Error("Unbalanced capture group in route '" + this.source + "'");
+	
+	  function decodePathArray(string) {
+	    function reverseString(str) { return str.split("").reverse().join(""); }
+	    function unquoteDashes(str) { return str.replace(/\\-/g, "-"); }
+	
+	    var split = reverseString(string).split(/-(?!\\)/);
+	    var allReversed = map(split, reverseString);
+	    return map(allReversed, unquoteDashes).reverse();
+	  }
+	
+	  for (i = 0; i < nPath; i++) {
+	    paramName = paramNames[i];
+	    var param = this.params[paramName];
+	    var paramVal = m[i+1];
+	    // if the param value matches a pre-replace pair, replace the value before decoding.
+	    for (j = 0; j < param.replace; j++) {
+	      if (param.replace[j].from === paramVal) paramVal = param.replace[j].to;
+	    }
+	    if (paramVal && param.array === true) paramVal = decodePathArray(paramVal);
+	    values[paramName] = param.value(paramVal);
+	  }
+	  for (/**/; i < nTotal; i++) {
+	    paramName = paramNames[i];
+	    values[paramName] = this.params[paramName].value(searchParams[paramName]);
+	  }
+	
+	  return values;
+	};
+	
+	/**
+	 * @ngdoc function
+	 * @name ui.router.util.type:UrlMatcher#parameters
+	 * @methodOf ui.router.util.type:UrlMatcher
+	 *
+	 * @description
+	 * Returns the names of all path and search parameters of this pattern in an unspecified order.
+	 *
+	 * @returns {Array.<string>}  An array of parameter names. Must be treated as read-only. If the
+	 *    pattern has no parameters, an empty array is returned.
+	 */
+	UrlMatcher.prototype.parameters = function (param) {
+	  if (!isDefined(param)) return this.$$paramNames;
+	  return this.params[param] || null;
+	};
+	
+	/**
+	 * @ngdoc function
+	 * @name ui.router.util.type:UrlMatcher#validate
+	 * @methodOf ui.router.util.type:UrlMatcher
+	 *
+	 * @description
+	 * Checks an object hash of parameters to validate their correctness according to the parameter
+	 * types of this `UrlMatcher`.
+	 *
+	 * @param {Object} params The object hash of parameters to validate.
+	 * @returns {boolean} Returns `true` if `params` validates, otherwise `false`.
+	 */
+	UrlMatcher.prototype.validates = function (params) {
+	  return this.params.$$validates(params);
+	};
+	
+	/**
+	 * @ngdoc function
+	 * @name ui.router.util.type:UrlMatcher#format
+	 * @methodOf ui.router.util.type:UrlMatcher
+	 *
+	 * @description
+	 * Creates a URL that matches this pattern by substituting the specified values
+	 * for the path and search parameters. Null values for path parameters are
+	 * treated as empty strings.
+	 *
+	 * @example
+	 * <pre>
+	 * new UrlMatcher('/user/{id}?q').format({ id:'bob', q:'yes' });
+	 * // returns '/user/bob?q=yes'
+	 * </pre>
+	 *
+	 * @param {Object} values  the values to substitute for the parameters in this pattern.
+	 * @returns {string}  the formatted URL (path and optionally search part).
+	 */
+	UrlMatcher.prototype.format = function (values) {
+	  values = values || {};
+	  var segments = this.segments, params = this.parameters(), paramset = this.params;
+	  if (!this.validates(values)) return null;
+	
+	  var i, search = false, nPath = segments.length - 1, nTotal = params.length, result = segments[0];
+	
+	  function encodeDashes(str) { // Replace dashes with encoded "\-"
+	    return encodeURIComponent(str).replace(/-/g, function(c) { return '%5C%' + c.charCodeAt(0).toString(16).toUpperCase(); });
+	  }
+	
+	  for (i = 0; i < nTotal; i++) {
+	    var isPathParam = i < nPath;
+	    var name = params[i], param = paramset[name], value = param.value(values[name]);
+	    var isDefaultValue = param.isOptional && param.type.equals(param.value(), value);
+	    var squash = isDefaultValue ? param.squash : false;
+	    var encoded = param.type.encode(value);
+	
+	    if (isPathParam) {
+	      var nextSegment = segments[i + 1];
+	      if (squash === false) {
+	        if (encoded != null) {
+	          if (isArray(encoded)) {
+	            result += map(encoded, encodeDashes).join("-");
+	          } else {
+	            result += encodeURIComponent(encoded);
+	          }
+	        }
+	        result += nextSegment;
+	      } else if (squash === true) {
+	        var capture = result.match(/\/$/) ? /\/?(.*)/ : /(.*)/;
+	        result += nextSegment.match(capture)[1];
+	      } else if (isString(squash)) {
+	        result += squash + nextSegment;
+	      }
+	    } else {
+	      if (encoded == null || (isDefaultValue && squash !== false)) continue;
+	      if (!isArray(encoded)) encoded = [ encoded ];
+	      encoded = map(encoded, encodeURIComponent).join('&' + name + '=');
+	      result += (search ? '&' : '?') + (name + '=' + encoded);
+	      search = true;
+	    }
+	  }
+	
+	  return result;
+	};
+	
+	/**
+	 * @ngdoc object
+	 * @name ui.router.util.type:Type
+	 *
+	 * @description
+	 * Implements an interface to define custom parameter types that can be decoded from and encoded to
+	 * string parameters matched in a URL. Used by {@link ui.router.util.type:UrlMatcher `UrlMatcher`}
+	 * objects when matching or formatting URLs, or comparing or validating parameter values.
+	 *
+	 * See {@link ui.router.util.$urlMatcherFactory#methods_type `$urlMatcherFactory#type()`} for more
+	 * information on registering custom types.
+	 *
+	 * @param {Object} config  A configuration object which contains the custom type definition.  The object's
+	 *        properties will override the default methods and/or pattern in `Type`'s public interface.
+	 * @example
+	 * <pre>
+	 * {
+	 *   decode: function(val) { return parseInt(val, 10); },
+	 *   encode: function(val) { return val && val.toString(); },
+	 *   equals: function(a, b) { return this.is(a) && a === b; },
+	 *   is: function(val) { return angular.isNumber(val) isFinite(val) && val % 1 === 0; },
+	 *   pattern: /\d+/
+	 * }
+	 * </pre>
+	 *
+	 * @property {RegExp} pattern The regular expression pattern used to match values of this type when
+	 *           coming from a substring of a URL.
+	 *
+	 * @returns {Object}  Returns a new `Type` object.
+	 */
+	function Type(config) {
+	  extend(this, config);
+	}
+	
+	/**
+	 * @ngdoc function
+	 * @name ui.router.util.type:Type#is
+	 * @methodOf ui.router.util.type:Type
+	 *
+	 * @description
+	 * Detects whether a value is of a particular type. Accepts a native (decoded) value
+	 * and determines whether it matches the current `Type` object.
+	 *
+	 * @param {*} val  The value to check.
+	 * @param {string} key  Optional. If the type check is happening in the context of a specific
+	 *        {@link ui.router.util.type:UrlMatcher `UrlMatcher`} object, this is the name of the
+	 *        parameter in which `val` is stored. Can be used for meta-programming of `Type` objects.
+	 * @returns {Boolean}  Returns `true` if the value matches the type, otherwise `false`.
+	 */
+	Type.prototype.is = function(val, key) {
+	  return true;
+	};
+	
+	/**
+	 * @ngdoc function
+	 * @name ui.router.util.type:Type#encode
+	 * @methodOf ui.router.util.type:Type
+	 *
+	 * @description
+	 * Encodes a custom/native type value to a string that can be embedded in a URL. Note that the
+	 * return value does *not* need to be URL-safe (i.e. passed through `encodeURIComponent()`), it
+	 * only needs to be a representation of `val` that has been coerced to a string.
+	 *
+	 * @param {*} val  The value to encode.
+	 * @param {string} key  The name of the parameter in which `val` is stored. Can be used for
+	 *        meta-programming of `Type` objects.
+	 * @returns {string}  Returns a string representation of `val` that can be encoded in a URL.
+	 */
+	Type.prototype.encode = function(val, key) {
+	  return val;
+	};
+	
+	/**
+	 * @ngdoc function
+	 * @name ui.router.util.type:Type#decode
+	 * @methodOf ui.router.util.type:Type
+	 *
+	 * @description
+	 * Converts a parameter value (from URL string or transition param) to a custom/native value.
+	 *
+	 * @param {string} val  The URL parameter value to decode.
+	 * @param {string} key  The name of the parameter in which `val` is stored. Can be used for
+	 *        meta-programming of `Type` objects.
+	 * @returns {*}  Returns a custom representation of the URL parameter value.
+	 */
+	Type.prototype.decode = function(val, key) {
+	  return val;
+	};
+	
+	/**
+	 * @ngdoc function
+	 * @name ui.router.util.type:Type#equals
+	 * @methodOf ui.router.util.type:Type
+	 *
+	 * @description
+	 * Determines whether two decoded values are equivalent.
+	 *
+	 * @param {*} a  A value to compare against.
+	 * @param {*} b  A value to compare against.
+	 * @returns {Boolean}  Returns `true` if the values are equivalent/equal, otherwise `false`.
+	 */
+	Type.prototype.equals = function(a, b) {
+	  return a == b;
+	};
+	
+	Type.prototype.$subPattern = function() {
+	  var sub = this.pattern.toString();
+	  return sub.substr(1, sub.length - 2);
+	};
+	
+	Type.prototype.pattern = /.*/;
+	
+	Type.prototype.toString = function() { return "{Type:" + this.name + "}"; };
+	
+	/** Given an encoded string, or a decoded object, returns a decoded object */
+	Type.prototype.$normalize = function(val) {
+	  return this.is(val) ? val : this.decode(val);
+	};
+	
+	/*
+	 * Wraps an existing custom Type as an array of Type, depending on 'mode'.
+	 * e.g.:
+	 * - urlmatcher pattern "/path?{queryParam[]:int}"
+	 * - url: "/path?queryParam=1&queryParam=2
+	 * - $stateParams.queryParam will be [1, 2]
+	 * if `mode` is "auto", then
+	 * - url: "/path?queryParam=1 will create $stateParams.queryParam: 1
+	 * - url: "/path?queryParam=1&queryParam=2 will create $stateParams.queryParam: [1, 2]
+	 */
+	Type.prototype.$asArray = function(mode, isSearch) {
+	  if (!mode) return this;
+	  if (mode === "auto" && !isSearch) throw new Error("'auto' array mode is for query parameters only");
+	
+	  function ArrayType(type, mode) {
+	    function bindTo(type, callbackName) {
+	      return function() {
+	        return type[callbackName].apply(type, arguments);
+	      };
+	    }
+	
+	    // Wrap non-array value as array
+	    function arrayWrap(val) { return isArray(val) ? val : (isDefined(val) ? [ val ] : []); }
+	    // Unwrap array value for "auto" mode. Return undefined for empty array.
+	    function arrayUnwrap(val) {
+	      switch(val.length) {
+	        case 0: return undefined;
+	        case 1: return mode === "auto" ? val[0] : val;
+	        default: return val;
+	      }
+	    }
+	    function falsey(val) { return !val; }
+	
+	    // Wraps type (.is/.encode/.decode) functions to operate on each value of an array
+	    function arrayHandler(callback, allTruthyMode) {
+	      return function handleArray(val) {
+	        val = arrayWrap(val);
+	        var result = map(val, callback);
+	        if (allTruthyMode === true)
+	          return filter(result, falsey).length === 0;
+	        return arrayUnwrap(result);
+	      };
+	    }
+	
+	    // Wraps type (.equals) functions to operate on each value of an array
+	    function arrayEqualsHandler(callback) {
+	      return function handleArray(val1, val2) {
+	        var left = arrayWrap(val1), right = arrayWrap(val2);
+	        if (left.length !== right.length) return false;
+	        for (var i = 0; i < left.length; i++) {
+	          if (!callback(left[i], right[i])) return false;
+	        }
+	        return true;
+	      };
+	    }
+	
+	    this.encode = arrayHandler(bindTo(type, 'encode'));
+	    this.decode = arrayHandler(bindTo(type, 'decode'));
+	    this.is     = arrayHandler(bindTo(type, 'is'), true);
+	    this.equals = arrayEqualsHandler(bindTo(type, 'equals'));
+	    this.pattern = type.pattern;
+	    this.$normalize = arrayHandler(bindTo(type, '$normalize'));
+	    this.name = type.name;
+	    this.$arrayMode = mode;
+	  }
+	
+	  return new ArrayType(this, mode);
+	};
+	
+	
+	
+	/**
+	 * @ngdoc object
+	 * @name ui.router.util.$urlMatcherFactory
+	 *
+	 * @description
+	 * Factory for {@link ui.router.util.type:UrlMatcher `UrlMatcher`} instances. The factory
+	 * is also available to providers under the name `$urlMatcherFactoryProvider`.
+	 */
+	function $UrlMatcherFactory() {
+	  $$UMFP = this;
+	
+	  var isCaseInsensitive = false, isStrictMode = true, defaultSquashPolicy = false;
+	
+	  function valToString(val) { return val != null ? val.toString().replace(/\//g, "%2F") : val; }
+	  function valFromString(val) { return val != null ? val.toString().replace(/%2F/g, "/") : val; }
+	
+	  var $types = {}, enqueue = true, typeQueue = [], injector, defaultTypes = {
+	    string: {
+	      encode: valToString,
+	      decode: valFromString,
+	      // TODO: in 1.0, make string .is() return false if value is undefined/null by default.
+	      // In 0.2.x, string params are optional by default for backwards compat
+	      is: function(val) { return val == null || !isDefined(val) || typeof val === "string"; },
+	      pattern: /[^/]*/
+	    },
+	    int: {
+	      encode: valToString,
+	      decode: function(val) { return parseInt(val, 10); },
+	      is: function(val) { return isDefined(val) && this.decode(val.toString()) === val; },
+	      pattern: /\d+/
+	    },
+	    bool: {
+	      encode: function(val) { return val ? 1 : 0; },
+	      decode: function(val) { return parseInt(val, 10) !== 0; },
+	      is: function(val) { return val === true || val === false; },
+	      pattern: /0|1/
+	    },
+	    date: {
+	      encode: function (val) {
+	        if (!this.is(val))
+	          return undefined;
+	        return [ val.getFullYear(),
+	          ('0' + (val.getMonth() + 1)).slice(-2),
+	          ('0' + val.getDate()).slice(-2)
+	        ].join("-");
+	      },
+	      decode: function (val) {
+	        if (this.is(val)) return val;
+	        var match = this.capture.exec(val);
+	        return match ? new Date(match[1], match[2] - 1, match[3]) : undefined;
+	      },
+	      is: function(val) { return val instanceof Date && !isNaN(val.valueOf()); },
+	      equals: function (a, b) { return this.is(a) && this.is(b) && a.toISOString() === b.toISOString(); },
+	      pattern: /[0-9]{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[1-2][0-9]|3[0-1])/,
+	      capture: /([0-9]{4})-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])/
+	    },
+	    json: {
+	      encode: angular.toJson,
+	      decode: angular.fromJson,
+	      is: angular.isObject,
+	      equals: angular.equals,
+	      pattern: /[^/]*/
+	    },
+	    any: { // does not encode/decode
+	      encode: angular.identity,
+	      decode: angular.identity,
+	      equals: angular.equals,
+	      pattern: /.*/
+	    }
+	  };
+	
+	  function getDefaultConfig() {
+	    return {
+	      strict: isStrictMode,
+	      caseInsensitive: isCaseInsensitive
+	    };
+	  }
+	
+	  function isInjectable(value) {
+	    return (isFunction(value) || (isArray(value) && isFunction(value[value.length - 1])));
+	  }
+	
+	  /**
+	   * [Internal] Get the default value of a parameter, which may be an injectable function.
+	   */
+	  $UrlMatcherFactory.$$getDefaultValue = function(config) {
+	    if (!isInjectable(config.value)) return config.value;
+	    if (!injector) throw new Error("Injectable functions cannot be called at configuration time");
+	    return injector.invoke(config.value);
+	  };
+	
+	  /**
+	   * @ngdoc function
+	   * @name ui.router.util.$urlMatcherFactory#caseInsensitive
+	   * @methodOf ui.router.util.$urlMatcherFactory
+	   *
+	   * @description
+	   * Defines whether URL matching should be case sensitive (the default behavior), or not.
+	   *
+	   * @param {boolean} value `false` to match URL in a case sensitive manner; otherwise `true`;
+	   * @returns {boolean} the current value of caseInsensitive
+	   */
+	  this.caseInsensitive = function(value) {
+	    if (isDefined(value))
+	      isCaseInsensitive = value;
+	    return isCaseInsensitive;
+	  };
+	
+	  /**
+	   * @ngdoc function
+	   * @name ui.router.util.$urlMatcherFactory#strictMode
+	   * @methodOf ui.router.util.$urlMatcherFactory
+	   *
+	   * @description
+	   * Defines whether URLs should match trailing slashes, or not (the default behavior).
+	   *
+	   * @param {boolean=} value `false` to match trailing slashes in URLs, otherwise `true`.
+	   * @returns {boolean} the current value of strictMode
+	   */
+	  this.strictMode = function(value) {
+	    if (isDefined(value))
+	      isStrictMode = value;
+	    return isStrictMode;
+	  };
+	
+	  /**
+	   * @ngdoc function
+	   * @name ui.router.util.$urlMatcherFactory#defaultSquashPolicy
+	   * @methodOf ui.router.util.$urlMatcherFactory
+	   *
+	   * @description
+	   * Sets the default behavior when generating or matching URLs with default parameter values.
+	   *
+	   * @param {string} value A string that defines the default parameter URL squashing behavior.
+	   *    `nosquash`: When generating an href with a default parameter value, do not squash the parameter value from the URL
+	   *    `slash`: When generating an href with a default parameter value, squash (remove) the parameter value, and, if the
+	   *             parameter is surrounded by slashes, squash (remove) one slash from the URL
+	   *    any other string, e.g. "~": When generating an href with a default parameter value, squash (remove)
+	   *             the parameter value from the URL and replace it with this string.
+	   */
+	  this.defaultSquashPolicy = function(value) {
+	    if (!isDefined(value)) return defaultSquashPolicy;
+	    if (value !== true && value !== false && !isString(value))
+	      throw new Error("Invalid squash policy: " + value + ". Valid policies: false, true, arbitrary-string");
+	    defaultSquashPolicy = value;
+	    return value;
+	  };
+	
+	  /**
+	   * @ngdoc function
+	   * @name ui.router.util.$urlMatcherFactory#compile
+	   * @methodOf ui.router.util.$urlMatcherFactory
+	   *
+	   * @description
+	   * Creates a {@link ui.router.util.type:UrlMatcher `UrlMatcher`} for the specified pattern.
+	   *
+	   * @param {string} pattern  The URL pattern.
+	   * @param {Object} config  The config object hash.
+	   * @returns {UrlMatcher}  The UrlMatcher.
+	   */
+	  this.compile = function (pattern, config) {
+	    return new UrlMatcher(pattern, extend(getDefaultConfig(), config));
+	  };
+	
+	  /**
+	   * @ngdoc function
+	   * @name ui.router.util.$urlMatcherFactory#isMatcher
+	   * @methodOf ui.router.util.$urlMatcherFactory
+	   *
+	   * @description
+	   * Returns true if the specified object is a `UrlMatcher`, or false otherwise.
+	   *
+	   * @param {Object} object  The object to perform the type check against.
+	   * @returns {Boolean}  Returns `true` if the object matches the `UrlMatcher` interface, by
+	   *          implementing all the same methods.
+	   */
+	  this.isMatcher = function (o) {
+	    if (!isObject(o)) return false;
+	    var result = true;
+	
+	    forEach(UrlMatcher.prototype, function(val, name) {
+	      if (isFunction(val)) {
+	        result = result && (isDefined(o[name]) && isFunction(o[name]));
+	      }
+	    });
+	    return result;
+	  };
+	
+	  /**
+	   * @ngdoc function
+	   * @name ui.router.util.$urlMatcherFactory#type
+	   * @methodOf ui.router.util.$urlMatcherFactory
+	   *
+	   * @description
+	   * Registers a custom {@link ui.router.util.type:Type `Type`} object that can be used to
+	   * generate URLs with typed parameters.
+	   *
+	   * @param {string} name  The type name.
+	   * @param {Object|Function} definition   The type definition. See
+	   *        {@link ui.router.util.type:Type `Type`} for information on the values accepted.
+	   * @param {Object|Function} definitionFn (optional) A function that is injected before the app
+	   *        runtime starts.  The result of this function is merged into the existing `definition`.
+	   *        See {@link ui.router.util.type:Type `Type`} for information on the values accepted.
+	   *
+	   * @returns {Object}  Returns `$urlMatcherFactoryProvider`.
+	   *
+	   * @example
+	   * This is a simple example of a custom type that encodes and decodes items from an
+	   * array, using the array index as the URL-encoded value:
+	   *
+	   * <pre>
+	   * var list = ['John', 'Paul', 'George', 'Ringo'];
+	   *
+	   * $urlMatcherFactoryProvider.type('listItem', {
+	   *   encode: function(item) {
+	   *     // Represent the list item in the URL using its corresponding index
+	   *     return list.indexOf(item);
+	   *   },
+	   *   decode: function(item) {
+	   *     // Look up the list item by index
+	   *     return list[parseInt(item, 10)];
+	   *   },
+	   *   is: function(item) {
+	   *     // Ensure the item is valid by checking to see that it appears
+	   *     // in the list
+	   *     return list.indexOf(item) > -1;
+	   *   }
+	   * });
+	   *
+	   * $stateProvider.state('list', {
+	   *   url: "/list/{item:listItem}",
+	   *   controller: function($scope, $stateParams) {
+	   *     console.log($stateParams.item);
+	   *   }
+	   * });
+	   *
+	   * // ...
+	   *
+	   * // Changes URL to '/list/3', logs "Ringo" to the console
+	   * $state.go('list', { item: "Ringo" });
+	   * </pre>
+	   *
+	   * This is a more complex example of a type that relies on dependency injection to
+	   * interact with services, and uses the parameter name from the URL to infer how to
+	   * handle encoding and decoding parameter values:
+	   *
+	   * <pre>
+	   * // Defines a custom type that gets a value from a service,
+	   * // where each service gets different types of values from
+	   * // a backend API:
+	   * $urlMatcherFactoryProvider.type('dbObject', {}, function(Users, Posts) {
+	   *
+	   *   // Matches up services to URL parameter names
+	   *   var services = {
+	   *     user: Users,
+	   *     post: Posts
+	   *   };
+	   *
+	   *   return {
+	   *     encode: function(object) {
+	   *       // Represent the object in the URL using its unique ID
+	   *       return object.id;
+	   *     },
+	   *     decode: function(value, key) {
+	   *       // Look up the object by ID, using the parameter
+	   *       // name (key) to call the correct service
+	   *       return services[key].findById(value);
+	   *     },
+	   *     is: function(object, key) {
+	   *       // Check that object is a valid dbObject
+	   *       return angular.isObject(object) && object.id && services[key];
+	   *     }
+	   *     equals: function(a, b) {
+	   *       // Check the equality of decoded objects by comparing
+	   *       // their unique IDs
+	   *       return a.id === b.id;
+	   *     }
+	   *   };
+	   * });
+	   *
+	   * // In a config() block, you can then attach URLs with
+	   * // type-annotated parameters:
+	   * $stateProvider.state('users', {
+	   *   url: "/users",
+	   *   // ...
+	   * }).state('users.item', {
+	   *   url: "/{user:dbObject}",
+	   *   controller: function($scope, $stateParams) {
+	   *     // $stateParams.user will now be an object returned from
+	   *     // the Users service
+	   *   },
+	   *   // ...
+	   * });
+	   * </pre>
+	   */
+	  this.type = function (name, definition, definitionFn) {
+	    if (!isDefined(definition)) return $types[name];
+	    if ($types.hasOwnProperty(name)) throw new Error("A type named '" + name + "' has already been defined.");
+	
+	    $types[name] = new Type(extend({ name: name }, definition));
+	    if (definitionFn) {
+	      typeQueue.push({ name: name, def: definitionFn });
+	      if (!enqueue) flushTypeQueue();
+	    }
+	    return this;
+	  };
+	
+	  // `flushTypeQueue()` waits until `$urlMatcherFactory` is injected before invoking the queued `definitionFn`s
+	  function flushTypeQueue() {
+	    while(typeQueue.length) {
+	      var type = typeQueue.shift();
+	      if (type.pattern) throw new Error("You cannot override a type's .pattern at runtime.");
+	      angular.extend($types[type.name], injector.invoke(type.def));
+	    }
+	  }
+	
+	  // Register default types. Store them in the prototype of $types.
+	  forEach(defaultTypes, function(type, name) { $types[name] = new Type(extend({name: name}, type)); });
+	  $types = inherit($types, {});
+	
+	  /* No need to document $get, since it returns this */
+	  this.$get = ['$injector', function ($injector) {
+	    injector = $injector;
+	    enqueue = false;
+	    flushTypeQueue();
+	
+	    forEach(defaultTypes, function(type, name) {
+	      if (!$types[name]) $types[name] = new Type(type);
+	    });
+	    return this;
+	  }];
+	
+	  this.Param = function Param(id, type, config, location) {
+	    var self = this;
+	    config = unwrapShorthand(config);
+	    type = getType(config, type, location);
+	    var arrayMode = getArrayMode();
+	    type = arrayMode ? type.$asArray(arrayMode, location === "search") : type;
+	    if (type.name === "string" && !arrayMode && location === "path" && config.value === undefined)
+	      config.value = ""; // for 0.2.x; in 0.3.0+ do not automatically default to ""
+	    var isOptional = config.value !== undefined;
+	    var squash = getSquashPolicy(config, isOptional);
+	    var replace = getReplace(config, arrayMode, isOptional, squash);
+	
+	    function unwrapShorthand(config) {
+	      var keys = isObject(config) ? objectKeys(config) : [];
+	      var isShorthand = indexOf(keys, "value") === -1 && indexOf(keys, "type") === -1 &&
+	                        indexOf(keys, "squash") === -1 && indexOf(keys, "array") === -1;
+	      if (isShorthand) config = { value: config };
+	      config.$$fn = isInjectable(config.value) ? config.value : function () { return config.value; };
+	      return config;
+	    }
+	
+	    function getType(config, urlType, location) {
+	      if (config.type && urlType) throw new Error("Param '"+id+"' has two type configurations.");
+	      if (urlType) return urlType;
+	      if (!config.type) return (location === "config" ? $types.any : $types.string);
+	      return config.type instanceof Type ? config.type : new Type(config.type);
+	    }
+	
+	    // array config: param name (param[]) overrides default settings.  explicit config overrides param name.
+	    function getArrayMode() {
+	      var arrayDefaults = { array: (location === "search" ? "auto" : false) };
+	      var arrayParamNomenclature = id.match(/\[\]$/) ? { array: true } : {};
+	      return extend(arrayDefaults, arrayParamNomenclature, config).array;
+	    }
+	
+	    /**
+	     * returns false, true, or the squash value to indicate the "default parameter url squash policy".
+	     */
+	    function getSquashPolicy(config, isOptional) {
+	      var squash = config.squash;
+	      if (!isOptional || squash === false) return false;
+	      if (!isDefined(squash) || squash == null) return defaultSquashPolicy;
+	      if (squash === true || isString(squash)) return squash;
+	      throw new Error("Invalid squash policy: '" + squash + "'. Valid policies: false, true, or arbitrary string");
+	    }
+	
+	    function getReplace(config, arrayMode, isOptional, squash) {
+	      var replace, configuredKeys, defaultPolicy = [
+	        { from: "",   to: (isOptional || arrayMode ? undefined : "") },
+	        { from: null, to: (isOptional || arrayMode ? undefined : "") }
+	      ];
+	      replace = isArray(config.replace) ? config.replace : [];
+	      if (isString(squash))
+	        replace.push({ from: squash, to: undefined });
+	      configuredKeys = map(replace, function(item) { return item.from; } );
+	      return filter(defaultPolicy, function(item) { return indexOf(configuredKeys, item.from) === -1; }).concat(replace);
+	    }
+	
+	    /**
+	     * [Internal] Get the default value of a parameter, which may be an injectable function.
+	     */
+	    function $$getDefaultValue() {
+	      if (!injector) throw new Error("Injectable functions cannot be called at configuration time");
+	      var defaultValue = injector.invoke(config.$$fn);
+	      if (defaultValue !== null && defaultValue !== undefined && !self.type.is(defaultValue))
+	        throw new Error("Default value (" + defaultValue + ") for parameter '" + self.id + "' is not an instance of Type (" + self.type.name + ")");
+	      return defaultValue;
+	    }
+	
+	    /**
+	     * [Internal] Gets the decoded representation of a value if the value is defined, otherwise, returns the
+	     * default value, which may be the result of an injectable function.
+	     */
+	    function $value(value) {
+	      function hasReplaceVal(val) { return function(obj) { return obj.from === val; }; }
+	      function $replace(value) {
+	        var replacement = map(filter(self.replace, hasReplaceVal(value)), function(obj) { return obj.to; });
+	        return replacement.length ? replacement[0] : value;
+	      }
+	      value = $replace(value);
+	      return !isDefined(value) ? $$getDefaultValue() : self.type.$normalize(value);
+	    }
+	
+	    function toString() { return "{Param:" + id + " " + type + " squash: '" + squash + "' optional: " + isOptional + "}"; }
+	
+	    extend(this, {
+	      id: id,
+	      type: type,
+	      location: location,
+	      array: arrayMode,
+	      squash: squash,
+	      replace: replace,
+	      isOptional: isOptional,
+	      value: $value,
+	      dynamic: undefined,
+	      config: config,
+	      toString: toString
+	    });
+	  };
+	
+	  function ParamSet(params) {
+	    extend(this, params || {});
+	  }
+	
+	  ParamSet.prototype = {
+	    $$new: function() {
+	      return inherit(this, extend(new ParamSet(), { $$parent: this}));
+	    },
+	    $$keys: function () {
+	      var keys = [], chain = [], parent = this,
+	        ignore = objectKeys(ParamSet.prototype);
+	      while (parent) { chain.push(parent); parent = parent.$$parent; }
+	      chain.reverse();
+	      forEach(chain, function(paramset) {
+	        forEach(objectKeys(paramset), function(key) {
+	            if (indexOf(keys, key) === -1 && indexOf(ignore, key) === -1) keys.push(key);
+	        });
+	      });
+	      return keys;
+	    },
+	    $$values: function(paramValues) {
+	      var values = {}, self = this;
+	      forEach(self.$$keys(), function(key) {
+	        values[key] = self[key].value(paramValues && paramValues[key]);
+	      });
+	      return values;
+	    },
+	    $$equals: function(paramValues1, paramValues2) {
+	      var equal = true, self = this;
+	      forEach(self.$$keys(), function(key) {
+	        var left = paramValues1 && paramValues1[key], right = paramValues2 && paramValues2[key];
+	        if (!self[key].type.equals(left, right)) equal = false;
+	      });
+	      return equal;
+	    },
+	    $$validates: function $$validate(paramValues) {
+	      var keys = this.$$keys(), i, param, rawVal, normalized, encoded;
+	      for (i = 0; i < keys.length; i++) {
+	        param = this[keys[i]];
+	        rawVal = paramValues[keys[i]];
+	        if ((rawVal === undefined || rawVal === null) && param.isOptional)
+	          break; // There was no parameter value, but the param is optional
+	        normalized = param.type.$normalize(rawVal);
+	        if (!param.type.is(normalized))
+	          return false; // The value was not of the correct Type, and could not be decoded to the correct Type
+	        encoded = param.type.encode(normalized);
+	        if (angular.isString(encoded) && !param.type.pattern.exec(encoded))
+	          return false; // The value was of the correct type, but when encoded, did not match the Type's regexp
+	      }
+	      return true;
+	    },
+	    $$parent: undefined
+	  };
+	
+	  this.ParamSet = ParamSet;
+	}
+	
+	// Register as a provider so it's available to other providers
+	angular.module('ui.router.util').provider('$urlMatcherFactory', $UrlMatcherFactory);
+	angular.module('ui.router.util').run(['$urlMatcherFactory', function($urlMatcherFactory) { }]);
+	
+	/**
+	 * @ngdoc object
+	 * @name ui.router.router.$urlRouterProvider
+	 *
+	 * @requires ui.router.util.$urlMatcherFactoryProvider
+	 * @requires $locationProvider
+	 *
+	 * @description
+	 * `$urlRouterProvider` has the responsibility of watching `$location`. 
+	 * When `$location` changes it runs through a list of rules one by one until a 
+	 * match is found. `$urlRouterProvider` is used behind the scenes anytime you specify 
+	 * a url in a state configuration. All urls are compiled into a UrlMatcher object.
+	 *
+	 * There are several methods on `$urlRouterProvider` that make it useful to use directly
+	 * in your module config.
+	 */
+	$UrlRouterProvider.$inject = ['$locationProvider', '$urlMatcherFactoryProvider'];
+	function $UrlRouterProvider(   $locationProvider,   $urlMatcherFactory) {
+	  var rules = [], otherwise = null, interceptDeferred = false, listener;
+	
+	  // Returns a string that is a prefix of all strings matching the RegExp
+	  function regExpPrefix(re) {
+	    var prefix = /^\^((?:\\[^a-zA-Z0-9]|[^\\\[\]\^$*+?.()|{}]+)*)/.exec(re.source);
+	    return (prefix != null) ? prefix[1].replace(/\\(.)/g, "$1") : '';
+	  }
+	
+	  // Interpolates matched values into a String.replace()-style pattern
+	  function interpolate(pattern, match) {
+	    return pattern.replace(/\$(\$|\d{1,2})/, function (m, what) {
+	      return match[what === '$' ? 0 : Number(what)];
+	    });
+	  }
+	
+	  /**
+	   * @ngdoc function
+	   * @name ui.router.router.$urlRouterProvider#rule
+	   * @methodOf ui.router.router.$urlRouterProvider
+	   *
+	   * @description
+	   * Defines rules that are used by `$urlRouterProvider` to find matches for
+	   * specific URLs.
+	   *
+	   * @example
+	   * <pre>
+	   * var app = angular.module('app', ['ui.router.router']);
+	   *
+	   * app.config(function ($urlRouterProvider) {
+	   *   // Here's an example of how you might allow case insensitive urls
+	   *   $urlRouterProvider.rule(function ($injector, $location) {
+	   *     var path = $location.path(),
+	   *         normalized = path.toLowerCase();
+	   *
+	   *     if (path !== normalized) {
+	   *       return normalized;
+	   *     }
+	   *   });
+	   * });
+	   * </pre>
+	   *
+	   * @param {object} rule Handler function that takes `$injector` and `$location`
+	   * services as arguments. You can use them to return a valid path as a string.
+	   *
+	   * @return {object} `$urlRouterProvider` - `$urlRouterProvider` instance
+	   */
+	  this.rule = function (rule) {
+	    if (!isFunction(rule)) throw new Error("'rule' must be a function");
+	    rules.push(rule);
+	    return this;
+	  };
+	
+	  /**
+	   * @ngdoc object
+	   * @name ui.router.router.$urlRouterProvider#otherwise
+	   * @methodOf ui.router.router.$urlRouterProvider
+	   *
+	   * @description
+	   * Defines a path that is used when an invalid route is requested.
+	   *
+	   * @example
+	   * <pre>
+	   * var app = angular.module('app', ['ui.router.router']);
+	   *
+	   * app.config(function ($urlRouterProvider) {
+	   *   // if the path doesn't match any of the urls you configured
+	   *   // otherwise will take care of routing the user to the
+	   *   // specified url
+	   *   $urlRouterProvider.otherwise('/index');
+	   *
+	   *   // Example of using function rule as param
+	   *   $urlRouterProvider.otherwise(function ($injector, $location) {
+	   *     return '/a/valid/url';
+	   *   });
+	   * });
+	   * </pre>
+	   *
+	   * @param {string|object} rule The url path you want to redirect to or a function 
+	   * rule that returns the url path. The function version is passed two params: 
+	   * `$injector` and `$location` services, and must return a url string.
+	   *
+	   * @return {object} `$urlRouterProvider` - `$urlRouterProvider` instance
+	   */
+	  this.otherwise = function (rule) {
+	    if (isString(rule)) {
+	      var redirect = rule;
+	      rule = function () { return redirect; };
+	    }
+	    else if (!isFunction(rule)) throw new Error("'rule' must be a function");
+	    otherwise = rule;
+	    return this;
+	  };
+	
+	
+	  function handleIfMatch($injector, handler, match) {
+	    if (!match) return false;
+	    var result = $injector.invoke(handler, handler, { $match: match });
+	    return isDefined(result) ? result : true;
+	  }
+	
+	  /**
+	   * @ngdoc function
+	   * @name ui.router.router.$urlRouterProvider#when
+	   * @methodOf ui.router.router.$urlRouterProvider
+	   *
+	   * @description
+	   * Registers a handler for a given url matching. if handle is a string, it is
+	   * treated as a redirect, and is interpolated according to the syntax of match
+	   * (i.e. like `String.replace()` for `RegExp`, or like a `UrlMatcher` pattern otherwise).
+	   *
+	   * If the handler is a function, it is injectable. It gets invoked if `$location`
+	   * matches. You have the option of inject the match object as `$match`.
+	   *
+	   * The handler can return
+	   *
+	   * - **falsy** to indicate that the rule didn't match after all, then `$urlRouter`
+	   *   will continue trying to find another one that matches.
+	   * - **string** which is treated as a redirect and passed to `$location.url()`
+	   * - **void** or any **truthy** value tells `$urlRouter` that the url was handled.
+	   *
+	   * @example
+	   * <pre>
+	   * var app = angular.module('app', ['ui.router.router']);
+	   *
+	   * app.config(function ($urlRouterProvider) {
+	   *   $urlRouterProvider.when($state.url, function ($match, $stateParams) {
+	   *     if ($state.$current.navigable !== state ||
+	   *         !equalForKeys($match, $stateParams) {
+	   *      $state.transitionTo(state, $match, false);
+	   *     }
+	   *   });
+	   * });
+	   * </pre>
+	   *
+	   * @param {string|object} what The incoming path that you want to redirect.
+	   * @param {string|object} handler The path you want to redirect your user to.
+	   */
+	  this.when = function (what, handler) {
+	    var redirect, handlerIsString = isString(handler);
+	    if (isString(what)) what = $urlMatcherFactory.compile(what);
+	
+	    if (!handlerIsString && !isFunction(handler) && !isArray(handler))
+	      throw new Error("invalid 'handler' in when()");
+	
+	    var strategies = {
+	      matcher: function (what, handler) {
+	        if (handlerIsString) {
+	          redirect = $urlMatcherFactory.compile(handler);
+	          handler = ['$match', function ($match) { return redirect.format($match); }];
+	        }
+	        return extend(function ($injector, $location) {
+	          return handleIfMatch($injector, handler, what.exec($location.path(), $location.search()));
+	        }, {
+	          prefix: isString(what.prefix) ? what.prefix : ''
+	        });
+	      },
+	      regex: function (what, handler) {
+	        if (what.global || what.sticky) throw new Error("when() RegExp must not be global or sticky");
+	
+	        if (handlerIsString) {
+	          redirect = handler;
+	          handler = ['$match', function ($match) { return interpolate(redirect, $match); }];
+	        }
+	        return extend(function ($injector, $location) {
+	          return handleIfMatch($injector, handler, what.exec($location.path()));
+	        }, {
+	          prefix: regExpPrefix(what)
+	        });
+	      }
+	    };
+	
+	    var check = { matcher: $urlMatcherFactory.isMatcher(what), regex: what instanceof RegExp };
+	
+	    for (var n in check) {
+	      if (check[n]) return this.rule(strategies[n](what, handler));
+	    }
+	
+	    throw new Error("invalid 'what' in when()");
+	  };
+	
+	  /**
+	   * @ngdoc function
+	   * @name ui.router.router.$urlRouterProvider#deferIntercept
+	   * @methodOf ui.router.router.$urlRouterProvider
+	   *
+	   * @description
+	   * Disables (or enables) deferring location change interception.
+	   *
+	   * If you wish to customize the behavior of syncing the URL (for example, if you wish to
+	   * defer a transition but maintain the current URL), call this method at configuration time.
+	   * Then, at run time, call `$urlRouter.listen()` after you have configured your own
+	   * `$locationChangeSuccess` event handler.
+	   *
+	   * @example
+	   * <pre>
+	   * var app = angular.module('app', ['ui.router.router']);
+	   *
+	   * app.config(function ($urlRouterProvider) {
+	   *
+	   *   // Prevent $urlRouter from automatically intercepting URL changes;
+	   *   // this allows you to configure custom behavior in between
+	   *   // location changes and route synchronization:
+	   *   $urlRouterProvider.deferIntercept();
+	   *
+	   * }).run(function ($rootScope, $urlRouter, UserService) {
+	   *
+	   *   $rootScope.$on('$locationChangeSuccess', function(e) {
+	   *     // UserService is an example service for managing user state
+	   *     if (UserService.isLoggedIn()) return;
+	   *
+	   *     // Prevent $urlRouter's default handler from firing
+	   *     e.preventDefault();
+	   *
+	   *     UserService.handleLogin().then(function() {
+	   *       // Once the user has logged in, sync the current URL
+	   *       // to the router:
+	   *       $urlRouter.sync();
+	   *     });
+	   *   });
+	   *
+	   *   // Configures $urlRouter's listener *after* your custom listener
+	   *   $urlRouter.listen();
+	   * });
+	   * </pre>
+	   *
+	   * @param {boolean} defer Indicates whether to defer location change interception. Passing
+	            no parameter is equivalent to `true`.
+	   */
+	  this.deferIntercept = function (defer) {
+	    if (defer === undefined) defer = true;
+	    interceptDeferred = defer;
+	  };
+	
+	  /**
+	   * @ngdoc object
+	   * @name ui.router.router.$urlRouter
+	   *
+	   * @requires $location
+	   * @requires $rootScope
+	   * @requires $injector
+	   * @requires $browser
+	   *
+	   * @description
+	   *
+	   */
+	  this.$get = $get;
+	  $get.$inject = ['$location', '$rootScope', '$injector', '$browser'];
+	  function $get(   $location,   $rootScope,   $injector,   $browser) {
+	
+	    var baseHref = $browser.baseHref(), location = $location.url(), lastPushedUrl;
+	
+	    function appendBasePath(url, isHtml5, absolute) {
+	      if (baseHref === '/') return url;
+	      if (isHtml5) return baseHref.slice(0, -1) + url;
+	      if (absolute) return baseHref.slice(1) + url;
+	      return url;
+	    }
+	
+	    // TODO: Optimize groups of rules with non-empty prefix into some sort of decision tree
+	    function update(evt) {
+	      if (evt && evt.defaultPrevented) return;
+	      var ignoreUpdate = lastPushedUrl && $location.url() === lastPushedUrl;
+	      lastPushedUrl = undefined;
+	      // TODO: Re-implement this in 1.0 for https://github.com/angular-ui/ui-router/issues/1573
+	      //if (ignoreUpdate) return true;
+	
+	      function check(rule) {
+	        var handled = rule($injector, $location);
+	
+	        if (!handled) return false;
+	        if (isString(handled)) $location.replace().url(handled);
+	        return true;
+	      }
+	      var n = rules.length, i;
+	
+	      for (i = 0; i < n; i++) {
+	        if (check(rules[i])) return;
+	      }
+	      // always check otherwise last to allow dynamic updates to the set of rules
+	      if (otherwise) check(otherwise);
+	    }
+	
+	    function listen() {
+	      listener = listener || $rootScope.$on('$locationChangeSuccess', update);
+	      return listener;
+	    }
+	
+	    if (!interceptDeferred) listen();
+	
+	    return {
+	      /**
+	       * @ngdoc function
+	       * @name ui.router.router.$urlRouter#sync
+	       * @methodOf ui.router.router.$urlRouter
+	       *
+	       * @description
+	       * Triggers an update; the same update that happens when the address bar url changes, aka `$locationChangeSuccess`.
+	       * This method is useful when you need to use `preventDefault()` on the `$locationChangeSuccess` event,
+	       * perform some custom logic (route protection, auth, config, redirection, etc) and then finally proceed
+	       * with the transition by calling `$urlRouter.sync()`.
+	       *
+	       * @example
+	       * <pre>
+	       * angular.module('app', ['ui.router'])
+	       *   .run(function($rootScope, $urlRouter) {
+	       *     $rootScope.$on('$locationChangeSuccess', function(evt) {
+	       *       // Halt state change from even starting
+	       *       evt.preventDefault();
+	       *       // Perform custom logic
+	       *       var meetsRequirement = ...
+	       *       // Continue with the update and state transition if logic allows
+	       *       if (meetsRequirement) $urlRouter.sync();
+	       *     });
+	       * });
+	       * </pre>
+	       */
+	      sync: function() {
+	        update();
+	      },
+	
+	      listen: function() {
+	        return listen();
+	      },
+	
+	      update: function(read) {
+	        if (read) {
+	          location = $location.url();
+	          return;
+	        }
+	        if ($location.url() === location) return;
+	
+	        $location.url(location);
+	        $location.replace();
+	      },
+	
+	      push: function(urlMatcher, params, options) {
+	         var url = urlMatcher.format(params || {});
+	
+	        // Handle the special hash param, if needed
+	        if (url !== null && params && params['#']) {
+	            url += '#' + params['#'];
+	        }
+	
+	        $location.url(url);
+	        lastPushedUrl = options && options.$$avoidResync ? $location.url() : undefined;
+	        if (options && options.replace) $location.replace();
+	      },
+	
+	      /**
+	       * @ngdoc function
+	       * @name ui.router.router.$urlRouter#href
+	       * @methodOf ui.router.router.$urlRouter
+	       *
+	       * @description
+	       * A URL generation method that returns the compiled URL for a given
+	       * {@link ui.router.util.type:UrlMatcher `UrlMatcher`}, populated with the provided parameters.
+	       *
+	       * @example
+	       * <pre>
+	       * $bob = $urlRouter.href(new UrlMatcher("/about/:person"), {
+	       *   person: "bob"
+	       * });
+	       * // $bob == "/about/bob";
+	       * </pre>
+	       *
+	       * @param {UrlMatcher} urlMatcher The `UrlMatcher` object which is used as the template of the URL to generate.
+	       * @param {object=} params An object of parameter values to fill the matcher's required parameters.
+	       * @param {object=} options Options object. The options are:
+	       *
+	       * - **`absolute`** - {boolean=false},  If true will generate an absolute url, e.g. "http://www.example.com/fullurl".
+	       *
+	       * @returns {string} Returns the fully compiled URL, or `null` if `params` fail validation against `urlMatcher`
+	       */
+	      href: function(urlMatcher, params, options) {
+	        if (!urlMatcher.validates(params)) return null;
+	
+	        var isHtml5 = $locationProvider.html5Mode();
+	        if (angular.isObject(isHtml5)) {
+	          isHtml5 = isHtml5.enabled;
+	        }
+	        
+	        var url = urlMatcher.format(params);
+	        options = options || {};
+	
+	        if (!isHtml5 && url !== null) {
+	          url = "#" + $locationProvider.hashPrefix() + url;
+	        }
+	
+	        // Handle special hash param, if needed
+	        if (url !== null && params && params['#']) {
+	          url += '#' + params['#'];
+	        }
+	
+	        url = appendBasePath(url, isHtml5, options.absolute);
+	
+	        if (!options.absolute || !url) {
+	          return url;
+	        }
+	
+	        var slash = (!isHtml5 && url ? '/' : ''), port = $location.port();
+	        port = (port === 80 || port === 443 ? '' : ':' + port);
+	
+	        return [$location.protocol(), '://', $location.host(), port, slash, url].join('');
+	      }
+	    };
+	  }
+	}
+	
+	angular.module('ui.router.router').provider('$urlRouter', $UrlRouterProvider);
+	
+	/**
+	 * @ngdoc object
+	 * @name ui.router.state.$stateProvider
+	 *
+	 * @requires ui.router.router.$urlRouterProvider
+	 * @requires ui.router.util.$urlMatcherFactoryProvider
+	 *
+	 * @description
+	 * The new `$stateProvider` works similar to Angular's v1 router, but it focuses purely
+	 * on state.
+	 *
+	 * A state corresponds to a "place" in the application in terms of the overall UI and
+	 * navigation. A state describes (via the controller / template / view properties) what
+	 * the UI looks like and does at that place.
+	 *
+	 * States often have things in common, and the primary way of factoring out these
+	 * commonalities in this model is via the state hierarchy, i.e. parent/child states aka
+	 * nested states.
+	 *
+	 * The `$stateProvider` provides interfaces to declare these states for your app.
+	 */
+	$StateProvider.$inject = ['$urlRouterProvider', '$urlMatcherFactoryProvider'];
+	function $StateProvider(   $urlRouterProvider,   $urlMatcherFactory) {
+	
+	  var root, states = {}, $state, queue = {}, abstractKey = 'abstract';
+	
+	  // Builds state properties from definition passed to registerState()
+	  var stateBuilder = {
+	
+	    // Derive parent state from a hierarchical name only if 'parent' is not explicitly defined.
+	    // state.children = [];
+	    // if (parent) parent.children.push(state);
+	    parent: function(state) {
+	      if (isDefined(state.parent) && state.parent) return findState(state.parent);
+	      // regex matches any valid composite state name
+	      // would match "contact.list" but not "contacts"
+	      var compositeName = /^(.+)\.[^.]+$/.exec(state.name);
+	      return compositeName ? findState(compositeName[1]) : root;
+	    },
+	
+	    // inherit 'data' from parent and override by own values (if any)
+	    data: function(state) {
+	      if (state.parent && state.parent.data) {
+	        state.data = state.self.data = extend({}, state.parent.data, state.data);
+	      }
+	      return state.data;
+	    },
+	
+	    // Build a URLMatcher if necessary, either via a relative or absolute URL
+	    url: function(state) {
+	      var url = state.url, config = { params: state.params || {} };
+	
+	      if (isString(url)) {
+	        if (url.charAt(0) == '^') return $urlMatcherFactory.compile(url.substring(1), config);
+	        return (state.parent.navigable || root).url.concat(url, config);
+	      }
+	
+	      if (!url || $urlMatcherFactory.isMatcher(url)) return url;
+	      throw new Error("Invalid url '" + url + "' in state '" + state + "'");
+	    },
+	
+	    // Keep track of the closest ancestor state that has a URL (i.e. is navigable)
+	    navigable: function(state) {
+	      return state.url ? state : (state.parent ? state.parent.navigable : null);
+	    },
+	
+	    // Own parameters for this state. state.url.params is already built at this point. Create and add non-url params
+	    ownParams: function(state) {
+	      var params = state.url && state.url.params || new $$UMFP.ParamSet();
+	      forEach(state.params || {}, function(config, id) {
+	        if (!params[id]) params[id] = new $$UMFP.Param(id, null, config, "config");
+	      });
+	      return params;
+	    },
+	
+	    // Derive parameters for this state and ensure they're a super-set of parent's parameters
+	    params: function(state) {
+	      return state.parent && state.parent.params ? extend(state.parent.params.$$new(), state.ownParams) : new $$UMFP.ParamSet();
+	    },
+	
+	    // If there is no explicit multi-view configuration, make one up so we don't have
+	    // to handle both cases in the view directive later. Note that having an explicit
+	    // 'views' property will mean the default unnamed view properties are ignored. This
+	    // is also a good time to resolve view names to absolute names, so everything is a
+	    // straight lookup at link time.
+	    views: function(state) {
+	      var views = {};
+	
+	      forEach(isDefined(state.views) ? state.views : { '': state }, function (view, name) {
+	        if (name.indexOf('@') < 0) name += '@' + state.parent.name;
+	        views[name] = view;
+	      });
+	      return views;
+	    },
+	
+	    // Keep a full path from the root down to this state as this is needed for state activation.
+	    path: function(state) {
+	      return state.parent ? state.parent.path.concat(state) : []; // exclude root from path
+	    },
+	
+	    // Speed up $state.contains() as it's used a lot
+	    includes: function(state) {
+	      var includes = state.parent ? extend({}, state.parent.includes) : {};
+	      includes[state.name] = true;
+	      return includes;
+	    },
+	
+	    $delegates: {}
+	  };
+	
+	  function isRelative(stateName) {
+	    return stateName.indexOf(".") === 0 || stateName.indexOf("^") === 0;
+	  }
+	
+	  function findState(stateOrName, base) {
+	    if (!stateOrName) return undefined;
+	
+	    var isStr = isString(stateOrName),
+	        name  = isStr ? stateOrName : stateOrName.name,
+	        path  = isRelative(name);
+	
+	    if (path) {
+	      if (!base) throw new Error("No reference point given for path '"  + name + "'");
+	      base = findState(base);
+	      
+	      var rel = name.split("."), i = 0, pathLength = rel.length, current = base;
+	
+	      for (; i < pathLength; i++) {
+	        if (rel[i] === "" && i === 0) {
+	          current = base;
+	          continue;
+	        }
+	        if (rel[i] === "^") {
+	          if (!current.parent) throw new Error("Path '" + name + "' not valid for state '" + base.name + "'");
+	          current = current.parent;
+	          continue;
+	        }
+	        break;
+	      }
+	      rel = rel.slice(i).join(".");
+	      name = current.name + (current.name && rel ? "." : "") + rel;
+	    }
+	    var state = states[name];
+	
+	    if (state && (isStr || (!isStr && (state === stateOrName || state.self === stateOrName)))) {
+	      return state;
+	    }
+	    return undefined;
+	  }
+	
+	  function queueState(parentName, state) {
+	    if (!queue[parentName]) {
+	      queue[parentName] = [];
+	    }
+	    queue[parentName].push(state);
+	  }
+	
+	  function flushQueuedChildren(parentName) {
+	    var queued = queue[parentName] || [];
+	    while(queued.length) {
+	      registerState(queued.shift());
+	    }
+	  }
+	
+	  function registerState(state) {
+	    // Wrap a new object around the state so we can store our private details easily.
+	    state = inherit(state, {
+	      self: state,
+	      resolve: state.resolve || {},
+	      toString: function() { return this.name; }
+	    });
+	
+	    var name = state.name;
+	    if (!isString(name) || name.indexOf('@') >= 0) throw new Error("State must have a valid name");
+	    if (states.hasOwnProperty(name)) throw new Error("State '" + name + "'' is already defined");
+	
+	    // Get parent name
+	    var parentName = (name.indexOf('.') !== -1) ? name.substring(0, name.lastIndexOf('.'))
+	        : (isString(state.parent)) ? state.parent
+	        : (isObject(state.parent) && isString(state.parent.name)) ? state.parent.name
+	        : '';
+	
+	    // If parent is not registered yet, add state to queue and register later
+	    if (parentName && !states[parentName]) {
+	      return queueState(parentName, state.self);
+	    }
+	
+	    for (var key in stateBuilder) {
+	      if (isFunction(stateBuilder[key])) state[key] = stateBuilder[key](state, stateBuilder.$delegates[key]);
+	    }
+	    states[name] = state;
+	
+	    // Register the state in the global state list and with $urlRouter if necessary.
+	    if (!state[abstractKey] && state.url) {
+	      $urlRouterProvider.when(state.url, ['$match', '$stateParams', function ($match, $stateParams) {
+	        if ($state.$current.navigable != state || !equalForKeys($match, $stateParams)) {
+	          $state.transitionTo(state, $match, { inherit: true, location: false });
+	        }
+	      }]);
+	    }
+	
+	    // Register any queued children
+	    flushQueuedChildren(name);
+	
+	    return state;
+	  }
+	
+	  // Checks text to see if it looks like a glob.
+	  function isGlob (text) {
+	    return text.indexOf('*') > -1;
+	  }
+	
+	  // Returns true if glob matches current $state name.
+	  function doesStateMatchGlob (glob) {
+	    var globSegments = glob.split('.'),
+	        segments = $state.$current.name.split('.');
+	
+	    //match single stars
+	    for (var i = 0, l = globSegments.length; i < l; i++) {
+	      if (globSegments[i] === '*') {
+	        segments[i] = '*';
+	      }
+	    }
+	
+	    //match greedy starts
+	    if (globSegments[0] === '**') {
+	       segments = segments.slice(indexOf(segments, globSegments[1]));
+	       segments.unshift('**');
+	    }
+	    //match greedy ends
+	    if (globSegments[globSegments.length - 1] === '**') {
+	       segments.splice(indexOf(segments, globSegments[globSegments.length - 2]) + 1, Number.MAX_VALUE);
+	       segments.push('**');
+	    }
+	
+	    if (globSegments.length != segments.length) {
+	      return false;
+	    }
+	
+	    return segments.join('') === globSegments.join('');
+	  }
+	
+	
+	  // Implicit root state that is always active
+	  root = registerState({
+	    name: '',
+	    url: '^',
+	    views: null,
+	    'abstract': true
+	  });
+	  root.navigable = null;
+	
+	
+	  /**
+	   * @ngdoc function
+	   * @name ui.router.state.$stateProvider#decorator
+	   * @methodOf ui.router.state.$stateProvider
+	   *
+	   * @description
+	   * Allows you to extend (carefully) or override (at your own peril) the 
+	   * `stateBuilder` object used internally by `$stateProvider`. This can be used 
+	   * to add custom functionality to ui-router, for example inferring templateUrl 
+	   * based on the state name.
+	   *
+	   * When passing only a name, it returns the current (original or decorated) builder
+	   * function that matches `name`.
+	   *
+	   * The builder functions that can be decorated are listed below. Though not all
+	   * necessarily have a good use case for decoration, that is up to you to decide.
+	   *
+	   * In addition, users can attach custom decorators, which will generate new 
+	   * properties within the state's internal definition. There is currently no clear 
+	   * use-case for this beyond accessing internal states (i.e. $state.$current), 
+	   * however, expect this to become increasingly relevant as we introduce additional 
+	   * meta-programming features.
+	   *
+	   * **Warning**: Decorators should not be interdependent because the order of 
+	   * execution of the builder functions in non-deterministic. Builder functions 
+	   * should only be dependent on the state definition object and super function.
+	   *
+	   *
+	   * Existing builder functions and current return values:
+	   *
+	   * - **parent** `{object}` - returns the parent state object.
+	   * - **data** `{object}` - returns state data, including any inherited data that is not
+	   *   overridden by own values (if any).
+	   * - **url** `{object}` - returns a {@link ui.router.util.type:UrlMatcher UrlMatcher}
+	   *   or `null`.
+	   * - **navigable** `{object}` - returns closest ancestor state that has a URL (aka is 
+	   *   navigable).
+	   * - **params** `{object}` - returns an array of state params that are ensured to 
+	   *   be a super-set of parent's params.
+	   * - **views** `{object}` - returns a views object where each key is an absolute view 
+	   *   name (i.e. "viewName@stateName") and each value is the config object 
+	   *   (template, controller) for the view. Even when you don't use the views object 
+	   *   explicitly on a state config, one is still created for you internally.
+	   *   So by decorating this builder function you have access to decorating template 
+	   *   and controller properties.
+	   * - **ownParams** `{object}` - returns an array of params that belong to the state, 
+	   *   not including any params defined by ancestor states.
+	   * - **path** `{string}` - returns the full path from the root down to this state. 
+	   *   Needed for state activation.
+	   * - **includes** `{object}` - returns an object that includes every state that 
+	   *   would pass a `$state.includes()` test.
+	   *
+	   * @example
+	   * <pre>
+	   * // Override the internal 'views' builder with a function that takes the state
+	   * // definition, and a reference to the internal function being overridden:
+	   * $stateProvider.decorator('views', function (state, parent) {
+	   *   var result = {},
+	   *       views = parent(state);
+	   *
+	   *   angular.forEach(views, function (config, name) {
+	   *     var autoName = (state.name + '.' + name).replace('.', '/');
+	   *     config.templateUrl = config.templateUrl || '/partials/' + autoName + '.html';
+	   *     result[name] = config;
+	   *   });
+	   *   return result;
+	   * });
+	   *
+	   * $stateProvider.state('home', {
+	   *   views: {
+	   *     'contact.list': { controller: 'ListController' },
+	   *     'contact.item': { controller: 'ItemController' }
+	   *   }
+	   * });
+	   *
+	   * // ...
+	   *
+	   * $state.go('home');
+	   * // Auto-populates list and item views with /partials/home/contact/list.html,
+	   * // and /partials/home/contact/item.html, respectively.
+	   * </pre>
+	   *
+	   * @param {string} name The name of the builder function to decorate. 
+	   * @param {object} func A function that is responsible for decorating the original 
+	   * builder function. The function receives two parameters:
+	   *
+	   *   - `{object}` - state - The state config object.
+	   *   - `{object}` - super - The original builder function.
+	   *
+	   * @return {object} $stateProvider - $stateProvider instance
+	   */
+	  this.decorator = decorator;
+	  function decorator(name, func) {
+	    /*jshint validthis: true */
+	    if (isString(name) && !isDefined(func)) {
+	      return stateBuilder[name];
+	    }
+	    if (!isFunction(func) || !isString(name)) {
+	      return this;
+	    }
+	    if (stateBuilder[name] && !stateBuilder.$delegates[name]) {
+	      stateBuilder.$delegates[name] = stateBuilder[name];
+	    }
+	    stateBuilder[name] = func;
+	    return this;
+	  }
+	
+	  /**
+	   * @ngdoc function
+	   * @name ui.router.state.$stateProvider#state
+	   * @methodOf ui.router.state.$stateProvider
+	   *
+	   * @description
+	   * Registers a state configuration under a given state name. The stateConfig object
+	   * has the following acceptable properties.
+	   *
+	   * @param {string} name A unique state name, e.g. "home", "about", "contacts".
+	   * To create a parent/child state use a dot, e.g. "about.sales", "home.newest".
+	   * @param {object} stateConfig State configuration object.
+	   * @param {string|function=} stateConfig.template
+	   * <a id='template'></a>
+	   *   html template as a string or a function that returns
+	   *   an html template as a string which should be used by the uiView directives. This property 
+	   *   takes precedence over templateUrl.
+	   *   
+	   *   If `template` is a function, it will be called with the following parameters:
+	   *
+	   *   - {array.&lt;object&gt;} - state parameters extracted from the current $location.path() by
+	   *     applying the current state
+	   *
+	   * <pre>template:
+	   *   "<h1>inline template definition</h1>" +
+	   *   "<div ui-view></div>"</pre>
+	   * <pre>template: function(params) {
+	   *       return "<h1>generated template</h1>"; }</pre>
+	   * </div>
+	   *
+	   * @param {string|function=} stateConfig.templateUrl
+	   * <a id='templateUrl'></a>
+	   *
+	   *   path or function that returns a path to an html
+	   *   template that should be used by uiView.
+	   *   
+	   *   If `templateUrl` is a function, it will be called with the following parameters:
+	   *
+	   *   - {array.&lt;object&gt;} - state parameters extracted from the current $location.path() by 
+	   *     applying the current state
+	   *
+	   * <pre>templateUrl: "home.html"</pre>
+	   * <pre>templateUrl: function(params) {
+	   *     return myTemplates[params.pageId]; }</pre>
+	   *
+	   * @param {function=} stateConfig.templateProvider
+	   * <a id='templateProvider'></a>
+	   *    Provider function that returns HTML content string.
+	   * <pre> templateProvider:
+	   *       function(MyTemplateService, params) {
+	   *         return MyTemplateService.getTemplate(params.pageId);
+	   *       }</pre>
+	   *
+	   * @param {string|function=} stateConfig.controller
+	   * <a id='controller'></a>
+	   *
+	   *  Controller fn that should be associated with newly
+	   *   related scope or the name of a registered controller if passed as a string.
+	   *   Optionally, the ControllerAs may be declared here.
+	   * <pre>controller: "MyRegisteredController"</pre>
+	   * <pre>controller:
+	   *     "MyRegisteredController as fooCtrl"}</pre>
+	   * <pre>controller: function($scope, MyService) {
+	   *     $scope.data = MyService.getData(); }</pre>
+	   *
+	   * @param {function=} stateConfig.controllerProvider
+	   * <a id='controllerProvider'></a>
+	   *
+	   * Injectable provider function that returns the actual controller or string.
+	   * <pre>controllerProvider:
+	   *   function(MyResolveData) {
+	   *     if (MyResolveData.foo)
+	   *       return "FooCtrl"
+	   *     else if (MyResolveData.bar)
+	   *       return "BarCtrl";
+	   *     else return function($scope) {
+	   *       $scope.baz = "Qux";
+	   *     }
+	   *   }</pre>
+	   *
+	   * @param {string=} stateConfig.controllerAs
+	   * <a id='controllerAs'></a>
+	   * 
+	   * A controller alias name. If present the controller will be
+	   *   published to scope under the controllerAs name.
+	   * <pre>controllerAs: "myCtrl"</pre>
+	   *
+	   * @param {string|object=} stateConfig.parent
+	   * <a id='parent'></a>
+	   * Optionally specifies the parent state of this state.
+	   *
+	   * <pre>parent: 'parentState'</pre>
+	   * <pre>parent: parentState // JS variable</pre>
+	   *
+	   * @param {object=} stateConfig.resolve
+	   * <a id='resolve'></a>
+	   *
+	   * An optional map&lt;string, function&gt; of dependencies which
+	   *   should be injected into the controller. If any of these dependencies are promises, 
+	   *   the router will wait for them all to be resolved before the controller is instantiated.
+	   *   If all the promises are resolved successfully, the $stateChangeSuccess event is fired
+	   *   and the values of the resolved promises are injected into any controllers that reference them.
+	   *   If any  of the promises are rejected the $stateChangeError event is fired.
+	   *
+	   *   The map object is:
+	   *   
+	   *   - key - {string}: name of dependency to be injected into controller
+	   *   - factory - {string|function}: If string then it is alias for service. Otherwise if function, 
+	   *     it is injected and return value it treated as dependency. If result is a promise, it is 
+	   *     resolved before its value is injected into controller.
+	   *
+	   * <pre>resolve: {
+	   *     myResolve1:
+	   *       function($http, $stateParams) {
+	   *         return $http.get("/api/foos/"+stateParams.fooID);
+	   *       }
+	   *     }</pre>
+	   *
+	   * @param {string=} stateConfig.url
+	   * <a id='url'></a>
+	   *
+	   *   A url fragment with optional parameters. When a state is navigated or
+	   *   transitioned to, the `$stateParams` service will be populated with any 
+	   *   parameters that were passed.
+	   *
+	   *   (See {@link ui.router.util.type:UrlMatcher UrlMatcher} `UrlMatcher`} for
+	   *   more details on acceptable patterns )
+	   *
+	   * examples:
+	   * <pre>url: "/home"
+	   * url: "/users/:userid"
+	   * url: "/books/{bookid:[a-zA-Z_-]}"
+	   * url: "/books/{categoryid:int}"
+	   * url: "/books/{publishername:string}/{categoryid:int}"
+	   * url: "/messages?before&after"
+	   * url: "/messages?{before:date}&{after:date}"
+	   * url: "/messages/:mailboxid?{before:date}&{after:date}"
+	   * </pre>
+	   *
+	   * @param {object=} stateConfig.views
+	   * <a id='views'></a>
+	   * an optional map&lt;string, object&gt; which defined multiple views, or targets views
+	   * manually/explicitly.
+	   *
+	   * Examples:
+	   *
+	   * Targets three named `ui-view`s in the parent state's template
+	   * <pre>views: {
+	   *     header: {
+	   *       controller: "headerCtrl",
+	   *       templateUrl: "header.html"
+	   *     }, body: {
+	   *       controller: "bodyCtrl",
+	   *       templateUrl: "body.html"
+	   *     }, footer: {
+	   *       controller: "footCtrl",
+	   *       templateUrl: "footer.html"
+	   *     }
+	   *   }</pre>
+	   *
+	   * Targets named `ui-view="header"` from grandparent state 'top''s template, and named `ui-view="body" from parent state's template.
+	   * <pre>views: {
+	   *     'header@top': {
+	   *       controller: "msgHeaderCtrl",
+	   *       templateUrl: "msgHeader.html"
+	   *     }, 'body': {
+	   *       controller: "messagesCtrl",
+	   *       templateUrl: "messages.html"
+	   *     }
+	   *   }</pre>
+	   *
+	   * @param {boolean=} [stateConfig.abstract=false]
+	   * <a id='abstract'></a>
+	   * An abstract state will never be directly activated,
+	   *   but can provide inherited properties to its common children states.
+	   * <pre>abstract: true</pre>
+	   *
+	   * @param {function=} stateConfig.onEnter
+	   * <a id='onEnter'></a>
+	   *
+	   * Callback function for when a state is entered. Good way
+	   *   to trigger an action or dispatch an event, such as opening a dialog.
+	   * If minifying your scripts, make sure to explictly annotate this function,
+	   * because it won't be automatically annotated by your build tools.
+	   *
+	   * <pre>onEnter: function(MyService, $stateParams) {
+	   *     MyService.foo($stateParams.myParam);
+	   * }</pre>
+	   *
+	   * @param {function=} stateConfig.onExit
+	   * <a id='onExit'></a>
+	   *
+	   * Callback function for when a state is exited. Good way to
+	   *   trigger an action or dispatch an event, such as opening a dialog.
+	   * If minifying your scripts, make sure to explictly annotate this function,
+	   * because it won't be automatically annotated by your build tools.
+	   *
+	   * <pre>onExit: function(MyService, $stateParams) {
+	   *     MyService.cleanup($stateParams.myParam);
+	   * }</pre>
+	   *
+	   * @param {boolean=} [stateConfig.reloadOnSearch=true]
+	   * <a id='reloadOnSearch'></a>
+	   *
+	   * If `false`, will not retrigger the same state
+	   *   just because a search/query parameter has changed (via $location.search() or $location.hash()). 
+	   *   Useful for when you'd like to modify $location.search() without triggering a reload.
+	   * <pre>reloadOnSearch: false</pre>
+	   *
+	   * @param {object=} stateConfig.data
+	   * <a id='data'></a>
+	   *
+	   * Arbitrary data object, useful for custom configuration.  The parent state's `data` is
+	   *   prototypally inherited.  In other words, adding a data property to a state adds it to
+	   *   the entire subtree via prototypal inheritance.
+	   *
+	   * <pre>data: {
+	   *     requiredRole: 'foo'
+	   * } </pre>
+	   *
+	   * @param {object=} stateConfig.params
+	   * <a id='params'></a>
+	   *
+	   * A map which optionally configures parameters declared in the `url`, or
+	   *   defines additional non-url parameters.  For each parameter being
+	   *   configured, add a configuration object keyed to the name of the parameter.
+	   *
+	   *   Each parameter configuration object may contain the following properties:
+	   *
+	   *   - ** value ** - {object|function=}: specifies the default value for this
+	   *     parameter.  This implicitly sets this parameter as optional.
+	   *
+	   *     When UI-Router routes to a state and no value is
+	   *     specified for this parameter in the URL or transition, the
+	   *     default value will be used instead.  If `value` is a function,
+	   *     it will be injected and invoked, and the return value used.
+	   *
+	   *     *Note*: `undefined` is treated as "no default value" while `null`
+	   *     is treated as "the default value is `null`".
+	   *
+	   *     *Shorthand*: If you only need to configure the default value of the
+	   *     parameter, you may use a shorthand syntax.   In the **`params`**
+	   *     map, instead mapping the param name to a full parameter configuration
+	   *     object, simply set map it to the default parameter value, e.g.:
+	   *
+	   * <pre>// define a parameter's default value
+	   * params: {
+	   *     param1: { value: "defaultValue" }
+	   * }
+	   * // shorthand default values
+	   * params: {
+	   *     param1: "defaultValue",
+	   *     param2: "param2Default"
+	   * }</pre>
+	   *
+	   *   - ** array ** - {boolean=}: *(default: false)* If true, the param value will be
+	   *     treated as an array of values.  If you specified a Type, the value will be
+	   *     treated as an array of the specified Type.  Note: query parameter values
+	   *     default to a special `"auto"` mode.
+	   *
+	   *     For query parameters in `"auto"` mode, if multiple  values for a single parameter
+	   *     are present in the URL (e.g.: `/foo?bar=1&bar=2&bar=3`) then the values
+	   *     are mapped to an array (e.g.: `{ foo: [ '1', '2', '3' ] }`).  However, if
+	   *     only one value is present (e.g.: `/foo?bar=1`) then the value is treated as single
+	   *     value (e.g.: `{ foo: '1' }`).
+	   *
+	   * <pre>params: {
+	   *     param1: { array: true }
+	   * }</pre>
+	   *
+	   *   - ** squash ** - {bool|string=}: `squash` configures how a default parameter value is represented in the URL when
+	   *     the current parameter value is the same as the default value. If `squash` is not set, it uses the
+	   *     configured default squash policy.
+	   *     (See {@link ui.router.util.$urlMatcherFactory#methods_defaultSquashPolicy `defaultSquashPolicy()`})
+	   *
+	   *   There are three squash settings:
+	   *
+	   *     - false: The parameter's default value is not squashed.  It is encoded and included in the URL
+	   *     - true: The parameter's default value is omitted from the URL.  If the parameter is preceeded and followed
+	   *       by slashes in the state's `url` declaration, then one of those slashes are omitted.
+	   *       This can allow for cleaner looking URLs.
+	   *     - `"<arbitrary string>"`: The parameter's default value is replaced with an arbitrary placeholder of  your choice.
+	   *
+	   * <pre>params: {
+	   *     param1: {
+	   *       value: "defaultId",
+	   *       squash: true
+	   * } }
+	   * // squash "defaultValue" to "~"
+	   * params: {
+	   *     param1: {
+	   *       value: "defaultValue",
+	   *       squash: "~"
+	   * } }
+	   * </pre>
+	   *
+	   *
+	   * @example
+	   * <pre>
+	   * // Some state name examples
+	   *
+	   * // stateName can be a single top-level name (must be unique).
+	   * $stateProvider.state("home", {});
+	   *
+	   * // Or it can be a nested state name. This state is a child of the
+	   * // above "home" state.
+	   * $stateProvider.state("home.newest", {});
+	   *
+	   * // Nest states as deeply as needed.
+	   * $stateProvider.state("home.newest.abc.xyz.inception", {});
+	   *
+	   * // state() returns $stateProvider, so you can chain state declarations.
+	   * $stateProvider
+	   *   .state("home", {})
+	   *   .state("about", {})
+	   *   .state("contacts", {});
+	   * </pre>
+	   *
+	   */
+	  this.state = state;
+	  function state(name, definition) {
+	    /*jshint validthis: true */
+	    if (isObject(name)) definition = name;
+	    else definition.name = name;
+	    registerState(definition);
+	    return this;
+	  }
+	
+	  /**
+	   * @ngdoc object
+	   * @name ui.router.state.$state
+	   *
+	   * @requires $rootScope
+	   * @requires $q
+	   * @requires ui.router.state.$view
+	   * @requires $injector
+	   * @requires ui.router.util.$resolve
+	   * @requires ui.router.state.$stateParams
+	   * @requires ui.router.router.$urlRouter
+	   *
+	   * @property {object} params A param object, e.g. {sectionId: section.id)}, that 
+	   * you'd like to test against the current active state.
+	   * @property {object} current A reference to the state's config object. However 
+	   * you passed it in. Useful for accessing custom data.
+	   * @property {object} transition Currently pending transition. A promise that'll 
+	   * resolve or reject.
+	   *
+	   * @description
+	   * `$state` service is responsible for representing states as well as transitioning
+	   * between them. It also provides interfaces to ask for current state or even states
+	   * you're coming from.
+	   */
+	  this.$get = $get;
+	  $get.$inject = ['$rootScope', '$q', '$view', '$injector', '$resolve', '$stateParams', '$urlRouter', '$location', '$urlMatcherFactory'];
+	  function $get(   $rootScope,   $q,   $view,   $injector,   $resolve,   $stateParams,   $urlRouter,   $location,   $urlMatcherFactory) {
+	
+	    var TransitionSuperseded = $q.reject(new Error('transition superseded'));
+	    var TransitionPrevented = $q.reject(new Error('transition prevented'));
+	    var TransitionAborted = $q.reject(new Error('transition aborted'));
+	    var TransitionFailed = $q.reject(new Error('transition failed'));
+	
+	    // Handles the case where a state which is the target of a transition is not found, and the user
+	    // can optionally retry or defer the transition
+	    function handleRedirect(redirect, state, params, options) {
+	      /**
+	       * @ngdoc event
+	       * @name ui.router.state.$state#$stateNotFound
+	       * @eventOf ui.router.state.$state
+	       * @eventType broadcast on root scope
+	       * @description
+	       * Fired when a requested state **cannot be found** using the provided state name during transition.
+	       * The event is broadcast allowing any handlers a single chance to deal with the error (usually by
+	       * lazy-loading the unfound state). A special `unfoundState` object is passed to the listener handler,
+	       * you can see its three properties in the example. You can use `event.preventDefault()` to abort the
+	       * transition and the promise returned from `go` will be rejected with a `'transition aborted'` value.
+	       *
+	       * @param {Object} event Event object.
+	       * @param {Object} unfoundState Unfound State information. Contains: `to, toParams, options` properties.
+	       * @param {State} fromState Current state object.
+	       * @param {Object} fromParams Current state params.
+	       *
+	       * @example
+	       *
+	       * <pre>
+	       * // somewhere, assume lazy.state has not been defined
+	       * $state.go("lazy.state", {a:1, b:2}, {inherit:false});
+	       *
+	       * // somewhere else
+	       * $scope.$on('$stateNotFound',
+	       * function(event, unfoundState, fromState, fromParams){
+	       *     console.log(unfoundState.to); // "lazy.state"
+	       *     console.log(unfoundState.toParams); // {a:1, b:2}
+	       *     console.log(unfoundState.options); // {inherit:false} + default options
+	       * })
+	       * </pre>
+	       */
+	      var evt = $rootScope.$broadcast('$stateNotFound', redirect, state, params);
+	
+	      if (evt.defaultPrevented) {
+	        $urlRouter.update();
+	        return TransitionAborted;
+	      }
+	
+	      if (!evt.retry) {
+	        return null;
+	      }
+	
+	      // Allow the handler to return a promise to defer state lookup retry
+	      if (options.$retry) {
+	        $urlRouter.update();
+	        return TransitionFailed;
+	      }
+	      var retryTransition = $state.transition = $q.when(evt.retry);
+	
+	      retryTransition.then(function() {
+	        if (retryTransition !== $state.transition) return TransitionSuperseded;
+	        redirect.options.$retry = true;
+	        return $state.transitionTo(redirect.to, redirect.toParams, redirect.options);
+	      }, function() {
+	        return TransitionAborted;
+	      });
+	      $urlRouter.update();
+	
+	      return retryTransition;
+	    }
+	
+	    root.locals = { resolve: null, globals: { $stateParams: {} } };
+	
+	    $state = {
+	      params: {},
+	      current: root.self,
+	      $current: root,
+	      transition: null
+	    };
+	
+	    /**
+	     * @ngdoc function
+	     * @name ui.router.state.$state#reload
+	     * @methodOf ui.router.state.$state
+	     *
+	     * @description
+	     * A method that force reloads the current state. All resolves are re-resolved,
+	     * controllers reinstantiated, and events re-fired.
+	     *
+	     * @example
+	     * <pre>
+	     * var app angular.module('app', ['ui.router']);
+	     *
+	     * app.controller('ctrl', function ($scope, $state) {
+	     *   $scope.reload = function(){
+	     *     $state.reload();
+	     *   }
+	     * });
+	     * </pre>
+	     *
+	     * `reload()` is just an alias for:
+	     * <pre>
+	     * $state.transitionTo($state.current, $stateParams, { 
+	     *   reload: true, inherit: false, notify: true
+	     * });
+	     * </pre>
+	     *
+	     * @param {string=|object=} state - A state name or a state object, which is the root of the resolves to be re-resolved.
+	     * @example
+	     * <pre>
+	     * //assuming app application consists of 3 states: 'contacts', 'contacts.detail', 'contacts.detail.item' 
+	     * //and current state is 'contacts.detail.item'
+	     * var app angular.module('app', ['ui.router']);
+	     *
+	     * app.controller('ctrl', function ($scope, $state) {
+	     *   $scope.reload = function(){
+	     *     //will reload 'contact.detail' and 'contact.detail.item' states
+	     *     $state.reload('contact.detail');
+	     *   }
+	     * });
+	     * </pre>
+	     *
+	     * `reload()` is just an alias for:
+	     * <pre>
+	     * $state.transitionTo($state.current, $stateParams, { 
+	     *   reload: true, inherit: false, notify: true
+	     * });
+	     * </pre>
+	
+	     * @returns {promise} A promise representing the state of the new transition. See
+	     * {@link ui.router.state.$state#methods_go $state.go}.
+	     */
+	    $state.reload = function reload(state) {
+	      return $state.transitionTo($state.current, $stateParams, { reload: state || true, inherit: false, notify: true});
+	    };
+	
+	    /**
+	     * @ngdoc function
+	     * @name ui.router.state.$state#go
+	     * @methodOf ui.router.state.$state
+	     *
+	     * @description
+	     * Convenience method for transitioning to a new state. `$state.go` calls 
+	     * `$state.transitionTo` internally but automatically sets options to 
+	     * `{ location: true, inherit: true, relative: $state.$current, notify: true }`. 
+	     * This allows you to easily use an absolute or relative to path and specify 
+	     * only the parameters you'd like to update (while letting unspecified parameters 
+	     * inherit from the currently active ancestor states).
+	     *
+	     * @example
+	     * <pre>
+	     * var app = angular.module('app', ['ui.router']);
+	     *
+	     * app.controller('ctrl', function ($scope, $state) {
+	     *   $scope.changeState = function () {
+	     *     $state.go('contact.detail');
+	     *   };
+	     * });
+	     * </pre>
+	     * <img src='../ngdoc_assets/StateGoExamples.png'/>
+	     *
+	     * @param {string} to Absolute state name or relative state path. Some examples:
+	     *
+	     * - `$state.go('contact.detail')` - will go to the `contact.detail` state
+	     * - `$state.go('^')` - will go to a parent state
+	     * - `$state.go('^.sibling')` - will go to a sibling state
+	     * - `$state.go('.child.grandchild')` - will go to grandchild state
+	     *
+	     * @param {object=} params A map of the parameters that will be sent to the state, 
+	     * will populate $stateParams. Any parameters that are not specified will be inherited from currently 
+	     * defined parameters. This allows, for example, going to a sibling state that shares parameters
+	     * specified in a parent state. Parameter inheritance only works between common ancestor states, I.e.
+	     * transitioning to a sibling will get you the parameters for all parents, transitioning to a child
+	     * will get you all current parameters, etc.
+	     * @param {object=} options Options object. The options are:
+	     *
+	     * - **`location`** - {boolean=true|string=} - If `true` will update the url in the location bar, if `false`
+	     *    will not. If string, must be `"replace"`, which will update url and also replace last history record.
+	     * - **`inherit`** - {boolean=true}, If `true` will inherit url parameters from current url.
+	     * - **`relative`** - {object=$state.$current}, When transitioning with relative path (e.g '^'), 
+	     *    defines which state to be relative from.
+	     * - **`notify`** - {boolean=true}, If `true` will broadcast $stateChangeStart and $stateChangeSuccess events.
+	     * - **`reload`** (v0.2.5) - {boolean=false}, If `true` will force transition even if the state or params 
+	     *    have not changed, aka a reload of the same state. It differs from reloadOnSearch because you'd
+	     *    use this when you want to force a reload when *everything* is the same, including search params.
+	     *
+	     * @returns {promise} A promise representing the state of the new transition.
+	     *
+	     * Possible success values:
+	     *
+	     * - $state.current
+	     *
+	     * <br/>Possible rejection values:
+	     *
+	     * - 'transition superseded' - when a newer transition has been started after this one
+	     * - 'transition prevented' - when `event.preventDefault()` has been called in a `$stateChangeStart` listener
+	     * - 'transition aborted' - when `event.preventDefault()` has been called in a `$stateNotFound` listener or
+	     *   when a `$stateNotFound` `event.retry` promise errors.
+	     * - 'transition failed' - when a state has been unsuccessfully found after 2 tries.
+	     * - *resolve error* - when an error has occurred with a `resolve`
+	     *
+	     */
+	    $state.go = function go(to, params, options) {
+	      return $state.transitionTo(to, params, extend({ inherit: true, relative: $state.$current }, options));
+	    };
+	
+	    /**
+	     * @ngdoc function
+	     * @name ui.router.state.$state#transitionTo
+	     * @methodOf ui.router.state.$state
+	     *
+	     * @description
+	     * Low-level method for transitioning to a new state. {@link ui.router.state.$state#methods_go $state.go}
+	     * uses `transitionTo` internally. `$state.go` is recommended in most situations.
+	     *
+	     * @example
+	     * <pre>
+	     * var app = angular.module('app', ['ui.router']);
+	     *
+	     * app.controller('ctrl', function ($scope, $state) {
+	     *   $scope.changeState = function () {
+	     *     $state.transitionTo('contact.detail');
+	     *   };
+	     * });
+	     * </pre>
+	     *
+	     * @param {string} to State name.
+	     * @param {object=} toParams A map of the parameters that will be sent to the state,
+	     * will populate $stateParams.
+	     * @param {object=} options Options object. The options are:
+	     *
+	     * - **`location`** - {boolean=true|string=} - If `true` will update the url in the location bar, if `false`
+	     *    will not. If string, must be `"replace"`, which will update url and also replace last history record.
+	     * - **`inherit`** - {boolean=false}, If `true` will inherit url parameters from current url.
+	     * - **`relative`** - {object=}, When transitioning with relative path (e.g '^'), 
+	     *    defines which state to be relative from.
+	     * - **`notify`** - {boolean=true}, If `true` will broadcast $stateChangeStart and $stateChangeSuccess events.
+	     * - **`reload`** (v0.2.5) - {boolean=false|string=|object=}, If `true` will force transition even if the state or params 
+	     *    have not changed, aka a reload of the same state. It differs from reloadOnSearch because you'd
+	     *    use this when you want to force a reload when *everything* is the same, including search params.
+	     *    if String, then will reload the state with the name given in reload, and any children.
+	     *    if Object, then a stateObj is expected, will reload the state found in stateObj, and any children.
+	     *
+	     * @returns {promise} A promise representing the state of the new transition. See
+	     * {@link ui.router.state.$state#methods_go $state.go}.
+	     */
+	    $state.transitionTo = function transitionTo(to, toParams, options) {
+	      toParams = toParams || {};
+	      options = extend({
+	        location: true, inherit: false, relative: null, notify: true, reload: false, $retry: false
+	      }, options || {});
+	
+	      var from = $state.$current, fromParams = $state.params, fromPath = from.path;
+	      var evt, toState = findState(to, options.relative);
+	
+	      // Store the hash param for later (since it will be stripped out by various methods)
+	      var hash = toParams['#'];
+	
+	      if (!isDefined(toState)) {
+	        var redirect = { to: to, toParams: toParams, options: options };
+	        var redirectResult = handleRedirect(redirect, from.self, fromParams, options);
+	
+	        if (redirectResult) {
+	          return redirectResult;
+	        }
+	
+	        // Always retry once if the $stateNotFound was not prevented
+	        // (handles either redirect changed or state lazy-definition)
+	        to = redirect.to;
+	        toParams = redirect.toParams;
+	        options = redirect.options;
+	        toState = findState(to, options.relative);
+	
+	        if (!isDefined(toState)) {
+	          if (!options.relative) throw new Error("No such state '" + to + "'");
+	          throw new Error("Could not resolve '" + to + "' from state '" + options.relative + "'");
+	        }
+	      }
+	      if (toState[abstractKey]) throw new Error("Cannot transition to abstract state '" + to + "'");
+	      if (options.inherit) toParams = inheritParams($stateParams, toParams || {}, $state.$current, toState);
+	      if (!toState.params.$$validates(toParams)) return TransitionFailed;
+	
+	      toParams = toState.params.$$values(toParams);
+	      to = toState;
+	
+	      var toPath = to.path;
+	
+	      // Starting from the root of the path, keep all levels that haven't changed
+	      var keep = 0, state = toPath[keep], locals = root.locals, toLocals = [];
+	
+	      if (!options.reload) {
+	        while (state && state === fromPath[keep] && state.ownParams.$$equals(toParams, fromParams)) {
+	          locals = toLocals[keep] = state.locals;
+	          keep++;
+	          state = toPath[keep];
+	        }
+	      } else if (isString(options.reload) || isObject(options.reload)) {
+	        if (isObject(options.reload) && !options.reload.name) {
+	          throw new Error('Invalid reload state object');
+	        }
+	        
+	        var reloadState = options.reload === true ? fromPath[0] : findState(options.reload);
+	        if (options.reload && !reloadState) {
+	          throw new Error("No such reload state '" + (isString(options.reload) ? options.reload : options.reload.name) + "'");
+	        }
+	
+	        while (state && state === fromPath[keep] && state !== reloadState) {
+	          locals = toLocals[keep] = state.locals;
+	          keep++;
+	          state = toPath[keep];
+	        }
+	      }
+	
+	      // If we're going to the same state and all locals are kept, we've got nothing to do.
+	      // But clear 'transition', as we still want to cancel any other pending transitions.
+	      // TODO: We may not want to bump 'transition' if we're called from a location change
+	      // that we've initiated ourselves, because we might accidentally abort a legitimate
+	      // transition initiated from code?
+	      if (shouldSkipReload(to, toParams, from, fromParams, locals, options)) {
+	        if (hash) toParams['#'] = hash;
+	        $state.params = toParams;
+	        copy($state.params, $stateParams);
+	        if (options.location && to.navigable && to.navigable.url) {
+	          $urlRouter.push(to.navigable.url, toParams, {
+	            $$avoidResync: true, replace: options.location === 'replace'
+	          });
+	          $urlRouter.update(true);
+	        }
+	        $state.transition = null;
+	        return $q.when($state.current);
+	      }
+	
+	      // Filter parameters before we pass them to event handlers etc.
+	      toParams = filterByKeys(to.params.$$keys(), toParams || {});
+	
+	      // Broadcast start event and cancel the transition if requested
+	      if (options.notify) {
+	        /**
+	         * @ngdoc event
+	         * @name ui.router.state.$state#$stateChangeStart
+	         * @eventOf ui.router.state.$state
+	         * @eventType broadcast on root scope
+	         * @description
+	         * Fired when the state transition **begins**. You can use `event.preventDefault()`
+	         * to prevent the transition from happening and then the transition promise will be
+	         * rejected with a `'transition prevented'` value.
+	         *
+	         * @param {Object} event Event object.
+	         * @param {State} toState The state being transitioned to.
+	         * @param {Object} toParams The params supplied to the `toState`.
+	         * @param {State} fromState The current state, pre-transition.
+	         * @param {Object} fromParams The params supplied to the `fromState`.
+	         *
+	         * @example
+	         *
+	         * <pre>
+	         * $rootScope.$on('$stateChangeStart',
+	         * function(event, toState, toParams, fromState, fromParams){
+	         *     event.preventDefault();
+	         *     // transitionTo() promise will be rejected with
+	         *     // a 'transition prevented' error
+	         * })
+	         * </pre>
+	         */
+	        if ($rootScope.$broadcast('$stateChangeStart', to.self, toParams, from.self, fromParams).defaultPrevented) {
+	          $rootScope.$broadcast('$stateChangeCancel', to.self, toParams, from.self, fromParams);
+	          $urlRouter.update();
+	          return TransitionPrevented;
+	        }
+	      }
+	
+	      // Resolve locals for the remaining states, but don't update any global state just
+	      // yet -- if anything fails to resolve the current state needs to remain untouched.
+	      // We also set up an inheritance chain for the locals here. This allows the view directive
+	      // to quickly look up the correct definition for each view in the current state. Even
+	      // though we create the locals object itself outside resolveState(), it is initially
+	      // empty and gets filled asynchronously. We need to keep track of the promise for the
+	      // (fully resolved) current locals, and pass this down the chain.
+	      var resolved = $q.when(locals);
+	
+	      for (var l = keep; l < toPath.length; l++, state = toPath[l]) {
+	        locals = toLocals[l] = inherit(locals);
+	        resolved = resolveState(state, toParams, state === to, resolved, locals, options);
+	      }
+	
+	      // Once everything is resolved, we are ready to perform the actual transition
+	      // and return a promise for the new state. We also keep track of what the
+	      // current promise is, so that we can detect overlapping transitions and
+	      // keep only the outcome of the last transition.
+	      var transition = $state.transition = resolved.then(function () {
+	        var l, entering, exiting;
+	
+	        if ($state.transition !== transition) return TransitionSuperseded;
+	
+	        // Exit 'from' states not kept
+	        for (l = fromPath.length - 1; l >= keep; l--) {
+	          exiting = fromPath[l];
+	          if (exiting.self.onExit) {
+	            $injector.invoke(exiting.self.onExit, exiting.self, exiting.locals.globals);
+	          }
+	          exiting.locals = null;
+	        }
+	
+	        // Enter 'to' states not kept
+	        for (l = keep; l < toPath.length; l++) {
+	          entering = toPath[l];
+	          entering.locals = toLocals[l];
+	          if (entering.self.onEnter) {
+	            $injector.invoke(entering.self.onEnter, entering.self, entering.locals.globals);
+	          }
+	        }
+	
+	        // Re-add the saved hash before we start returning things
+	        if (hash) toParams['#'] = hash;
+	
+	        // Run it again, to catch any transitions in callbacks
+	        if ($state.transition !== transition) return TransitionSuperseded;
+	
+	        // Update globals in $state
+	        $state.$current = to;
+	        $state.current = to.self;
+	        $state.params = toParams;
+	        copy($state.params, $stateParams);
+	        $state.transition = null;
+	
+	        if (options.location && to.navigable) {
+	          $urlRouter.push(to.navigable.url, to.navigable.locals.globals.$stateParams, {
+	            $$avoidResync: true, replace: options.location === 'replace'
+	          });
+	        }
+	
+	        if (options.notify) {
+	        /**
+	         * @ngdoc event
+	         * @name ui.router.state.$state#$stateChangeSuccess
+	         * @eventOf ui.router.state.$state
+	         * @eventType broadcast on root scope
+	         * @description
+	         * Fired once the state transition is **complete**.
+	         *
+	         * @param {Object} event Event object.
+	         * @param {State} toState The state being transitioned to.
+	         * @param {Object} toParams The params supplied to the `toState`.
+	         * @param {State} fromState The current state, pre-transition.
+	         * @param {Object} fromParams The params supplied to the `fromState`.
+	         */
+	          $rootScope.$broadcast('$stateChangeSuccess', to.self, toParams, from.self, fromParams);
+	        }
+	        $urlRouter.update(true);
+	
+	        return $state.current;
+	      }, function (error) {
+	        if ($state.transition !== transition) return TransitionSuperseded;
+	
+	        $state.transition = null;
+	        /**
+	         * @ngdoc event
+	         * @name ui.router.state.$state#$stateChangeError
+	         * @eventOf ui.router.state.$state
+	         * @eventType broadcast on root scope
+	         * @description
+	         * Fired when an **error occurs** during transition. It's important to note that if you
+	         * have any errors in your resolve functions (javascript errors, non-existent services, etc)
+	         * they will not throw traditionally. You must listen for this $stateChangeError event to
+	         * catch **ALL** errors.
+	         *
+	         * @param {Object} event Event object.
+	         * @param {State} toState The state being transitioned to.
+	         * @param {Object} toParams The params supplied to the `toState`.
+	         * @param {State} fromState The current state, pre-transition.
+	         * @param {Object} fromParams The params supplied to the `fromState`.
+	         * @param {Error} error The resolve error object.
+	         */
+	        evt = $rootScope.$broadcast('$stateChangeError', to.self, toParams, from.self, fromParams, error);
+	
+	        if (!evt.defaultPrevented) {
+	            $urlRouter.update();
+	        }
+	
+	        return $q.reject(error);
+	      });
+	
+	      return transition;
+	    };
+	
+	    /**
+	     * @ngdoc function
+	     * @name ui.router.state.$state#is
+	     * @methodOf ui.router.state.$state
+	     *
+	     * @description
+	     * Similar to {@link ui.router.state.$state#methods_includes $state.includes},
+	     * but only checks for the full state name. If params is supplied then it will be
+	     * tested for strict equality against the current active params object, so all params
+	     * must match with none missing and no extras.
+	     *
+	     * @example
+	     * <pre>
+	     * $state.$current.name = 'contacts.details.item';
+	     *
+	     * // absolute name
+	     * $state.is('contact.details.item'); // returns true
+	     * $state.is(contactDetailItemStateObject); // returns true
+	     *
+	     * // relative name (. and ^), typically from a template
+	     * // E.g. from the 'contacts.details' template
+	     * <div ng-class="{highlighted: $state.is('.item')}">Item</div>
+	     * </pre>
+	     *
+	     * @param {string|object} stateOrName The state name (absolute or relative) or state object you'd like to check.
+	     * @param {object=} params A param object, e.g. `{sectionId: section.id}`, that you'd like
+	     * to test against the current active state.
+	     * @param {object=} options An options object.  The options are:
+	     *
+	     * - **`relative`** - {string|object} -  If `stateOrName` is a relative state name and `options.relative` is set, .is will
+	     * test relative to `options.relative` state (or name).
+	     *
+	     * @returns {boolean} Returns true if it is the state.
+	     */
+	    $state.is = function is(stateOrName, params, options) {
+	      options = extend({ relative: $state.$current }, options || {});
+	      var state = findState(stateOrName, options.relative);
+	
+	      if (!isDefined(state)) { return undefined; }
+	      if ($state.$current !== state) { return false; }
+	      return params ? equalForKeys(state.params.$$values(params), $stateParams) : true;
+	    };
+	
+	    /**
+	     * @ngdoc function
+	     * @name ui.router.state.$state#includes
+	     * @methodOf ui.router.state.$state
+	     *
+	     * @description
+	     * A method to determine if the current active state is equal to or is the child of the
+	     * state stateName. If any params are passed then they will be tested for a match as well.
+	     * Not all the parameters need to be passed, just the ones you'd like to test for equality.
+	     *
+	     * @example
+	     * Partial and relative names
+	     * <pre>
+	     * $state.$current.name = 'contacts.details.item';
+	     *
+	     * // Using partial names
+	     * $state.includes("contacts"); // returns true
+	     * $state.includes("contacts.details"); // returns true
+	     * $state.includes("contacts.details.item"); // returns true
+	     * $state.includes("contacts.list"); // returns false
+	     * $state.includes("about"); // returns false
+	     *
+	     * // Using relative names (. and ^), typically from a template
+	     * // E.g. from the 'contacts.details' template
+	     * <div ng-class="{highlighted: $state.includes('.item')}">Item</div>
+	     * </pre>
+	     *
+	     * Basic globbing patterns
+	     * <pre>
+	     * $state.$current.name = 'contacts.details.item.url';
+	     *
+	     * $state.includes("*.details.*.*"); // returns true
+	     * $state.includes("*.details.**"); // returns true
+	     * $state.includes("**.item.**"); // returns true
+	     * $state.includes("*.details.item.url"); // returns true
+	     * $state.includes("*.details.*.url"); // returns true
+	     * $state.includes("*.details.*"); // returns false
+	     * $state.includes("item.**"); // returns false
+	     * </pre>
+	     *
+	     * @param {string} stateOrName A partial name, relative name, or glob pattern
+	     * to be searched for within the current state name.
+	     * @param {object=} params A param object, e.g. `{sectionId: section.id}`,
+	     * that you'd like to test against the current active state.
+	     * @param {object=} options An options object.  The options are:
+	     *
+	     * - **`relative`** - {string|object=} -  If `stateOrName` is a relative state reference and `options.relative` is set,
+	     * .includes will test relative to `options.relative` state (or name).
+	     *
+	     * @returns {boolean} Returns true if it does include the state
+	     */
+	    $state.includes = function includes(stateOrName, params, options) {
+	      options = extend({ relative: $state.$current }, options || {});
+	      if (isString(stateOrName) && isGlob(stateOrName)) {
+	        if (!doesStateMatchGlob(stateOrName)) {
+	          return false;
+	        }
+	        stateOrName = $state.$current.name;
+	      }
+	
+	      var state = findState(stateOrName, options.relative);
+	      if (!isDefined(state)) { return undefined; }
+	      if (!isDefined($state.$current.includes[state.name])) { return false; }
+	      return params ? equalForKeys(state.params.$$values(params), $stateParams, objectKeys(params)) : true;
+	    };
+	
+	
+	    /**
+	     * @ngdoc function
+	     * @name ui.router.state.$state#href
+	     * @methodOf ui.router.state.$state
+	     *
+	     * @description
+	     * A url generation method that returns the compiled url for the given state populated with the given params.
+	     *
+	     * @example
+	     * <pre>
+	     * expect($state.href("about.person", { person: "bob" })).toEqual("/about/bob");
+	     * </pre>
+	     *
+	     * @param {string|object} stateOrName The state name or state object you'd like to generate a url from.
+	     * @param {object=} params An object of parameter values to fill the state's required parameters.
+	     * @param {object=} options Options object. The options are:
+	     *
+	     * - **`lossy`** - {boolean=true} -  If true, and if there is no url associated with the state provided in the
+	     *    first parameter, then the constructed href url will be built from the first navigable ancestor (aka
+	     *    ancestor with a valid url).
+	     * - **`inherit`** - {boolean=true}, If `true` will inherit url parameters from current url.
+	     * - **`relative`** - {object=$state.$current}, When transitioning with relative path (e.g '^'), 
+	     *    defines which state to be relative from.
+	     * - **`absolute`** - {boolean=false},  If true will generate an absolute url, e.g. "http://www.example.com/fullurl".
+	     * 
+	     * @returns {string} compiled state url
+	     */
+	    $state.href = function href(stateOrName, params, options) {
+	      options = extend({
+	        lossy:    true,
+	        inherit:  true,
+	        absolute: false,
+	        relative: $state.$current
+	      }, options || {});
+	
+	      var state = findState(stateOrName, options.relative);
+	
+	      if (!isDefined(state)) return null;
+	      if (options.inherit) params = inheritParams($stateParams, params || {}, $state.$current, state);
+	      
+	      var nav = (state && options.lossy) ? state.navigable : state;
+	
+	      if (!nav || nav.url === undefined || nav.url === null) {
+	        return null;
+	      }
+	      return $urlRouter.href(nav.url, filterByKeys(state.params.$$keys().concat('#'), params || {}), {
+	        absolute: options.absolute
+	      });
+	    };
+	
+	    /**
+	     * @ngdoc function
+	     * @name ui.router.state.$state#get
+	     * @methodOf ui.router.state.$state
+	     *
+	     * @description
+	     * Returns the state configuration object for any specific state or all states.
+	     *
+	     * @param {string|object=} stateOrName (absolute or relative) If provided, will only get the config for
+	     * the requested state. If not provided, returns an array of ALL state configs.
+	     * @param {string|object=} context When stateOrName is a relative state reference, the state will be retrieved relative to context.
+	     * @returns {Object|Array} State configuration object or array of all objects.
+	     */
+	    $state.get = function (stateOrName, context) {
+	      if (arguments.length === 0) return map(objectKeys(states), function(name) { return states[name].self; });
+	      var state = findState(stateOrName, context || $state.$current);
+	      return (state && state.self) ? state.self : null;
+	    };
+	
+	    function resolveState(state, params, paramsAreFiltered, inherited, dst, options) {
+	      // Make a restricted $stateParams with only the parameters that apply to this state if
+	      // necessary. In addition to being available to the controller and onEnter/onExit callbacks,
+	      // we also need $stateParams to be available for any $injector calls we make during the
+	      // dependency resolution process.
+	      var $stateParams = (paramsAreFiltered) ? params : filterByKeys(state.params.$$keys(), params);
+	      var locals = { $stateParams: $stateParams };
+	
+	      // Resolve 'global' dependencies for the state, i.e. those not specific to a view.
+	      // We're also including $stateParams in this; that way the parameters are restricted
+	      // to the set that should be visible to the state, and are independent of when we update
+	      // the global $state and $stateParams values.
+	      dst.resolve = $resolve.resolve(state.resolve, locals, dst.resolve, state);
+	      var promises = [dst.resolve.then(function (globals) {
+	        dst.globals = globals;
+	      })];
+	      if (inherited) promises.push(inherited);
+	
+	      function resolveViews() {
+	        var viewsPromises = [];
+	
+	        // Resolve template and dependencies for all views.
+	        forEach(state.views, function (view, name) {
+	          var injectables = (view.resolve && view.resolve !== state.resolve ? view.resolve : {});
+	          injectables.$template = [ function () {
+	            return $view.load(name, { view: view, locals: dst.globals, params: $stateParams, notify: options.notify }) || '';
+	          }];
+	
+	          viewsPromises.push($resolve.resolve(injectables, dst.globals, dst.resolve, state).then(function (result) {
+	            // References to the controller (only instantiated at link time)
+	            if (isFunction(view.controllerProvider) || isArray(view.controllerProvider)) {
+	              var injectLocals = angular.extend({}, injectables, dst.globals);
+	              result.$$controller = $injector.invoke(view.controllerProvider, null, injectLocals);
+	            } else {
+	              result.$$controller = view.controller;
+	            }
+	            // Provide access to the state itself for internal use
+	            result.$$state = state;
+	            result.$$controllerAs = view.controllerAs;
+	            dst[name] = result;
+	          }));
+	        });
+	
+	        return $q.all(viewsPromises).then(function(){
+	          return dst.globals;
+	        });
+	      }
+	
+	      // Wait for all the promises and then return the activation object
+	      return $q.all(promises).then(resolveViews).then(function (values) {
+	        return dst;
+	      });
+	    }
+	
+	    return $state;
+	  }
+	
+	  function shouldSkipReload(to, toParams, from, fromParams, locals, options) {
+	    // Return true if there are no differences in non-search (path/object) params, false if there are differences
+	    function nonSearchParamsEqual(fromAndToState, fromParams, toParams) {
+	      // Identify whether all the parameters that differ between `fromParams` and `toParams` were search params.
+	      function notSearchParam(key) {
+	        return fromAndToState.params[key].location != "search";
+	      }
+	      var nonQueryParamKeys = fromAndToState.params.$$keys().filter(notSearchParam);
+	      var nonQueryParams = pick.apply({}, [fromAndToState.params].concat(nonQueryParamKeys));
+	      var nonQueryParamSet = new $$UMFP.ParamSet(nonQueryParams);
+	      return nonQueryParamSet.$$equals(fromParams, toParams);
+	    }
+	
+	    // If reload was not explicitly requested
+	    // and we're transitioning to the same state we're already in
+	    // and    the locals didn't change
+	    //     or they changed in a way that doesn't merit reloading
+	    //        (reloadOnParams:false, or reloadOnSearch.false and only search params changed)
+	    // Then return true.
+	    if (!options.reload && to === from &&
+	      (locals === from.locals || (to.self.reloadOnSearch === false && nonSearchParamsEqual(from, fromParams, toParams)))) {
+	      return true;
+	    }
+	  }
+	}
+	
+	angular.module('ui.router.state')
+	  .value('$stateParams', {})
+	  .provider('$state', $StateProvider);
+	
+	
+	$ViewProvider.$inject = [];
+	function $ViewProvider() {
+	
+	  this.$get = $get;
+	  /**
+	   * @ngdoc object
+	   * @name ui.router.state.$view
+	   *
+	   * @requires ui.router.util.$templateFactory
+	   * @requires $rootScope
+	   *
+	   * @description
+	   *
+	   */
+	  $get.$inject = ['$rootScope', '$templateFactory'];
+	  function $get(   $rootScope,   $templateFactory) {
+	    return {
+	      // $view.load('full.viewName', { template: ..., controller: ..., resolve: ..., async: false, params: ... })
+	      /**
+	       * @ngdoc function
+	       * @name ui.router.state.$view#load
+	       * @methodOf ui.router.state.$view
+	       *
+	       * @description
+	       *
+	       * @param {string} name name
+	       * @param {object} options option object.
+	       */
+	      load: function load(name, options) {
+	        var result, defaults = {
+	          template: null, controller: null, view: null, locals: null, notify: true, async: true, params: {}
+	        };
+	        options = extend(defaults, options);
+	
+	        if (options.view) {
+	          result = $templateFactory.fromConfig(options.view, options.params, options.locals);
+	        }
+	        if (result && options.notify) {
+	        /**
+	         * @ngdoc event
+	         * @name ui.router.state.$state#$viewContentLoading
+	         * @eventOf ui.router.state.$view
+	         * @eventType broadcast on root scope
+	         * @description
+	         *
+	         * Fired once the view **begins loading**, *before* the DOM is rendered.
+	         *
+	         * @param {Object} event Event object.
+	         * @param {Object} viewConfig The view config properties (template, controller, etc).
+	         *
+	         * @example
+	         *
+	         * <pre>
+	         * $scope.$on('$viewContentLoading',
+	         * function(event, viewConfig){
+	         *     // Access to all the view config properties.
+	         *     // and one special property 'targetView'
+	         *     // viewConfig.targetView
+	         * });
+	         * </pre>
+	         */
+	          $rootScope.$broadcast('$viewContentLoading', options);
+	        }
+	        return result;
+	      }
+	    };
+	  }
+	}
+	
+	angular.module('ui.router.state').provider('$view', $ViewProvider);
+	
+	/**
+	 * @ngdoc object
+	 * @name ui.router.state.$uiViewScrollProvider
+	 *
+	 * @description
+	 * Provider that returns the {@link ui.router.state.$uiViewScroll} service function.
+	 */
+	function $ViewScrollProvider() {
+	
+	  var useAnchorScroll = false;
+	
+	  /**
+	   * @ngdoc function
+	   * @name ui.router.state.$uiViewScrollProvider#useAnchorScroll
+	   * @methodOf ui.router.state.$uiViewScrollProvider
+	   *
+	   * @description
+	   * Reverts back to using the core [`$anchorScroll`](http://docs.angularjs.org/api/ng.$anchorScroll) service for
+	   * scrolling based on the url anchor.
+	   */
+	  this.useAnchorScroll = function () {
+	    useAnchorScroll = true;
+	  };
+	
+	  /**
+	   * @ngdoc object
+	   * @name ui.router.state.$uiViewScroll
+	   *
+	   * @requires $anchorScroll
+	   * @requires $timeout
+	   *
+	   * @description
+	   * When called with a jqLite element, it scrolls the element into view (after a
+	   * `$timeout` so the DOM has time to refresh).
+	   *
+	   * If you prefer to rely on `$anchorScroll` to scroll the view to the anchor,
+	   * this can be enabled by calling {@link ui.router.state.$uiViewScrollProvider#methods_useAnchorScroll `$uiViewScrollProvider.useAnchorScroll()`}.
+	   */
+	  this.$get = ['$anchorScroll', '$timeout', function ($anchorScroll, $timeout) {
+	    if (useAnchorScroll) {
+	      return $anchorScroll;
+	    }
+	
+	    return function ($element) {
+	      return $timeout(function () {
+	        $element[0].scrollIntoView();
+	      }, 0, false);
+	    };
+	  }];
+	}
+	
+	angular.module('ui.router.state').provider('$uiViewScroll', $ViewScrollProvider);
+	
+	/**
+	 * @ngdoc directive
+	 * @name ui.router.state.directive:ui-view
+	 *
+	 * @requires ui.router.state.$state
+	 * @requires $compile
+	 * @requires $controller
+	 * @requires $injector
+	 * @requires ui.router.state.$uiViewScroll
+	 * @requires $document
+	 *
+	 * @restrict ECA
+	 *
+	 * @description
+	 * The ui-view directive tells $state where to place your templates.
+	 *
+	 * @param {string=} name A view name. The name should be unique amongst the other views in the
+	 * same state. You can have views of the same name that live in different states.
+	 *
+	 * @param {string=} autoscroll It allows you to set the scroll behavior of the browser window
+	 * when a view is populated. By default, $anchorScroll is overridden by ui-router's custom scroll
+	 * service, {@link ui.router.state.$uiViewScroll}. This custom service let's you
+	 * scroll ui-view elements into view when they are populated during a state activation.
+	 *
+	 * *Note: To revert back to old [`$anchorScroll`](http://docs.angularjs.org/api/ng.$anchorScroll)
+	 * functionality, call `$uiViewScrollProvider.useAnchorScroll()`.*
+	 *
+	 * @param {string=} onload Expression to evaluate whenever the view updates.
+	 * 
+	 * @example
+	 * A view can be unnamed or named. 
+	 * <pre>
+	 * <!-- Unnamed -->
+	 * <div ui-view></div> 
+	 * 
+	 * <!-- Named -->
+	 * <div ui-view="viewName"></div>
+	 * </pre>
+	 *
+	 * You can only have one unnamed view within any template (or root html). If you are only using a 
+	 * single view and it is unnamed then you can populate it like so:
+	 * <pre>
+	 * <div ui-view></div> 
+	 * $stateProvider.state("home", {
+	 *   template: "<h1>HELLO!</h1>"
+	 * })
+	 * </pre>
+	 * 
+	 * The above is a convenient shortcut equivalent to specifying your view explicitly with the {@link ui.router.state.$stateProvider#views `views`}
+	 * config property, by name, in this case an empty name:
+	 * <pre>
+	 * $stateProvider.state("home", {
+	 *   views: {
+	 *     "": {
+	 *       template: "<h1>HELLO!</h1>"
+	 *     }
+	 *   }    
+	 * })
+	 * </pre>
+	 * 
+	 * But typically you'll only use the views property if you name your view or have more than one view 
+	 * in the same template. There's not really a compelling reason to name a view if its the only one, 
+	 * but you could if you wanted, like so:
+	 * <pre>
+	 * <div ui-view="main"></div>
+	 * </pre> 
+	 * <pre>
+	 * $stateProvider.state("home", {
+	 *   views: {
+	 *     "main": {
+	 *       template: "<h1>HELLO!</h1>"
+	 *     }
+	 *   }    
+	 * })
+	 * </pre>
+	 * 
+	 * Really though, you'll use views to set up multiple views:
+	 * <pre>
+	 * <div ui-view></div>
+	 * <div ui-view="chart"></div> 
+	 * <div ui-view="data"></div> 
+	 * </pre>
+	 * 
+	 * <pre>
+	 * $stateProvider.state("home", {
+	 *   views: {
+	 *     "": {
+	 *       template: "<h1>HELLO!</h1>"
+	 *     },
+	 *     "chart": {
+	 *       template: "<chart_thing/>"
+	 *     },
+	 *     "data": {
+	 *       template: "<data_thing/>"
+	 *     }
+	 *   }    
+	 * })
+	 * </pre>
+	 *
+	 * Examples for `autoscroll`:
+	 *
+	 * <pre>
+	 * <!-- If autoscroll present with no expression,
+	 *      then scroll ui-view into view -->
+	 * <ui-view autoscroll/>
+	 *
+	 * <!-- If autoscroll present with valid expression,
+	 *      then scroll ui-view into view if expression evaluates to true -->
+	 * <ui-view autoscroll='true'/>
+	 * <ui-view autoscroll='false'/>
+	 * <ui-view autoscroll='scopeVariable'/>
+	 * </pre>
+	 */
+	$ViewDirective.$inject = ['$state', '$injector', '$uiViewScroll', '$interpolate'];
+	function $ViewDirective(   $state,   $injector,   $uiViewScroll,   $interpolate) {
+	
+	  function getService() {
+	    return ($injector.has) ? function(service) {
+	      return $injector.has(service) ? $injector.get(service) : null;
+	    } : function(service) {
+	      try {
+	        return $injector.get(service);
+	      } catch (e) {
+	        return null;
+	      }
+	    };
+	  }
+	
+	  var service = getService(),
+	      $animator = service('$animator'),
+	      $animate = service('$animate');
+	
+	  // Returns a set of DOM manipulation functions based on which Angular version
+	  // it should use
+	  function getRenderer(attrs, scope) {
+	    var statics = function() {
+	      return {
+	        enter: function (element, target, cb) { target.after(element); cb(); },
+	        leave: function (element, cb) { element.remove(); cb(); }
+	      };
+	    };
+	
+	    if ($animate) {
+	      return {
+	        enter: function(element, target, cb) {
+	          var promise = $animate.enter(element, null, target, cb);
+	          if (promise && promise.then) promise.then(cb);
+	        },
+	        leave: function(element, cb) {
+	          var promise = $animate.leave(element, cb);
+	          if (promise && promise.then) promise.then(cb);
+	        }
+	      };
+	    }
+	
+	    if ($animator) {
+	      var animate = $animator && $animator(scope, attrs);
+	
+	      return {
+	        enter: function(element, target, cb) {animate.enter(element, null, target); cb(); },
+	        leave: function(element, cb) { animate.leave(element); cb(); }
+	      };
+	    }
+	
+	    return statics();
+	  }
+	
+	  var directive = {
+	    restrict: 'ECA',
+	    terminal: true,
+	    priority: 400,
+	    transclude: 'element',
+	    compile: function (tElement, tAttrs, $transclude) {
+	      return function (scope, $element, attrs) {
+	        var previousEl, currentEl, currentScope, latestLocals,
+	            onloadExp     = attrs.onload || '',
+	            autoScrollExp = attrs.autoscroll,
+	            renderer      = getRenderer(attrs, scope);
+	
+	        scope.$on('$stateChangeSuccess', function() {
+	          updateView(false);
+	        });
+	        scope.$on('$viewContentLoading', function() {
+	          updateView(false);
+	        });
+	
+	        updateView(true);
+	
+	        function cleanupLastView() {
+	          if (previousEl) {
+	            previousEl.remove();
+	            previousEl = null;
+	          }
+	
+	          if (currentScope) {
+	            currentScope.$destroy();
+	            currentScope = null;
+	          }
+	
+	          if (currentEl) {
+	            renderer.leave(currentEl, function() {
+	              previousEl = null;
+	            });
+	
+	            previousEl = currentEl;
+	            currentEl = null;
+	          }
+	        }
+	
+	        function updateView(firstTime) {
+	          var newScope,
+	              name            = getUiViewName(scope, attrs, $element, $interpolate),
+	              previousLocals  = name && $state.$current && $state.$current.locals[name];
+	
+	          if (!firstTime && previousLocals === latestLocals) return; // nothing to do
+	          newScope = scope.$new();
+	          latestLocals = $state.$current.locals[name];
+	
+	          var clone = $transclude(newScope, function(clone) {
+	            renderer.enter(clone, $element, function onUiViewEnter() {
+	              if(currentScope) {
+	                currentScope.$emit('$viewContentAnimationEnded');
+	              }
+	
+	              if (angular.isDefined(autoScrollExp) && !autoScrollExp || scope.$eval(autoScrollExp)) {
+	                $uiViewScroll(clone);
+	              }
+	            });
+	            cleanupLastView();
+	          });
+	
+	          currentEl = clone;
+	          currentScope = newScope;
+	          /**
+	           * @ngdoc event
+	           * @name ui.router.state.directive:ui-view#$viewContentLoaded
+	           * @eventOf ui.router.state.directive:ui-view
+	           * @eventType emits on ui-view directive scope
+	           * @description           *
+	           * Fired once the view is **loaded**, *after* the DOM is rendered.
+	           *
+	           * @param {Object} event Event object.
+	           */
+	          currentScope.$emit('$viewContentLoaded');
+	          currentScope.$eval(onloadExp);
+	        }
+	      };
+	    }
+	  };
+	
+	  return directive;
+	}
+	
+	$ViewDirectiveFill.$inject = ['$compile', '$controller', '$state', '$interpolate'];
+	function $ViewDirectiveFill (  $compile,   $controller,   $state,   $interpolate) {
+	  return {
+	    restrict: 'ECA',
+	    priority: -400,
+	    compile: function (tElement) {
+	      var initial = tElement.html();
+	      return function (scope, $element, attrs) {
+	        var current = $state.$current,
+	            name = getUiViewName(scope, attrs, $element, $interpolate),
+	            locals  = current && current.locals[name];
+	
+	        if (! locals) {
+	          return;
+	        }
+	
+	        $element.data('$uiView', { name: name, state: locals.$$state });
+	        $element.html(locals.$template ? locals.$template : initial);
+	
+	        var link = $compile($element.contents());
+	
+	        if (locals.$$controller) {
+	          locals.$scope = scope;
+	          locals.$element = $element;
+	          var controller = $controller(locals.$$controller, locals);
+	          if (locals.$$controllerAs) {
+	            scope[locals.$$controllerAs] = controller;
+	          }
+	          $element.data('$ngControllerController', controller);
+	          $element.children().data('$ngControllerController', controller);
+	        }
+	
+	        link(scope);
+	      };
+	    }
+	  };
+	}
+	
+	/**
+	 * Shared ui-view code for both directives:
+	 * Given scope, element, and its attributes, return the view's name
+	 */
+	function getUiViewName(scope, attrs, element, $interpolate) {
+	  var name = $interpolate(attrs.uiView || attrs.name || '')(scope);
+	  var inherited = element.inheritedData('$uiView');
+	  return name.indexOf('@') >= 0 ?  name :  (name + '@' + (inherited ? inherited.state.name : ''));
+	}
+	
+	angular.module('ui.router.state').directive('uiView', $ViewDirective);
+	angular.module('ui.router.state').directive('uiView', $ViewDirectiveFill);
+	
+	function parseStateRef(ref, current) {
+	  var preparsed = ref.match(/^\s*({[^}]*})\s*$/), parsed;
+	  if (preparsed) ref = current + '(' + preparsed[1] + ')';
+	  parsed = ref.replace(/\n/g, " ").match(/^([^(]+?)\s*(\((.*)\))?$/);
+	  if (!parsed || parsed.length !== 4) throw new Error("Invalid state ref '" + ref + "'");
+	  return { state: parsed[1], paramExpr: parsed[3] || null };
+	}
+	
+	function stateContext(el) {
+	  var stateData = el.parent().inheritedData('$uiView');
+	
+	  if (stateData && stateData.state && stateData.state.name) {
+	    return stateData.state;
+	  }
+	}
+	
+	/**
+	 * @ngdoc directive
+	 * @name ui.router.state.directive:ui-sref
+	 *
+	 * @requires ui.router.state.$state
+	 * @requires $timeout
+	 *
+	 * @restrict A
+	 *
+	 * @description
+	 * A directive that binds a link (`<a>` tag) to a state. If the state has an associated 
+	 * URL, the directive will automatically generate & update the `href` attribute via 
+	 * the {@link ui.router.state.$state#methods_href $state.href()} method. Clicking 
+	 * the link will trigger a state transition with optional parameters. 
+	 *
+	 * Also middle-clicking, right-clicking, and ctrl-clicking on the link will be 
+	 * handled natively by the browser.
+	 *
+	 * You can also use relative state paths within ui-sref, just like the relative 
+	 * paths passed to `$state.go()`. You just need to be aware that the path is relative
+	 * to the state that the link lives in, in other words the state that loaded the 
+	 * template containing the link.
+	 *
+	 * You can specify options to pass to {@link ui.router.state.$state#go $state.go()}
+	 * using the `ui-sref-opts` attribute. Options are restricted to `location`, `inherit`,
+	 * and `reload`.
+	 *
+	 * @example
+	 * Here's an example of how you'd use ui-sref and how it would compile. If you have the 
+	 * following template:
+	 * <pre>
+	 * <a ui-sref="home">Home</a> | <a ui-sref="about">About</a> | <a ui-sref="{page: 2}">Next page</a>
+	 * 
+	 * <ul>
+	 *     <li ng-repeat="contact in contacts">
+	 *         <a ui-sref="contacts.detail({ id: contact.id })">{{ contact.name }}</a>
+	 *     </li>
+	 * </ul>
+	 * </pre>
+	 * 
+	 * Then the compiled html would be (assuming Html5Mode is off and current state is contacts):
+	 * <pre>
+	 * <a href="#/home" ui-sref="home">Home</a> | <a href="#/about" ui-sref="about">About</a> | <a href="#/contacts?page=2" ui-sref="{page: 2}">Next page</a>
+	 * 
+	 * <ul>
+	 *     <li ng-repeat="contact in contacts">
+	 *         <a href="#/contacts/1" ui-sref="contacts.detail({ id: contact.id })">Joe</a>
+	 *     </li>
+	 *     <li ng-repeat="contact in contacts">
+	 *         <a href="#/contacts/2" ui-sref="contacts.detail({ id: contact.id })">Alice</a>
+	 *     </li>
+	 *     <li ng-repeat="contact in contacts">
+	 *         <a href="#/contacts/3" ui-sref="contacts.detail({ id: contact.id })">Bob</a>
+	 *     </li>
+	 * </ul>
+	 *
+	 * <a ui-sref="home" ui-sref-opts="{reload: true}">Home</a>
+	 * </pre>
+	 *
+	 * @param {string} ui-sref 'stateName' can be any valid absolute or relative state
+	 * @param {Object} ui-sref-opts options to pass to {@link ui.router.state.$state#go $state.go()}
+	 */
+	$StateRefDirective.$inject = ['$state', '$timeout'];
+	function $StateRefDirective($state, $timeout) {
+	  var allowedOptions = ['location', 'inherit', 'reload', 'absolute'];
+	
+	  return {
+	    restrict: 'A',
+	    require: ['?^uiSrefActive', '?^uiSrefActiveEq'],
+	    link: function(scope, element, attrs, uiSrefActive) {
+	      var ref = parseStateRef(attrs.uiSref, $state.current.name);
+	      var params = null, url = null, base = stateContext(element) || $state.$current;
+	      // SVGAElement does not use the href attribute, but rather the 'xlinkHref' attribute.
+	      var hrefKind = Object.prototype.toString.call(element.prop('href')) === '[object SVGAnimatedString]' ?
+	                 'xlink:href' : 'href';
+	      var newHref = null, isAnchor = element.prop("tagName").toUpperCase() === "A";
+	      var isForm = element[0].nodeName === "FORM";
+	      var attr = isForm ? "action" : hrefKind, nav = true;
+	
+	      var options = { relative: base, inherit: true };
+	      var optionsOverride = scope.$eval(attrs.uiSrefOpts) || {};
+	
+	      angular.forEach(allowedOptions, function(option) {
+	        if (option in optionsOverride) {
+	          options[option] = optionsOverride[option];
+	        }
+	      });
+	
+	      var update = function(newVal) {
+	        if (newVal) params = angular.copy(newVal);
+	        if (!nav) return;
+	
+	        newHref = $state.href(ref.state, params, options);
+	
+	        var activeDirective = uiSrefActive[1] || uiSrefActive[0];
+	        if (activeDirective) {
+	          activeDirective.$$addStateInfo(ref.state, params);
+	        }
+	        if (newHref === null) {
+	          nav = false;
+	          return false;
+	        }
+	        attrs.$set(attr, newHref);
+	      };
+	
+	      if (ref.paramExpr) {
+	        scope.$watch(ref.paramExpr, function(newVal, oldVal) {
+	          if (newVal !== params) update(newVal);
+	        }, true);
+	        params = angular.copy(scope.$eval(ref.paramExpr));
+	      }
+	      update();
+	
+	      if (isForm) return;
+	
+	      element.bind("click", function(e) {
+	        var button = e.which || e.button;
+	        if ( !(button > 1 || e.ctrlKey || e.metaKey || e.shiftKey || element.attr('target')) ) {
+	          // HACK: This is to allow ng-clicks to be processed before the transition is initiated:
+	          var transition = $timeout(function() {
+	            $state.go(ref.state, params, options);
+	          });
+	          e.preventDefault();
+	
+	          // if the state has no URL, ignore one preventDefault from the <a> directive.
+	          var ignorePreventDefaultCount = isAnchor && !newHref ? 1: 0;
+	          e.preventDefault = function() {
+	            if (ignorePreventDefaultCount-- <= 0)
+	              $timeout.cancel(transition);
+	          };
+	        }
+	      });
+	    }
+	  };
+	}
+	
+	/**
+	 * @ngdoc directive
+	 * @name ui.router.state.directive:ui-sref-active
+	 *
+	 * @requires ui.router.state.$state
+	 * @requires ui.router.state.$stateParams
+	 * @requires $interpolate
+	 *
+	 * @restrict A
+	 *
+	 * @description
+	 * A directive working alongside ui-sref to add classes to an element when the
+	 * related ui-sref directive's state is active, and removing them when it is inactive.
+	 * The primary use-case is to simplify the special appearance of navigation menus
+	 * relying on `ui-sref`, by having the "active" state's menu button appear different,
+	 * distinguishing it from the inactive menu items.
+	 *
+	 * ui-sref-active can live on the same element as ui-sref or on a parent element. The first
+	 * ui-sref-active found at the same level or above the ui-sref will be used.
+	 *
+	 * Will activate when the ui-sref's target state or any child state is active. If you
+	 * need to activate only when the ui-sref target state is active and *not* any of
+	 * it's children, then you will use
+	 * {@link ui.router.state.directive:ui-sref-active-eq ui-sref-active-eq}
+	 *
+	 * @example
+	 * Given the following template:
+	 * <pre>
+	 * <ul>
+	 *   <li ui-sref-active="active" class="item">
+	 *     <a href ui-sref="app.user({user: 'bilbobaggins'})">@bilbobaggins</a>
+	 *   </li>
+	 * </ul>
+	 * </pre>
+	 *
+	 *
+	 * When the app state is "app.user" (or any children states), and contains the state parameter "user" with value "bilbobaggins",
+	 * the resulting HTML will appear as (note the 'active' class):
+	 * <pre>
+	 * <ul>
+	 *   <li ui-sref-active="active" class="item active">
+	 *     <a ui-sref="app.user({user: 'bilbobaggins'})" href="/users/bilbobaggins">@bilbobaggins</a>
+	 *   </li>
+	 * </ul>
+	 * </pre>
+	 *
+	 * The class name is interpolated **once** during the directives link time (any further changes to the
+	 * interpolated value are ignored).
+	 *
+	 * Multiple classes may be specified in a space-separated format:
+	 * <pre>
+	 * <ul>
+	 *   <li ui-sref-active='class1 class2 class3'>
+	 *     <a ui-sref="app.user">link</a>
+	 *   </li>
+	 * </ul>
+	 * </pre>
+	 */
+	
+	/**
+	 * @ngdoc directive
+	 * @name ui.router.state.directive:ui-sref-active-eq
+	 *
+	 * @requires ui.router.state.$state
+	 * @requires ui.router.state.$stateParams
+	 * @requires $interpolate
+	 *
+	 * @restrict A
+	 *
+	 * @description
+	 * The same as {@link ui.router.state.directive:ui-sref-active ui-sref-active} but will only activate
+	 * when the exact target state used in the `ui-sref` is active; no child states.
+	 *
+	 */
+	$StateRefActiveDirective.$inject = ['$state', '$stateParams', '$interpolate'];
+	function $StateRefActiveDirective($state, $stateParams, $interpolate) {
+	  return  {
+	    restrict: "A",
+	    controller: ['$scope', '$element', '$attrs', function ($scope, $element, $attrs) {
+	      var states = [], activeClass;
+	
+	      // There probably isn't much point in $observing this
+	      // uiSrefActive and uiSrefActiveEq share the same directive object with some
+	      // slight difference in logic routing
+	      activeClass = $interpolate($attrs.uiSrefActiveEq || $attrs.uiSrefActive || '', false)($scope);
+	
+	      // Allow uiSref to communicate with uiSrefActive[Equals]
+	      this.$$addStateInfo = function (newState, newParams) {
+	        var state = $state.get(newState, stateContext($element));
+	
+	        states.push({
+	          state: state || { name: newState },
+	          params: newParams
+	        });
+	
+	        update();
+	      };
+	
+	      $scope.$on('$stateChangeSuccess', update);
+	
+	      // Update route state
+	      function update() {
+	        if (anyMatch()) {
+	          $element.addClass(activeClass);
+	        } else {
+	          $element.removeClass(activeClass);
+	        }
+	      }
+	
+	      function anyMatch() {
+	        for (var i = 0; i < states.length; i++) {
+	          if (isMatch(states[i].state, states[i].params)) {
+	            return true;
+	          }
+	        }
+	        return false;
+	      }
+	
+	      function isMatch(state, params) {
+	        if (typeof $attrs.uiSrefActiveEq !== 'undefined') {
+	          return $state.is(state.name, params);
+	        } else {
+	          return $state.includes(state.name, params);
+	        }
+	      }
+	    }]
+	  };
+	}
+	
+	angular.module('ui.router.state')
+	  .directive('uiSref', $StateRefDirective)
+	  .directive('uiSrefActive', $StateRefActiveDirective)
+	  .directive('uiSrefActiveEq', $StateRefActiveDirective);
+	
+	/**
+	 * @ngdoc filter
+	 * @name ui.router.state.filter:isState
+	 *
+	 * @requires ui.router.state.$state
+	 *
+	 * @description
+	 * Translates to {@link ui.router.state.$state#methods_is $state.is("stateName")}.
+	 */
+	$IsStateFilter.$inject = ['$state'];
+	function $IsStateFilter($state) {
+	  var isFilter = function (state) {
+	    return $state.is(state);
+	  };
+	  isFilter.$stateful = true;
+	  return isFilter;
+	}
+	
+	/**
+	 * @ngdoc filter
+	 * @name ui.router.state.filter:includedByState
+	 *
+	 * @requires ui.router.state.$state
+	 *
+	 * @description
+	 * Translates to {@link ui.router.state.$state#methods_includes $state.includes('fullOrPartialStateName')}.
+	 */
+	$IncludedByStateFilter.$inject = ['$state'];
+	function $IncludedByStateFilter($state) {
+	  var includesFilter = function (state) {
+	    return $state.includes(state);
+	  };
+	  includesFilter.$stateful = true;
+	  return  includesFilter;
+	}
+	
+	angular.module('ui.router.state')
+	  .filter('isState', $IsStateFilter)
+	  .filter('includedByState', $IncludedByStateFilter);
+	})(window, window.angular);
+
+/***/ },
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32713,300 +32637,21 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _angular = __webpack_require__(4);
+	var _angular = __webpack_require__(3);
 	
 	var _angular2 = _interopRequireDefault(_angular);
 	
-	var _angularUiRouter = __webpack_require__(5);
+	var _zPresentZPresent = __webpack_require__(7);
 	
-	var _angularUiRouter2 = _interopRequireDefault(_angularUiRouter);
+	var _zPresentZPresent2 = _interopRequireDefault(_zPresentZPresent);
 	
-	var _homeComponent = __webpack_require__(15);
+	var commonModule = _angular2['default'].module('app.common', [_zPresentZPresent2['default'].name]);
 	
-	var _homeComponent2 = _interopRequireDefault(_homeComponent);
-	
-	var _homeService = __webpack_require__(16);
-	
-	var _homeService2 = _interopRequireDefault(_homeService);
-	
-	var homeModule = _angular2['default'].module('home', [_angularUiRouter2['default']]).config(function ($stateProvider, $urlRouterProvider) {
-		$urlRouterProvider.otherwise('/');
-	
-		$stateProvider.state('home', {
-			url: '/',
-			template: '<home></home>'
-		});
-	}).directive('home', _homeComponent2['default']).service('homeService', _homeService2['default']);
-	
-	exports['default'] = homeModule;
+	exports['default'] = commonModule;
 	module.exports = exports['default'];
 
 /***/ },
-/* 9 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// style-loader: Adds some css to the DOM by adding a <style> tag
-	
-	// load the styles
-	var content = __webpack_require__(10);
-	if(typeof content === 'string') content = [[module.id, content, '']];
-	// add the styles to the DOM
-	var update = __webpack_require__(12)(content, {});
-	if(content.locals) module.exports = content.locals;
-	// Hot Module Replacement
-	if(false) {
-		// When the styles change, update the <style> tags
-		if(!content.locals) {
-			module.hot.accept("!!./../css-loader/index.js!./normalize.css", function() {
-				var newContent = require("!!./../css-loader/index.js!./normalize.css");
-				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-				update(newContent);
-			});
-		}
-		// When the module is disposed, remove the <style> tags
-		module.hot.dispose(function() { update(); });
-	}
-
-/***/ },
-/* 10 */
-/***/ function(module, exports, __webpack_require__) {
-
-	exports = module.exports = __webpack_require__(17)();
-	exports.push([module.id, "/*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */\n\n/**\n * 1. Set default font family to sans-serif.\n * 2. Prevent iOS and IE text size adjust after device orientation change,\n *    without disabling user zoom.\n */\n\nhtml {\n  font-family: sans-serif; /* 1 */\n  -ms-text-size-adjust: 100%; /* 2 */\n  -webkit-text-size-adjust: 100%; /* 2 */\n}\n\n/**\n * Remove default margin.\n */\n\nbody {\n  margin: 0;\n}\n\n/* HTML5 display definitions\n   ========================================================================== */\n\n/**\n * Correct `block` display not defined for any HTML5 element in IE 8/9.\n * Correct `block` display not defined for `details` or `summary` in IE 10/11\n * and Firefox.\n * Correct `block` display not defined for `main` in IE 11.\n */\n\narticle,\naside,\ndetails,\nfigcaption,\nfigure,\nfooter,\nheader,\nhgroup,\nmain,\nmenu,\nnav,\nsection,\nsummary {\n  display: block;\n}\n\n/**\n * 1. Correct `inline-block` display not defined in IE 8/9.\n * 2. Normalize vertical alignment of `progress` in Chrome, Firefox, and Opera.\n */\n\naudio,\ncanvas,\nprogress,\nvideo {\n  display: inline-block; /* 1 */\n  vertical-align: baseline; /* 2 */\n}\n\n/**\n * Prevent modern browsers from displaying `audio` without controls.\n * Remove excess height in iOS 5 devices.\n */\n\naudio:not([controls]) {\n  display: none;\n  height: 0;\n}\n\n/**\n * Address `[hidden]` styling not present in IE 8/9/10.\n * Hide the `template` element in IE 8/9/10/11, Safari, and Firefox < 22.\n */\n\n[hidden],\ntemplate {\n  display: none;\n}\n\n/* Links\n   ========================================================================== */\n\n/**\n * Remove the gray background color from active links in IE 10.\n */\n\na {\n  background-color: transparent;\n}\n\n/**\n * Improve readability of focused elements when they are also in an\n * active/hover state.\n */\n\na:active,\na:hover {\n  outline: 0;\n}\n\n/* Text-level semantics\n   ========================================================================== */\n\n/**\n * Address styling not present in IE 8/9/10/11, Safari, and Chrome.\n */\n\nabbr[title] {\n  border-bottom: 1px dotted;\n}\n\n/**\n * Address style set to `bolder` in Firefox 4+, Safari, and Chrome.\n */\n\nb,\nstrong {\n  font-weight: bold;\n}\n\n/**\n * Address styling not present in Safari and Chrome.\n */\n\ndfn {\n  font-style: italic;\n}\n\n/**\n * Address variable `h1` font-size and margin within `section` and `article`\n * contexts in Firefox 4+, Safari, and Chrome.\n */\n\nh1 {\n  font-size: 2em;\n  margin: 0.67em 0;\n}\n\n/**\n * Address styling not present in IE 8/9.\n */\n\nmark {\n  background: #ff0;\n  color: #000;\n}\n\n/**\n * Address inconsistent and variable font size in all browsers.\n */\n\nsmall {\n  font-size: 80%;\n}\n\n/**\n * Prevent `sub` and `sup` affecting `line-height` in all browsers.\n */\n\nsub,\nsup {\n  font-size: 75%;\n  line-height: 0;\n  position: relative;\n  vertical-align: baseline;\n}\n\nsup {\n  top: -0.5em;\n}\n\nsub {\n  bottom: -0.25em;\n}\n\n/* Embedded content\n   ========================================================================== */\n\n/**\n * Remove border when inside `a` element in IE 8/9/10.\n */\n\nimg {\n  border: 0;\n}\n\n/**\n * Correct overflow not hidden in IE 9/10/11.\n */\n\nsvg:not(:root) {\n  overflow: hidden;\n}\n\n/* Grouping content\n   ========================================================================== */\n\n/**\n * Address margin not present in IE 8/9 and Safari.\n */\n\nfigure {\n  margin: 1em 40px;\n}\n\n/**\n * Address differences between Firefox and other browsers.\n */\n\nhr {\n  box-sizing: content-box;\n  height: 0;\n}\n\n/**\n * Contain overflow in all browsers.\n */\n\npre {\n  overflow: auto;\n}\n\n/**\n * Address odd `em`-unit font size rendering in all browsers.\n */\n\ncode,\nkbd,\npre,\nsamp {\n  font-family: monospace, monospace;\n  font-size: 1em;\n}\n\n/* Forms\n   ========================================================================== */\n\n/**\n * Known limitation: by default, Chrome and Safari on OS X allow very limited\n * styling of `select`, unless a `border` property is set.\n */\n\n/**\n * 1. Correct color not being inherited.\n *    Known issue: affects color of disabled elements.\n * 2. Correct font properties not being inherited.\n * 3. Address margins set differently in Firefox 4+, Safari, and Chrome.\n */\n\nbutton,\ninput,\noptgroup,\nselect,\ntextarea {\n  color: inherit; /* 1 */\n  font: inherit; /* 2 */\n  margin: 0; /* 3 */\n}\n\n/**\n * Address `overflow` set to `hidden` in IE 8/9/10/11.\n */\n\nbutton {\n  overflow: visible;\n}\n\n/**\n * Address inconsistent `text-transform` inheritance for `button` and `select`.\n * All other form control elements do not inherit `text-transform` values.\n * Correct `button` style inheritance in Firefox, IE 8/9/10/11, and Opera.\n * Correct `select` style inheritance in Firefox.\n */\n\nbutton,\nselect {\n  text-transform: none;\n}\n\n/**\n * 1. Avoid the WebKit bug in Android 4.0.* where (2) destroys native `audio`\n *    and `video` controls.\n * 2. Correct inability to style clickable `input` types in iOS.\n * 3. Improve usability and consistency of cursor style between image-type\n *    `input` and others.\n */\n\nbutton,\nhtml input[type=\"button\"], /* 1 */\ninput[type=\"reset\"],\ninput[type=\"submit\"] {\n  -webkit-appearance: button; /* 2 */\n  cursor: pointer; /* 3 */\n}\n\n/**\n * Re-set default cursor for disabled elements.\n */\n\nbutton[disabled],\nhtml input[disabled] {\n  cursor: default;\n}\n\n/**\n * Remove inner padding and border in Firefox 4+.\n */\n\nbutton::-moz-focus-inner,\ninput::-moz-focus-inner {\n  border: 0;\n  padding: 0;\n}\n\n/**\n * Address Firefox 4+ setting `line-height` on `input` using `!important` in\n * the UA stylesheet.\n */\n\ninput {\n  line-height: normal;\n}\n\n/**\n * It's recommended that you don't attempt to style these elements.\n * Firefox's implementation doesn't respect box-sizing, padding, or width.\n *\n * 1. Address box sizing set to `content-box` in IE 8/9/10.\n * 2. Remove excess padding in IE 8/9/10.\n */\n\ninput[type=\"checkbox\"],\ninput[type=\"radio\"] {\n  box-sizing: border-box; /* 1 */\n  padding: 0; /* 2 */\n}\n\n/**\n * Fix the cursor style for Chrome's increment/decrement buttons. For certain\n * `font-size` values of the `input`, it causes the cursor style of the\n * decrement button to change from `default` to `text`.\n */\n\ninput[type=\"number\"]::-webkit-inner-spin-button,\ninput[type=\"number\"]::-webkit-outer-spin-button {\n  height: auto;\n}\n\n/**\n * 1. Address `appearance` set to `searchfield` in Safari and Chrome.\n * 2. Address `box-sizing` set to `border-box` in Safari and Chrome.\n */\n\ninput[type=\"search\"] {\n  -webkit-appearance: textfield; /* 1 */\n  box-sizing: content-box; /* 2 */\n}\n\n/**\n * Remove inner padding and search cancel button in Safari and Chrome on OS X.\n * Safari (but not Chrome) clips the cancel button when the search input has\n * padding (and `textfield` appearance).\n */\n\ninput[type=\"search\"]::-webkit-search-cancel-button,\ninput[type=\"search\"]::-webkit-search-decoration {\n  -webkit-appearance: none;\n}\n\n/**\n * Define consistent border, margin, and padding.\n */\n\nfieldset {\n  border: 1px solid #c0c0c0;\n  margin: 0 2px;\n  padding: 0.35em 0.625em 0.75em;\n}\n\n/**\n * 1. Correct `color` not being inherited in IE 8/9/10/11.\n * 2. Remove padding so people aren't caught out if they zero out fieldsets.\n */\n\nlegend {\n  border: 0; /* 1 */\n  padding: 0; /* 2 */\n}\n\n/**\n * Remove default vertical scrollbar in IE 8/9/10/11.\n */\n\ntextarea {\n  overflow: auto;\n}\n\n/**\n * Don't inherit the `font-weight` (applied by a rule above).\n * NOTE: the default cannot safely be changed in Chrome and Safari on OS X.\n */\n\noptgroup {\n  font-weight: bold;\n}\n\n/* Tables\n   ========================================================================== */\n\n/**\n * Remove most spacing between table cells.\n */\n\ntable {\n  border-collapse: collapse;\n  border-spacing: 0;\n}\n\ntd,\nth {\n  padding: 0;\n}\n", ""]);
-
-/***/ },
-/* 11 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = "<!--Anything you want to be on every page, place it in this file-->\n<div class=\"app\">\n\t<div ui-view>\n\t</div>\n</div>\n"
-
-/***/ },
-/* 12 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-		MIT License http://www.opensource.org/licenses/mit-license.php
-		Author Tobias Koppers @sokra
-	*/
-	var stylesInDom = {},
-		memoize = function(fn) {
-			var memo;
-			return function () {
-				if (typeof memo === "undefined") memo = fn.apply(this, arguments);
-				return memo;
-			};
-		},
-		isOldIE = memoize(function() {
-			return /msie [6-9]\b/.test(window.navigator.userAgent.toLowerCase());
-		}),
-		getHeadElement = memoize(function () {
-			return document.head || document.getElementsByTagName("head")[0];
-		}),
-		singletonElement = null,
-		singletonCounter = 0;
-	
-	module.exports = function(list, options) {
-		if(false) {
-			if(typeof document !== "object") throw new Error("The style-loader cannot be used in a non-browser environment");
-		}
-	
-		options = options || {};
-		// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
-		// tags it will allow on a page
-		if (typeof options.singleton === "undefined") options.singleton = isOldIE();
-	
-		var styles = listToStyles(list);
-		addStylesToDom(styles, options);
-	
-		return function update(newList) {
-			var mayRemove = [];
-			for(var i = 0; i < styles.length; i++) {
-				var item = styles[i];
-				var domStyle = stylesInDom[item.id];
-				domStyle.refs--;
-				mayRemove.push(domStyle);
-			}
-			if(newList) {
-				var newStyles = listToStyles(newList);
-				addStylesToDom(newStyles, options);
-			}
-			for(var i = 0; i < mayRemove.length; i++) {
-				var domStyle = mayRemove[i];
-				if(domStyle.refs === 0) {
-					for(var j = 0; j < domStyle.parts.length; j++)
-						domStyle.parts[j]();
-					delete stylesInDom[domStyle.id];
-				}
-			}
-		};
-	}
-	
-	function addStylesToDom(styles, options) {
-		for(var i = 0; i < styles.length; i++) {
-			var item = styles[i];
-			var domStyle = stylesInDom[item.id];
-			if(domStyle) {
-				domStyle.refs++;
-				for(var j = 0; j < domStyle.parts.length; j++) {
-					domStyle.parts[j](item.parts[j]);
-				}
-				for(; j < item.parts.length; j++) {
-					domStyle.parts.push(addStyle(item.parts[j], options));
-				}
-			} else {
-				var parts = [];
-				for(var j = 0; j < item.parts.length; j++) {
-					parts.push(addStyle(item.parts[j], options));
-				}
-				stylesInDom[item.id] = {id: item.id, refs: 1, parts: parts};
-			}
-		}
-	}
-	
-	function listToStyles(list) {
-		var styles = [];
-		var newStyles = {};
-		for(var i = 0; i < list.length; i++) {
-			var item = list[i];
-			var id = item[0];
-			var css = item[1];
-			var media = item[2];
-			var sourceMap = item[3];
-			var part = {css: css, media: media, sourceMap: sourceMap};
-			if(!newStyles[id])
-				styles.push(newStyles[id] = {id: id, parts: [part]});
-			else
-				newStyles[id].parts.push(part);
-		}
-		return styles;
-	}
-	
-	function createStyleElement() {
-		var styleElement = document.createElement("style");
-		var head = getHeadElement();
-		styleElement.type = "text/css";
-		head.appendChild(styleElement);
-		return styleElement;
-	}
-	
-	function createLinkElement() {
-		var linkElement = document.createElement("link");
-		var head = getHeadElement();
-		linkElement.rel = "stylesheet";
-		head.appendChild(linkElement);
-		return linkElement;
-	}
-	
-	function addStyle(obj, options) {
-		var styleElement, update, remove;
-	
-		if (options.singleton) {
-			var styleIndex = singletonCounter++;
-			styleElement = singletonElement || (singletonElement = createStyleElement());
-			update = applyToSingletonTag.bind(null, styleElement, styleIndex, false);
-			remove = applyToSingletonTag.bind(null, styleElement, styleIndex, true);
-		} else if(obj.sourceMap &&
-			typeof URL === "function" &&
-			typeof URL.createObjectURL === "function" &&
-			typeof URL.revokeObjectURL === "function" &&
-			typeof Blob === "function" &&
-			typeof btoa === "function") {
-			styleElement = createLinkElement();
-			update = updateLink.bind(null, styleElement);
-			remove = function() {
-				styleElement.parentNode.removeChild(styleElement);
-				if(styleElement.href)
-					URL.revokeObjectURL(styleElement.href);
-			};
-		} else {
-			styleElement = createStyleElement();
-			update = applyToTag.bind(null, styleElement);
-			remove = function() {
-				styleElement.parentNode.removeChild(styleElement);
-			};
-		}
-	
-		update(obj);
-	
-		return function updateStyle(newObj) {
-			if(newObj) {
-				if(newObj.css === obj.css && newObj.media === obj.media && newObj.sourceMap === obj.sourceMap)
-					return;
-				update(obj = newObj);
-			} else {
-				remove();
-			}
-		};
-	}
-	
-	var replaceText = (function () {
-		var textStore = [];
-	
-		return function (index, replacement) {
-			textStore[index] = replacement;
-			return textStore.filter(Boolean).join('\n');
-		};
-	})();
-	
-	function applyToSingletonTag(styleElement, index, remove, obj) {
-		var css = remove ? "" : obj.css;
-	
-		if (styleElement.styleSheet) {
-			styleElement.styleSheet.cssText = replaceText(index, css);
-		} else {
-			var cssNode = document.createTextNode(css);
-			var childNodes = styleElement.childNodes;
-			if (childNodes[index]) styleElement.removeChild(childNodes[index]);
-			if (childNodes.length) {
-				styleElement.insertBefore(cssNode, childNodes[index]);
-			} else {
-				styleElement.appendChild(cssNode);
-			}
-		}
-	}
-	
-	function applyToTag(styleElement, obj) {
-		var css = obj.css;
-		var media = obj.media;
-		var sourceMap = obj.sourceMap;
-	
-		if(media) {
-			styleElement.setAttribute("media", media)
-		}
-	
-		if(styleElement.styleSheet) {
-			styleElement.styleSheet.cssText = css;
-		} else {
-			while(styleElement.firstChild) {
-				styleElement.removeChild(styleElement.firstChild);
-			}
-			styleElement.appendChild(document.createTextNode(css));
-		}
-	}
-	
-	function updateLink(linkElement, obj) {
-		var css = obj.css;
-		var media = obj.media;
-		var sourceMap = obj.sourceMap;
-	
-		if(sourceMap) {
-			// http://stackoverflow.com/a/26603875
-			css += "\n/*# sourceMappingURL=data:application/json;base64," + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + " */";
-		}
-	
-		var blob = new Blob([css], { type: "text/css" });
-	
-		var oldSrc = linkElement.href;
-	
-		linkElement.href = URL.createObjectURL(blob);
-	
-		if(oldSrc)
-			URL.revokeObjectURL(oldSrc);
-	}
-
-
-/***/ },
-/* 13 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33017,17 +32662,49 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _zPresentHtml = __webpack_require__(19);
+	var _angular = __webpack_require__(3);
+	
+	var _angular2 = _interopRequireDefault(_angular);
+	
+	var _zPresentComponentJs = __webpack_require__(8);
+	
+	var _zPresentComponentJs2 = _interopRequireDefault(_zPresentComponentJs);
+	
+	var _zSlideZSlideComponentJs = __webpack_require__(19);
+	
+	var _zSlideZSlideComponentJs2 = _interopRequireDefault(_zSlideZSlideComponentJs);
+	
+	var _angularSanitize = __webpack_require__(22);
+	
+	var _angularSanitize2 = _interopRequireDefault(_angularSanitize);
+	
+	var zPresentModule = _angular2['default'].module('zPresent', [_angularSanitize2['default']]).directive('zPresent', _zPresentComponentJs2['default']).directive('zSlide', _zSlideZSlideComponentJs2['default']);
+	exports['default'] = zPresentModule;
+	module.exports = exports['default'];
+
+/***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	
+	var _zPresentHtml = __webpack_require__(9);
 	
 	var _zPresentHtml2 = _interopRequireDefault(_zPresentHtml);
 	
-	var _zPresentControllerJs = __webpack_require__(20);
+	var _zPresentControllerJs = __webpack_require__(10);
 	
 	var _zPresentControllerJs2 = _interopRequireDefault(_zPresentControllerJs);
 	
-	var _revealConnectorJs = __webpack_require__(21);
+	var _RevealConnectorJs = __webpack_require__(11);
 	
-	var _revealConnectorJs2 = _interopRequireDefault(_revealConnectorJs);
+	var _RevealConnectorJs2 = _interopRequireDefault(_RevealConnectorJs);
 	
 	//import data from 'slides.js'
 	
@@ -33079,7 +32756,7 @@
 	            }
 	        }
 	        if (!revealC) {
-	            revealC = new _revealConnectorJs2['default']();
+	            revealC = new _RevealConnectorJs2['default']();
 	        } else {
 	            revealC.goToSlide(0);
 	        }
@@ -33095,173 +32772,14 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 14 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-	
-	var _zSlideHtml = __webpack_require__(24);
-	
-	var _zSlideHtml2 = _interopRequireDefault(_zSlideHtml);
-	
-	var _zSlideControllerJs = __webpack_require__(25);
-	
-	var _zSlideControllerJs2 = _interopRequireDefault(_zSlideControllerJs);
-	
-	var zSlideComponent = function zSlideComponent() {
-	  var dir = {
-	    template: _zSlideHtml2['default'],
-	    controller: _zSlideControllerJs2['default'],
-	    link: function link(scope, element, attrs) {},
-	    transclude: true,
-	    restrict: 'E',
-	    replace: true,
-	    controllerAs: 'vm',
-	    scope: {},
-	    bindToController: true
-	  };
-	  return dir;
-	};
-	
-	exports['default'] = zSlideComponent;
-	module.exports = exports['default'];
-
-/***/ },
-/* 15 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, '__esModule', {
-		value: true
-	});
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-	
-	var _homeHtml = __webpack_require__(22);
-	
-	var _homeHtml2 = _interopRequireDefault(_homeHtml);
-	
-	var _homeController = __webpack_require__(23);
-	
-	var _homeController2 = _interopRequireDefault(_homeController);
-	
-	__webpack_require__(27);
-	
-	var homeComponent = function homeComponent() {
-		return {
-			template: _homeHtml2['default'],
-			controller: _homeController2['default'],
-			restrict: 'E',
-			controllerAs: 'vm',
-			scope: {},
-			bindToController: true
-		};
-	};
-	
-	exports['default'] = homeComponent;
-	module.exports = exports['default'];
-
-/***/ },
-/* 16 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Created by osamaalghanmi on 6/4/15.
-	 */
-	
-	'use strict';
-	
-	Object.defineProperty(exports, '__esModule', {
-	    value: true
-	});
-	var homeService = function homeService($http) {
-	    this.getSlides = function () {
-	        return $http.get('/slides.json');
-	    };
-	};
-	exports['default'] = homeService;
-	module.exports = exports['default'];
-
-/***/ },
-/* 17 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-		MIT License http://www.opensource.org/licenses/mit-license.php
-		Author Tobias Koppers @sokra
-	*/
-	// css base code, injected by the css-loader
-	module.exports = function() {
-		var list = [];
-	
-		// return the list of modules as css string
-		list.toString = function toString() {
-			var result = [];
-			for(var i = 0; i < this.length; i++) {
-				var item = this[i];
-				if(item[2]) {
-					result.push("@media " + item[2] + "{" + item[1] + "}");
-				} else {
-					result.push(item[1]);
-				}
-			}
-			return result.join("");
-		};
-	
-		// import a list of modules into the list
-		list.i = function(modules, mediaQuery) {
-			if(typeof modules === "string")
-				modules = [[null, modules, ""]];
-			var alreadyImportedModules = {};
-			for(var i = 0; i < this.length; i++) {
-				var id = this[i][0];
-				if(typeof id === "number")
-					alreadyImportedModules[id] = true;
-			}
-			for(i = 0; i < modules.length; i++) {
-				var item = modules[i];
-				// skip already imported module
-				// this implementation is not 100% perfect for weird media query combinations
-				//  when a module is imported multiple times with different media queries.
-				//  I hope this will never occur (Hey this way we have smaller bundles)
-				if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
-					if(mediaQuery && !item[2]) {
-						item[2] = mediaQuery;
-					} else if(mediaQuery) {
-						item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
-					}
-					list.push(item);
-				}
-			}
-		};
-		return list;
-	};
-
-
-/***/ },
-/* 18 */
-/***/ function(module, exports, __webpack_require__) {
-
-	__webpack_require__(26);
-	module.exports = 'ngSanitize';
-
-
-/***/ },
-/* 19 */
-/***/ function(module, exports, __webpack_require__) {
+/* 9 */
+/***/ function(module, exports) {
 
 	module.exports = "<div class=\"slides\">\n\n</div>"
 
 /***/ },
-/* 20 */
-/***/ function(module, exports, __webpack_require__) {
+/* 10 */
+/***/ function(module, exports) {
 
 	'use strict';
 	
@@ -33281,7 +32799,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 21 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33296,13 +32814,13 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var _revealJs = __webpack_require__(33);
+	var _revealJs = __webpack_require__(12);
 	
 	var _revealJs2 = _interopRequireDefault(_revealJs);
 	
-	__webpack_require__(29);
+	__webpack_require__(13);
 	
-	__webpack_require__(31);
+	__webpack_require__(17);
 	
 	var revealConnector = (function () {
 		function revealConnector() {
@@ -33338,855 +32856,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 22 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = "<!--if you'd like to have the navbar and or header on every page, move it up a level to app.html!-->\n<navbar></navbar>\n<header>\n\t<hero></hero>\n</header>\n<main>\n\t<div style=\"position: inherit\" class=\"reveal\">\n\t\t<z-present slides=\"slides\">\n\t\t</z-present>\n\t</div>\n</main>"
-
-/***/ },
-/* 23 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, '__esModule', {
-		value: true
-	});
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-	
-	var HomeController = function HomeController($scope, $timeout, homeService) {
-		_classCallCheck(this, HomeController);
-	
-		this.name = 'home';
-	
-		homeService.getSlides().success(function (slides) {
-			$scope.slides = slides;
-		});
-	};
-	
-	exports['default'] = HomeController;
-	module.exports = exports['default'];
-
-/***/ },
-/* 24 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = "<section>\n    <ng-transclude></ng-transclude>\n</section>"
-
-/***/ },
-/* 25 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, '__esModule', {
-		value: true
-	});
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-	
-	var zSlideController = function zSlideController() {
-		_classCallCheck(this, zSlideController);
-	
-		this.name = 'navbar';
-	};
-	
-	exports['default'] = zSlideController;
-	module.exports = exports['default'];
-
-/***/ },
-/* 26 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * @license AngularJS v1.4.0
-	 * (c) 2010-2015 Google, Inc. http://angularjs.org
-	 * License: MIT
-	 */
-	(function(window, angular, undefined) {'use strict';
-	
-	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-	 *     Any commits to this file should be reviewed with security in mind.  *
-	 *   Changes to this file can potentially create security vulnerabilities. *
-	 *          An approval from 2 Core members with history of modifying      *
-	 *                         this file is required.                          *
-	 *                                                                         *
-	 *  Does the change somehow allow for arbitrary javascript to be executed? *
-	 *    Or allows for someone to change the prototype of built-in objects?   *
-	 *     Or gives undesired access to variables likes document or window?    *
-	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-	
-	var $sanitizeMinErr = angular.$$minErr('$sanitize');
-	
-	/**
-	 * @ngdoc module
-	 * @name ngSanitize
-	 * @description
-	 *
-	 * # ngSanitize
-	 *
-	 * The `ngSanitize` module provides functionality to sanitize HTML.
-	 *
-	 *
-	 * <div doc-module-components="ngSanitize"></div>
-	 *
-	 * See {@link ngSanitize.$sanitize `$sanitize`} for usage.
-	 */
-	
-	/*
-	 * HTML Parser By Misko Hevery (misko@hevery.com)
-	 * based on:  HTML Parser By John Resig (ejohn.org)
-	 * Original code by Erik Arvidsson, Mozilla Public License
-	 * http://erik.eae.net/simplehtmlparser/simplehtmlparser.js
-	 *
-	 * // Use like so:
-	 * htmlParser(htmlString, {
-	 *     start: function(tag, attrs, unary) {},
-	 *     end: function(tag) {},
-	 *     chars: function(text) {},
-	 *     comment: function(text) {}
-	 * });
-	 *
-	 */
-	
-	
-	/**
-	 * @ngdoc service
-	 * @name $sanitize
-	 * @kind function
-	 *
-	 * @description
-	 *   The input is sanitized by parsing the HTML into tokens. All safe tokens (from a whitelist) are
-	 *   then serialized back to properly escaped html string. This means that no unsafe input can make
-	 *   it into the returned string, however, since our parser is more strict than a typical browser
-	 *   parser, it's possible that some obscure input, which would be recognized as valid HTML by a
-	 *   browser, won't make it through the sanitizer. The input may also contain SVG markup.
-	 *   The whitelist is configured using the functions `aHrefSanitizationWhitelist` and
-	 *   `imgSrcSanitizationWhitelist` of {@link ng.$compileProvider `$compileProvider`}.
-	 *
-	 * @param {string} html HTML input.
-	 * @returns {string} Sanitized HTML.
-	 *
-	 * @example
-	   <example module="sanitizeExample" deps="angular-sanitize.js">
-	   <file name="index.html">
-	     <script>
-	         angular.module('sanitizeExample', ['ngSanitize'])
-	           .controller('ExampleController', ['$scope', '$sce', function($scope, $sce) {
-	             $scope.snippet =
-	               '<p style="color:blue">an html\n' +
-	               '<em onmouseover="this.textContent=\'PWN3D!\'">click here</em>\n' +
-	               'snippet</p>';
-	             $scope.deliberatelyTrustDangerousSnippet = function() {
-	               return $sce.trustAsHtml($scope.snippet);
-	             };
-	           }]);
-	     </script>
-	     <div ng-controller="ExampleController">
-	        Snippet: <textarea ng-model="snippet" cols="60" rows="3"></textarea>
-	       <table>
-	         <tr>
-	           <td>Directive</td>
-	           <td>How</td>
-	           <td>Source</td>
-	           <td>Rendered</td>
-	         </tr>
-	         <tr id="bind-html-with-sanitize">
-	           <td>ng-bind-html</td>
-	           <td>Automatically uses $sanitize</td>
-	           <td><pre>&lt;div ng-bind-html="snippet"&gt;<br/>&lt;/div&gt;</pre></td>
-	           <td><div ng-bind-html="snippet"></div></td>
-	         </tr>
-	         <tr id="bind-html-with-trust">
-	           <td>ng-bind-html</td>
-	           <td>Bypass $sanitize by explicitly trusting the dangerous value</td>
-	           <td>
-	           <pre>&lt;div ng-bind-html="deliberatelyTrustDangerousSnippet()"&gt;
-	&lt;/div&gt;</pre>
-	           </td>
-	           <td><div ng-bind-html="deliberatelyTrustDangerousSnippet()"></div></td>
-	         </tr>
-	         <tr id="bind-default">
-	           <td>ng-bind</td>
-	           <td>Automatically escapes</td>
-	           <td><pre>&lt;div ng-bind="snippet"&gt;<br/>&lt;/div&gt;</pre></td>
-	           <td><div ng-bind="snippet"></div></td>
-	         </tr>
-	       </table>
-	       </div>
-	   </file>
-	   <file name="protractor.js" type="protractor">
-	     it('should sanitize the html snippet by default', function() {
-	       expect(element(by.css('#bind-html-with-sanitize div')).getInnerHtml()).
-	         toBe('<p>an html\n<em>click here</em>\nsnippet</p>');
-	     });
-	
-	     it('should inline raw snippet if bound to a trusted value', function() {
-	       expect(element(by.css('#bind-html-with-trust div')).getInnerHtml()).
-	         toBe("<p style=\"color:blue\">an html\n" +
-	              "<em onmouseover=\"this.textContent='PWN3D!'\">click here</em>\n" +
-	              "snippet</p>");
-	     });
-	
-	     it('should escape snippet without any filter', function() {
-	       expect(element(by.css('#bind-default div')).getInnerHtml()).
-	         toBe("&lt;p style=\"color:blue\"&gt;an html\n" +
-	              "&lt;em onmouseover=\"this.textContent='PWN3D!'\"&gt;click here&lt;/em&gt;\n" +
-	              "snippet&lt;/p&gt;");
-	     });
-	
-	     it('should update', function() {
-	       element(by.model('snippet')).clear();
-	       element(by.model('snippet')).sendKeys('new <b onclick="alert(1)">text</b>');
-	       expect(element(by.css('#bind-html-with-sanitize div')).getInnerHtml()).
-	         toBe('new <b>text</b>');
-	       expect(element(by.css('#bind-html-with-trust div')).getInnerHtml()).toBe(
-	         'new <b onclick="alert(1)">text</b>');
-	       expect(element(by.css('#bind-default div')).getInnerHtml()).toBe(
-	         "new &lt;b onclick=\"alert(1)\"&gt;text&lt;/b&gt;");
-	     });
-	   </file>
-	   </example>
-	 */
-	function $SanitizeProvider() {
-	  this.$get = ['$$sanitizeUri', function($$sanitizeUri) {
-	    return function(html) {
-	      var buf = [];
-	      htmlParser(html, htmlSanitizeWriter(buf, function(uri, isImage) {
-	        return !/^unsafe/.test($$sanitizeUri(uri, isImage));
-	      }));
-	      return buf.join('');
-	    };
-	  }];
-	}
-	
-	function sanitizeText(chars) {
-	  var buf = [];
-	  var writer = htmlSanitizeWriter(buf, angular.noop);
-	  writer.chars(chars);
-	  return buf.join('');
-	}
-	
-	
-	// Regular Expressions for parsing tags and attributes
-	var START_TAG_REGEXP =
-	       /^<((?:[a-zA-Z])[\w:-]*)((?:\s+[\w:-]+(?:\s*=\s*(?:(?:"[^"]*")|(?:'[^']*')|[^>\s]+))?)*)\s*(\/?)\s*(>?)/,
-	  END_TAG_REGEXP = /^<\/\s*([\w:-]+)[^>]*>/,
-	  ATTR_REGEXP = /([\w:-]+)(?:\s*=\s*(?:(?:"((?:[^"])*)")|(?:'((?:[^'])*)')|([^>\s]+)))?/g,
-	  BEGIN_TAG_REGEXP = /^</,
-	  BEGING_END_TAGE_REGEXP = /^<\//,
-	  COMMENT_REGEXP = /<!--(.*?)-->/g,
-	  DOCTYPE_REGEXP = /<!DOCTYPE([^>]*?)>/i,
-	  CDATA_REGEXP = /<!\[CDATA\[(.*?)]]>/g,
-	  SURROGATE_PAIR_REGEXP = /[\uD800-\uDBFF][\uDC00-\uDFFF]/g,
-	  // Match everything outside of normal chars and " (quote character)
-	  NON_ALPHANUMERIC_REGEXP = /([^\#-~| |!])/g;
-	
-	
-	// Good source of info about elements and attributes
-	// http://dev.w3.org/html5/spec/Overview.html#semantics
-	// http://simon.html5.org/html-elements
-	
-	// Safe Void Elements - HTML5
-	// http://dev.w3.org/html5/spec/Overview.html#void-elements
-	var voidElements = makeMap("area,br,col,hr,img,wbr");
-	
-	// Elements that you can, intentionally, leave open (and which close themselves)
-	// http://dev.w3.org/html5/spec/Overview.html#optional-tags
-	var optionalEndTagBlockElements = makeMap("colgroup,dd,dt,li,p,tbody,td,tfoot,th,thead,tr"),
-	    optionalEndTagInlineElements = makeMap("rp,rt"),
-	    optionalEndTagElements = angular.extend({},
-	                                            optionalEndTagInlineElements,
-	                                            optionalEndTagBlockElements);
-	
-	// Safe Block Elements - HTML5
-	var blockElements = angular.extend({}, optionalEndTagBlockElements, makeMap("address,article," +
-	        "aside,blockquote,caption,center,del,dir,div,dl,figure,figcaption,footer,h1,h2,h3,h4,h5," +
-	        "h6,header,hgroup,hr,ins,map,menu,nav,ol,pre,script,section,table,ul"));
-	
-	// Inline Elements - HTML5
-	var inlineElements = angular.extend({}, optionalEndTagInlineElements, makeMap("a,abbr,acronym,b," +
-	        "bdi,bdo,big,br,cite,code,del,dfn,em,font,i,img,ins,kbd,label,map,mark,q,ruby,rp,rt,s," +
-	        "samp,small,span,strike,strong,sub,sup,time,tt,u,var"));
-	
-	// SVG Elements
-	// https://wiki.whatwg.org/wiki/Sanitization_rules#svg_Elements
-	// Note: the elements animate,animateColor,animateMotion,animateTransform,set are intentionally omitted.
-	// They can potentially allow for arbitrary javascript to be executed. See #11290
-	var svgElements = makeMap("circle,defs,desc,ellipse,font-face,font-face-name,font-face-src,g,glyph," +
-	        "hkern,image,linearGradient,line,marker,metadata,missing-glyph,mpath,path,polygon,polyline," +
-	        "radialGradient,rect,stop,svg,switch,text,title,tspan,use");
-	
-	// Special Elements (can contain anything)
-	var specialElements = makeMap("script,style");
-	
-	var validElements = angular.extend({},
-	                                   voidElements,
-	                                   blockElements,
-	                                   inlineElements,
-	                                   optionalEndTagElements,
-	                                   svgElements);
-	
-	//Attributes that have href and hence need to be sanitized
-	var uriAttrs = makeMap("background,cite,href,longdesc,src,usemap,xlink:href");
-	
-	var htmlAttrs = makeMap('abbr,align,alt,axis,bgcolor,border,cellpadding,cellspacing,class,clear,' +
-	    'color,cols,colspan,compact,coords,dir,face,headers,height,hreflang,hspace,' +
-	    'ismap,lang,language,nohref,nowrap,rel,rev,rows,rowspan,rules,' +
-	    'scope,scrolling,shape,size,span,start,summary,target,title,type,' +
-	    'valign,value,vspace,width');
-	
-	// SVG attributes (without "id" and "name" attributes)
-	// https://wiki.whatwg.org/wiki/Sanitization_rules#svg_Attributes
-	var svgAttrs = makeMap('accent-height,accumulate,additive,alphabetic,arabic-form,ascent,' +
-	    'baseProfile,bbox,begin,by,calcMode,cap-height,class,color,color-rendering,content,' +
-	    'cx,cy,d,dx,dy,descent,display,dur,end,fill,fill-rule,font-family,font-size,font-stretch,' +
-	    'font-style,font-variant,font-weight,from,fx,fy,g1,g2,glyph-name,gradientUnits,hanging,' +
-	    'height,horiz-adv-x,horiz-origin-x,ideographic,k,keyPoints,keySplines,keyTimes,lang,' +
-	    'marker-end,marker-mid,marker-start,markerHeight,markerUnits,markerWidth,mathematical,' +
-	    'max,min,offset,opacity,orient,origin,overline-position,overline-thickness,panose-1,' +
-	    'path,pathLength,points,preserveAspectRatio,r,refX,refY,repeatCount,repeatDur,' +
-	    'requiredExtensions,requiredFeatures,restart,rotate,rx,ry,slope,stemh,stemv,stop-color,' +
-	    'stop-opacity,strikethrough-position,strikethrough-thickness,stroke,stroke-dasharray,' +
-	    'stroke-dashoffset,stroke-linecap,stroke-linejoin,stroke-miterlimit,stroke-opacity,' +
-	    'stroke-width,systemLanguage,target,text-anchor,to,transform,type,u1,u2,underline-position,' +
-	    'underline-thickness,unicode,unicode-range,units-per-em,values,version,viewBox,visibility,' +
-	    'width,widths,x,x-height,x1,x2,xlink:actuate,xlink:arcrole,xlink:role,xlink:show,xlink:title,' +
-	    'xlink:type,xml:base,xml:lang,xml:space,xmlns,xmlns:xlink,y,y1,y2,zoomAndPan', true);
-	
-	var validAttrs = angular.extend({},
-	                                uriAttrs,
-	                                svgAttrs,
-	                                htmlAttrs);
-	
-	function makeMap(str, lowercaseKeys) {
-	  var obj = {}, items = str.split(','), i;
-	  for (i = 0; i < items.length; i++) {
-	    obj[lowercaseKeys ? angular.lowercase(items[i]) : items[i]] = true;
-	  }
-	  return obj;
-	}
-	
-	
-	/**
-	 * @example
-	 * htmlParser(htmlString, {
-	 *     start: function(tag, attrs, unary) {},
-	 *     end: function(tag) {},
-	 *     chars: function(text) {},
-	 *     comment: function(text) {}
-	 * });
-	 *
-	 * @param {string} html string
-	 * @param {object} handler
-	 */
-	function htmlParser(html, handler) {
-	  if (typeof html !== 'string') {
-	    if (html === null || typeof html === 'undefined') {
-	      html = '';
-	    } else {
-	      html = '' + html;
-	    }
-	  }
-	  var index, chars, match, stack = [], last = html, text;
-	  stack.last = function() { return stack[stack.length - 1]; };
-	
-	  while (html) {
-	    text = '';
-	    chars = true;
-	
-	    // Make sure we're not in a script or style element
-	    if (!stack.last() || !specialElements[stack.last()]) {
-	
-	      // Comment
-	      if (html.indexOf("<!--") === 0) {
-	        // comments containing -- are not allowed unless they terminate the comment
-	        index = html.indexOf("--", 4);
-	
-	        if (index >= 0 && html.lastIndexOf("-->", index) === index) {
-	          if (handler.comment) handler.comment(html.substring(4, index));
-	          html = html.substring(index + 3);
-	          chars = false;
-	        }
-	      // DOCTYPE
-	      } else if (DOCTYPE_REGEXP.test(html)) {
-	        match = html.match(DOCTYPE_REGEXP);
-	
-	        if (match) {
-	          html = html.replace(match[0], '');
-	          chars = false;
-	        }
-	      // end tag
-	      } else if (BEGING_END_TAGE_REGEXP.test(html)) {
-	        match = html.match(END_TAG_REGEXP);
-	
-	        if (match) {
-	          html = html.substring(match[0].length);
-	          match[0].replace(END_TAG_REGEXP, parseEndTag);
-	          chars = false;
-	        }
-	
-	      // start tag
-	      } else if (BEGIN_TAG_REGEXP.test(html)) {
-	        match = html.match(START_TAG_REGEXP);
-	
-	        if (match) {
-	          // We only have a valid start-tag if there is a '>'.
-	          if (match[4]) {
-	            html = html.substring(match[0].length);
-	            match[0].replace(START_TAG_REGEXP, parseStartTag);
-	          }
-	          chars = false;
-	        } else {
-	          // no ending tag found --- this piece should be encoded as an entity.
-	          text += '<';
-	          html = html.substring(1);
-	        }
-	      }
-	
-	      if (chars) {
-	        index = html.indexOf("<");
-	
-	        text += index < 0 ? html : html.substring(0, index);
-	        html = index < 0 ? "" : html.substring(index);
-	
-	        if (handler.chars) handler.chars(decodeEntities(text));
-	      }
-	
-	    } else {
-	      // IE versions 9 and 10 do not understand the regex '[^]', so using a workaround with [\W\w].
-	      html = html.replace(new RegExp("([\\W\\w]*)<\\s*\\/\\s*" + stack.last() + "[^>]*>", 'i'),
-	        function(all, text) {
-	          text = text.replace(COMMENT_REGEXP, "$1").replace(CDATA_REGEXP, "$1");
-	
-	          if (handler.chars) handler.chars(decodeEntities(text));
-	
-	          return "";
-	      });
-	
-	      parseEndTag("", stack.last());
-	    }
-	
-	    if (html == last) {
-	      throw $sanitizeMinErr('badparse', "The sanitizer was unable to parse the following block " +
-	                                        "of html: {0}", html);
-	    }
-	    last = html;
-	  }
-	
-	  // Clean up any remaining tags
-	  parseEndTag();
-	
-	  function parseStartTag(tag, tagName, rest, unary) {
-	    tagName = angular.lowercase(tagName);
-	    if (blockElements[tagName]) {
-	      while (stack.last() && inlineElements[stack.last()]) {
-	        parseEndTag("", stack.last());
-	      }
-	    }
-	
-	    if (optionalEndTagElements[tagName] && stack.last() == tagName) {
-	      parseEndTag("", tagName);
-	    }
-	
-	    unary = voidElements[tagName] || !!unary;
-	
-	    if (!unary) {
-	      stack.push(tagName);
-	    }
-	
-	    var attrs = {};
-	
-	    rest.replace(ATTR_REGEXP,
-	      function(match, name, doubleQuotedValue, singleQuotedValue, unquotedValue) {
-	        var value = doubleQuotedValue
-	          || singleQuotedValue
-	          || unquotedValue
-	          || '';
-	
-	        attrs[name] = decodeEntities(value);
-	    });
-	    if (handler.start) handler.start(tagName, attrs, unary);
-	  }
-	
-	  function parseEndTag(tag, tagName) {
-	    var pos = 0, i;
-	    tagName = angular.lowercase(tagName);
-	    if (tagName) {
-	      // Find the closest opened tag of the same type
-	      for (pos = stack.length - 1; pos >= 0; pos--) {
-	        if (stack[pos] == tagName) break;
-	      }
-	    }
-	
-	    if (pos >= 0) {
-	      // Close all the open elements, up the stack
-	      for (i = stack.length - 1; i >= pos; i--)
-	        if (handler.end) handler.end(stack[i]);
-	
-	      // Remove the open elements from the stack
-	      stack.length = pos;
-	    }
-	  }
-	}
-	
-	var hiddenPre=document.createElement("pre");
-	/**
-	 * decodes all entities into regular string
-	 * @param value
-	 * @returns {string} A string with decoded entities.
-	 */
-	function decodeEntities(value) {
-	  if (!value) { return ''; }
-	
-	  hiddenPre.innerHTML = value.replace(/</g,"&lt;");
-	  // innerText depends on styling as it doesn't display hidden elements.
-	  // Therefore, it's better to use textContent not to cause unnecessary reflows.
-	  return hiddenPre.textContent;
-	}
-	
-	/**
-	 * Escapes all potentially dangerous characters, so that the
-	 * resulting string can be safely inserted into attribute or
-	 * element text.
-	 * @param value
-	 * @returns {string} escaped text
-	 */
-	function encodeEntities(value) {
-	  return value.
-	    replace(/&/g, '&amp;').
-	    replace(SURROGATE_PAIR_REGEXP, function(value) {
-	      var hi = value.charCodeAt(0);
-	      var low = value.charCodeAt(1);
-	      return '&#' + (((hi - 0xD800) * 0x400) + (low - 0xDC00) + 0x10000) + ';';
-	    }).
-	    replace(NON_ALPHANUMERIC_REGEXP, function(value) {
-	      return '&#' + value.charCodeAt(0) + ';';
-	    }).
-	    replace(/</g, '&lt;').
-	    replace(/>/g, '&gt;');
-	}
-	
-	/**
-	 * create an HTML/XML writer which writes to buffer
-	 * @param {Array} buf use buf.jain('') to get out sanitized html string
-	 * @returns {object} in the form of {
-	 *     start: function(tag, attrs, unary) {},
-	 *     end: function(tag) {},
-	 *     chars: function(text) {},
-	 *     comment: function(text) {}
-	 * }
-	 */
-	function htmlSanitizeWriter(buf, uriValidator) {
-	  var ignore = false;
-	  var out = angular.bind(buf, buf.push);
-	  return {
-	    start: function(tag, attrs, unary) {
-	      tag = angular.lowercase(tag);
-	      if (!ignore && specialElements[tag]) {
-	        ignore = tag;
-	      }
-	      if (!ignore && validElements[tag] === true) {
-	        out('<');
-	        out(tag);
-	        angular.forEach(attrs, function(value, key) {
-	          var lkey=angular.lowercase(key);
-	          var isImage = (tag === 'img' && lkey === 'src') || (lkey === 'background');
-	          if (validAttrs[lkey] === true &&
-	            (uriAttrs[lkey] !== true || uriValidator(value, isImage))) {
-	            out(' ');
-	            out(key);
-	            out('="');
-	            out(encodeEntities(value));
-	            out('"');
-	          }
-	        });
-	        out(unary ? '/>' : '>');
-	      }
-	    },
-	    end: function(tag) {
-	        tag = angular.lowercase(tag);
-	        if (!ignore && validElements[tag] === true) {
-	          out('</');
-	          out(tag);
-	          out('>');
-	        }
-	        if (tag == ignore) {
-	          ignore = false;
-	        }
-	      },
-	    chars: function(chars) {
-	        if (!ignore) {
-	          out(encodeEntities(chars));
-	        }
-	      }
-	  };
-	}
-	
-	
-	// define ngSanitize module and register $sanitize service
-	angular.module('ngSanitize', []).provider('$sanitize', $SanitizeProvider);
-	
-	/* global sanitizeText: false */
-	
-	/**
-	 * @ngdoc filter
-	 * @name linky
-	 * @kind function
-	 *
-	 * @description
-	 * Finds links in text input and turns them into html links. Supports http/https/ftp/mailto and
-	 * plain email address links.
-	 *
-	 * Requires the {@link ngSanitize `ngSanitize`} module to be installed.
-	 *
-	 * @param {string} text Input text.
-	 * @param {string} target Window (_blank|_self|_parent|_top) or named frame to open links in.
-	 * @returns {string} Html-linkified text.
-	 *
-	 * @usage
-	   <span ng-bind-html="linky_expression | linky"></span>
-	 *
-	 * @example
-	   <example module="linkyExample" deps="angular-sanitize.js">
-	     <file name="index.html">
-	       <script>
-	         angular.module('linkyExample', ['ngSanitize'])
-	           .controller('ExampleController', ['$scope', function($scope) {
-	             $scope.snippet =
-	               'Pretty text with some links:\n'+
-	               'http://angularjs.org/,\n'+
-	               'mailto:us@somewhere.org,\n'+
-	               'another@somewhere.org,\n'+
-	               'and one more: ftp://127.0.0.1/.';
-	             $scope.snippetWithTarget = 'http://angularjs.org/';
-	           }]);
-	       </script>
-	       <div ng-controller="ExampleController">
-	       Snippet: <textarea ng-model="snippet" cols="60" rows="3"></textarea>
-	       <table>
-	         <tr>
-	           <td>Filter</td>
-	           <td>Source</td>
-	           <td>Rendered</td>
-	         </tr>
-	         <tr id="linky-filter">
-	           <td>linky filter</td>
-	           <td>
-	             <pre>&lt;div ng-bind-html="snippet | linky"&gt;<br>&lt;/div&gt;</pre>
-	           </td>
-	           <td>
-	             <div ng-bind-html="snippet | linky"></div>
-	           </td>
-	         </tr>
-	         <tr id="linky-target">
-	          <td>linky target</td>
-	          <td>
-	            <pre>&lt;div ng-bind-html="snippetWithTarget | linky:'_blank'"&gt;<br>&lt;/div&gt;</pre>
-	          </td>
-	          <td>
-	            <div ng-bind-html="snippetWithTarget | linky:'_blank'"></div>
-	          </td>
-	         </tr>
-	         <tr id="escaped-html">
-	           <td>no filter</td>
-	           <td><pre>&lt;div ng-bind="snippet"&gt;<br>&lt;/div&gt;</pre></td>
-	           <td><div ng-bind="snippet"></div></td>
-	         </tr>
-	       </table>
-	     </file>
-	     <file name="protractor.js" type="protractor">
-	       it('should linkify the snippet with urls', function() {
-	         expect(element(by.id('linky-filter')).element(by.binding('snippet | linky')).getText()).
-	             toBe('Pretty text with some links: http://angularjs.org/, us@somewhere.org, ' +
-	                  'another@somewhere.org, and one more: ftp://127.0.0.1/.');
-	         expect(element.all(by.css('#linky-filter a')).count()).toEqual(4);
-	       });
-	
-	       it('should not linkify snippet without the linky filter', function() {
-	         expect(element(by.id('escaped-html')).element(by.binding('snippet')).getText()).
-	             toBe('Pretty text with some links: http://angularjs.org/, mailto:us@somewhere.org, ' +
-	                  'another@somewhere.org, and one more: ftp://127.0.0.1/.');
-	         expect(element.all(by.css('#escaped-html a')).count()).toEqual(0);
-	       });
-	
-	       it('should update', function() {
-	         element(by.model('snippet')).clear();
-	         element(by.model('snippet')).sendKeys('new http://link.');
-	         expect(element(by.id('linky-filter')).element(by.binding('snippet | linky')).getText()).
-	             toBe('new http://link.');
-	         expect(element.all(by.css('#linky-filter a')).count()).toEqual(1);
-	         expect(element(by.id('escaped-html')).element(by.binding('snippet')).getText())
-	             .toBe('new http://link.');
-	       });
-	
-	       it('should work with the target property', function() {
-	        expect(element(by.id('linky-target')).
-	            element(by.binding("snippetWithTarget | linky:'_blank'")).getText()).
-	            toBe('http://angularjs.org/');
-	        expect(element(by.css('#linky-target a')).getAttribute('target')).toEqual('_blank');
-	       });
-	     </file>
-	   </example>
-	 */
-	angular.module('ngSanitize').filter('linky', ['$sanitize', function($sanitize) {
-	  var LINKY_URL_REGEXP =
-	        /((ftp|https?):\/\/|(www\.)|(mailto:)?[A-Za-z0-9._%+-]+@)\S*[^\s.;,(){}<>"”’]/,
-	      MAILTO_REGEXP = /^mailto:/;
-	
-	  return function(text, target) {
-	    if (!text) return text;
-	    var match;
-	    var raw = text;
-	    var html = [];
-	    var url;
-	    var i;
-	    while ((match = raw.match(LINKY_URL_REGEXP))) {
-	      // We can not end in these as they are sometimes found at the end of the sentence
-	      url = match[0];
-	      // if we did not match ftp/http/www/mailto then assume mailto
-	      if (!match[2] && !match[4]) {
-	        url = (match[3] ? 'http://' : 'mailto:') + url;
-	      }
-	      i = match.index;
-	      addText(raw.substr(0, i));
-	      addLink(url, match[0].replace(MAILTO_REGEXP, ''));
-	      raw = raw.substring(i + match[0].length);
-	    }
-	    addText(raw);
-	    return $sanitize(html.join(''));
-	
-	    function addText(text) {
-	      if (!text) {
-	        return;
-	      }
-	      html.push(sanitizeText(text));
-	    }
-	
-	    function addLink(url, text) {
-	      html.push('<a ');
-	      if (angular.isDefined(target)) {
-	        html.push('target="',
-	                  target,
-	                  '" ');
-	      }
-	      html.push('href="',
-	                url.replace(/"/g, '&quot;'),
-	                '">');
-	      addText(text);
-	      html.push('</a>');
-	    }
-	  };
-	}]);
-	
-	
-	})(window, window.angular);
-
-
-/***/ },
-/* 27 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// style-loader: Adds some css to the DOM by adding a <style> tag
-	
-	// load the styles
-	var content = __webpack_require__(28);
-	if(typeof content === 'string') content = [[module.id, content, '']];
-	// add the styles to the DOM
-	var update = __webpack_require__(12)(content, {});
-	if(content.locals) module.exports = content.locals;
-	// Hot Module Replacement
-	if(false) {
-		// When the styles change, update the <style> tags
-		if(!content.locals) {
-			module.hot.accept("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/sass-loader/index.js!./home.scss", function() {
-				var newContent = require("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/sass-loader/index.js!./home.scss");
-				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-				update(newContent);
-			});
-		}
-		// When the module is disposed, remove the <style> tags
-		module.hot.dispose(function() { update(); });
-	}
-
-/***/ },
-/* 28 */
-/***/ function(module, exports, __webpack_require__) {
-
-	exports = module.exports = __webpack_require__(17)();
-	exports.push([module.id, "p {\n  font-size: 30px; }\n", ""]);
-
-/***/ },
-/* 29 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// style-loader: Adds some css to the DOM by adding a <style> tag
-	
-	// load the styles
-	var content = __webpack_require__(30);
-	if(typeof content === 'string') content = [[module.id, content, '']];
-	// add the styles to the DOM
-	var update = __webpack_require__(12)(content, {});
-	if(content.locals) module.exports = content.locals;
-	// Hot Module Replacement
-	if(false) {
-		// When the styles change, update the <style> tags
-		if(!content.locals) {
-			module.hot.accept("!!./../../css-loader/index.js!./reveal.css", function() {
-				var newContent = require("!!./../../css-loader/index.js!./reveal.css");
-				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-				update(newContent);
-			});
-		}
-		// When the module is disposed, remove the <style> tags
-		module.hot.dispose(function() { update(); });
-	}
-
-/***/ },
-/* 30 */
-/***/ function(module, exports, __webpack_require__) {
-
-	exports = module.exports = __webpack_require__(17)();
-	exports.push([module.id, "/*!\n * reveal.js\n * http://lab.hakim.se/reveal-js\n * MIT licensed\n *\n * Copyright (C) 2015 Hakim El Hattab, http://hakim.se\n */\n/*********************************************\n * RESET STYLES\n *********************************************/\nhtml, body, .reveal div, .reveal span, .reveal applet, .reveal object, .reveal iframe, .reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6, .reveal p, .reveal blockquote, .reveal pre, .reveal a, .reveal abbr, .reveal acronym, .reveal address, .reveal big, .reveal cite, .reveal code, .reveal del, .reveal dfn, .reveal em, .reveal img, .reveal ins, .reveal kbd, .reveal q, .reveal s, .reveal samp, .reveal small, .reveal strike, .reveal strong, .reveal sub, .reveal sup, .reveal tt, .reveal var, .reveal b, .reveal u, .reveal center, .reveal dl, .reveal dt, .reveal dd, .reveal ol, .reveal ul, .reveal li, .reveal fieldset, .reveal form, .reveal label, .reveal legend, .reveal table, .reveal caption, .reveal tbody, .reveal tfoot, .reveal thead, .reveal tr, .reveal th, .reveal td, .reveal article, .reveal aside, .reveal canvas, .reveal details, .reveal embed, .reveal figure, .reveal figcaption, .reveal footer, .reveal header, .reveal hgroup, .reveal menu, .reveal nav, .reveal output, .reveal ruby, .reveal section, .reveal summary, .reveal time, .reveal mark, .reveal audio, video {\n  margin: 0;\n  padding: 0;\n  border: 0;\n  font-size: 100%;\n  font: inherit;\n  vertical-align: baseline; }\n\n.reveal article, .reveal aside, .reveal details, .reveal figcaption, .reveal figure, .reveal footer, .reveal header, .reveal hgroup, .reveal menu, .reveal nav, .reveal section {\n  display: block; }\n\n/*********************************************\n * GLOBAL STYLES\n *********************************************/\nhtml, body {\n  width: 100%;\n  height: 100%;\n  overflow: hidden; }\n\nbody {\n  position: relative;\n  line-height: 1;\n  background-color: #fff;\n  color: #000; }\n\n/*********************************************\n * VIEW FRAGMENTS\n *********************************************/\n.reveal .slides section .fragment {\n  opacity: 0;\n  visibility: hidden;\n  -webkit-transition: all 0.2s ease;\n          transition: all 0.2s ease; }\n  .reveal .slides section .fragment.visible {\n    opacity: 1;\n    visibility: visible; }\n\n.reveal .slides section .fragment.grow {\n  opacity: 1;\n  visibility: visible; }\n  .reveal .slides section .fragment.grow.visible {\n    -webkit-transform: scale(1.3);\n        -ms-transform: scale(1.3);\n            transform: scale(1.3); }\n\n.reveal .slides section .fragment.shrink {\n  opacity: 1;\n  visibility: visible; }\n  .reveal .slides section .fragment.shrink.visible {\n    -webkit-transform: scale(0.7);\n        -ms-transform: scale(0.7);\n            transform: scale(0.7); }\n\n.reveal .slides section .fragment.zoom-in {\n  -webkit-transform: scale(0.1);\n      -ms-transform: scale(0.1);\n          transform: scale(0.1); }\n  .reveal .slides section .fragment.zoom-in.visible {\n    -webkit-transform: none;\n        -ms-transform: none;\n            transform: none; }\n\n.reveal .slides section .fragment.fade-out {\n  opacity: 1;\n  visibility: visible; }\n  .reveal .slides section .fragment.fade-out.visible {\n    opacity: 0;\n    visibility: hidden; }\n\n.reveal .slides section .fragment.semi-fade-out {\n  opacity: 1;\n  visibility: visible; }\n  .reveal .slides section .fragment.semi-fade-out.visible {\n    opacity: 0.5;\n    visibility: visible; }\n\n.reveal .slides section .fragment.strike {\n  opacity: 1; }\n  .reveal .slides section .fragment.strike.visible {\n    text-decoration: line-through; }\n\n.reveal .slides section .fragment.current-visible {\n  opacity: 0;\n  visibility: hidden; }\n  .reveal .slides section .fragment.current-visible.current-fragment {\n    opacity: 1;\n    visibility: visible; }\n\n.reveal .slides section .fragment.highlight-red, .reveal .slides section .fragment.highlight-current-red, .reveal .slides section .fragment.highlight-green, .reveal .slides section .fragment.highlight-current-green, .reveal .slides section .fragment.highlight-blue, .reveal .slides section .fragment.highlight-current-blue {\n  opacity: 1;\n  visibility: visible; }\n\n.reveal .slides section .fragment.highlight-red.visible {\n  color: #ff2c2d; }\n\n.reveal .slides section .fragment.highlight-green.visible {\n  color: #17ff2e; }\n\n.reveal .slides section .fragment.highlight-blue.visible {\n  color: #1b91ff; }\n\n.reveal .slides section .fragment.highlight-current-red.current-fragment {\n  color: #ff2c2d; }\n\n.reveal .slides section .fragment.highlight-current-green.current-fragment {\n  color: #17ff2e; }\n\n.reveal .slides section .fragment.highlight-current-blue.current-fragment {\n  color: #1b91ff; }\n\n/*********************************************\n * DEFAULT ELEMENT STYLES\n *********************************************/\n/* Fixes issue in Chrome where italic fonts did not appear when printing to PDF */\n.reveal:after {\n  content: '';\n  font-style: italic; }\n\n.reveal iframe {\n  z-index: 1; }\n\n/** Prevents layering issues in certain browser/transition combinations */\n.reveal a {\n  position: relative; }\n\n.reveal .stretch {\n  max-width: none;\n  max-height: none; }\n\n.reveal pre.stretch code {\n  height: 100%;\n  max-height: 100%;\n  -moz-box-sizing: border-box;\n       box-sizing: border-box; }\n\n/*********************************************\n * CONTROLS\n *********************************************/\n.reveal .controls {\n  display: none;\n  position: fixed;\n  width: 110px;\n  height: 110px;\n  z-index: 30;\n  right: 10px;\n  bottom: 10px;\n  -webkit-user-select: none; }\n\n.reveal .controls div {\n  position: absolute;\n  opacity: 0.05;\n  width: 0;\n  height: 0;\n  border: 12px solid transparent;\n  -webkit-transform: scale(0.9999);\n      -ms-transform: scale(0.9999);\n          transform: scale(0.9999);\n  -webkit-transition: all 0.2s ease;\n          transition: all 0.2s ease;\n  -webkit-tap-highlight-color: rgba(0, 0, 0, 0); }\n\n.reveal .controls div.enabled {\n  opacity: 0.7;\n  cursor: pointer; }\n\n.reveal .controls div.enabled:active {\n  margin-top: 1px; }\n\n.reveal .controls div.navigate-left {\n  top: 42px;\n  border-right-width: 22px;\n  border-right-color: #000; }\n\n.reveal .controls div.navigate-left.fragmented {\n  opacity: 0.3; }\n\n.reveal .controls div.navigate-right {\n  left: 74px;\n  top: 42px;\n  border-left-width: 22px;\n  border-left-color: #000; }\n\n.reveal .controls div.navigate-right.fragmented {\n  opacity: 0.3; }\n\n.reveal .controls div.navigate-up {\n  left: 42px;\n  border-bottom-width: 22px;\n  border-bottom-color: #000; }\n\n.reveal .controls div.navigate-up.fragmented {\n  opacity: 0.3; }\n\n.reveal .controls div.navigate-down {\n  left: 42px;\n  top: 74px;\n  border-top-width: 22px;\n  border-top-color: #000; }\n\n.reveal .controls div.navigate-down.fragmented {\n  opacity: 0.3; }\n\n/*********************************************\n * PROGRESS BAR\n *********************************************/\n.reveal .progress {\n  position: fixed;\n  display: none;\n  height: 3px;\n  width: 100%;\n  bottom: 0;\n  left: 0;\n  z-index: 10;\n  background-color: rgba(0, 0, 0, 0.2); }\n\n.reveal .progress:after {\n  content: '';\n  display: block;\n  position: absolute;\n  height: 20px;\n  width: 100%;\n  top: -20px; }\n\n.reveal .progress span {\n  display: block;\n  height: 100%;\n  width: 0px;\n  background-color: #000;\n  -webkit-transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);\n          transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985); }\n\n/*********************************************\n * SLIDE NUMBER\n *********************************************/\n.reveal .slide-number {\n  position: fixed;\n  display: block;\n  right: 15px;\n  bottom: 15px;\n  opacity: 0.5;\n  z-index: 31;\n  font-size: 12px; }\n\n/*********************************************\n * SLIDES\n *********************************************/\n.reveal {\n  position: relative;\n  width: 100%;\n  height: 100%;\n  overflow: hidden;\n  -ms-touch-action: none;\n      touch-action: none; }\n\n.reveal .slides {\n  position: absolute;\n  width: 100%;\n  height: 100%;\n  top: 0;\n  right: 0;\n  bottom: 0;\n  left: 0;\n  margin: auto;\n  overflow: visible;\n  z-index: 1;\n  text-align: center;\n  -webkit-perspective: 600px;\n          perspective: 600px;\n  -webkit-perspective-origin: 50% 40%;\n          perspective-origin: 50% 40%; }\n\n.reveal .slides > section {\n  -ms-perspective: 600px; }\n\n.reveal .slides > section, .reveal .slides > section > section {\n  display: none;\n  position: absolute;\n  width: 100%;\n  padding: 20px 0px;\n  z-index: 10;\n  -webkit-transform-style: preserve-3d;\n          transform-style: preserve-3d;\n  -webkit-transition: -webkit-transform-origin 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985), -webkit-transform 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985), visibility 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985), opacity 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);\n          transition: -ms-transform-origin 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985), transform 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985), visibility 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985), opacity 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);\n          transition: transform-origin 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985), transform 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985), visibility 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985), opacity 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985); }\n\n/* Global transition speed settings */\n.reveal[data-transition-speed=\"fast\"] .slides section {\n  -webkit-transition-duration: 400ms;\n          transition-duration: 400ms; }\n\n.reveal[data-transition-speed=\"slow\"] .slides section {\n  -webkit-transition-duration: 1200ms;\n          transition-duration: 1200ms; }\n\n/* Slide-specific transition speed overrides */\n.reveal .slides section[data-transition-speed=\"fast\"] {\n  -webkit-transition-duration: 400ms;\n          transition-duration: 400ms; }\n\n.reveal .slides section[data-transition-speed=\"slow\"] {\n  -webkit-transition-duration: 1200ms;\n          transition-duration: 1200ms; }\n\n.reveal .slides > section.stack {\n  padding-top: 0;\n  padding-bottom: 0; }\n\n.reveal .slides > section.present, .reveal .slides > section > section.present {\n  display: block;\n  z-index: 11;\n  opacity: 1; }\n\n.reveal.center, .reveal.center .slides, .reveal.center .slides section {\n  min-height: 0 !important; }\n\n/* Don't allow interaction with invisible slides */\n.reveal .slides > section.future, .reveal .slides > section > section.future, .reveal .slides > section.past, .reveal .slides > section > section.past {\n  pointer-events: none; }\n\n.reveal.overview .slides > section, .reveal.overview .slides > section > section {\n  pointer-events: auto; }\n\n.reveal .slides > section.past, .reveal .slides > section.future, .reveal .slides > section > section.past, .reveal .slides > section > section.future {\n  opacity: 0; }\n\n/*********************************************\n * Mixins for readability of transitions\n *********************************************/\n/*********************************************\n * SLIDE TRANSITION\n * Aliased 'linear' for backwards compatibility\n *********************************************/\n.reveal.slide section {\n  -webkit-backface-visibility: hidden;\n          backface-visibility: hidden; }\n\n.reveal .slides > section[data-transition=slide].past, .reveal .slides > section[data-transition~=slide-out].past, .reveal.slide .slides > section:not([data-transition]).past {\n  -webkit-transform: translate(-150%, 0);\n      -ms-transform: translate(-150%, 0);\n          transform: translate(-150%, 0); }\n\n.reveal .slides > section[data-transition=slide].future, .reveal .slides > section[data-transition~=slide-in].future, .reveal.slide .slides > section:not([data-transition]).future {\n  -webkit-transform: translate(150%, 0);\n      -ms-transform: translate(150%, 0);\n          transform: translate(150%, 0); }\n\n.reveal .slides > section > section[data-transition=slide].past, .reveal .slides > section > section[data-transition~=slide-out].past, .reveal.slide .slides > section > section:not([data-transition]).past {\n  -webkit-transform: translate(0, -150%);\n      -ms-transform: translate(0, -150%);\n          transform: translate(0, -150%); }\n\n.reveal .slides > section > section[data-transition=slide].future, .reveal .slides > section > section[data-transition~=slide-in].future, .reveal.slide .slides > section > section:not([data-transition]).future {\n  -webkit-transform: translate(0, 150%);\n      -ms-transform: translate(0, 150%);\n          transform: translate(0, 150%); }\n\n.reveal.linear section {\n  -webkit-backface-visibility: hidden;\n          backface-visibility: hidden; }\n\n.reveal .slides > section[data-transition=linear].past, .reveal .slides > section[data-transition~=linear-out].past, .reveal.linear .slides > section:not([data-transition]).past {\n  -webkit-transform: translate(-150%, 0);\n      -ms-transform: translate(-150%, 0);\n          transform: translate(-150%, 0); }\n\n.reveal .slides > section[data-transition=linear].future, .reveal .slides > section[data-transition~=linear-in].future, .reveal.linear .slides > section:not([data-transition]).future {\n  -webkit-transform: translate(150%, 0);\n      -ms-transform: translate(150%, 0);\n          transform: translate(150%, 0); }\n\n.reveal .slides > section > section[data-transition=linear].past, .reveal .slides > section > section[data-transition~=linear-out].past, .reveal.linear .slides > section > section:not([data-transition]).past {\n  -webkit-transform: translate(0, -150%);\n      -ms-transform: translate(0, -150%);\n          transform: translate(0, -150%); }\n\n.reveal .slides > section > section[data-transition=linear].future, .reveal .slides > section > section[data-transition~=linear-in].future, .reveal.linear .slides > section > section:not([data-transition]).future {\n  -webkit-transform: translate(0, 150%);\n      -ms-transform: translate(0, 150%);\n          transform: translate(0, 150%); }\n\n/*********************************************\n * CONVEX TRANSITION\n * Aliased 'default' for backwards compatibility\n *********************************************/\n.reveal .slides > section[data-transition=default].past, .reveal .slides > section[data-transition~=default-out].past, .reveal.default .slides > section:not([data-transition]).past {\n  -webkit-transform: translate3d(-100%, 0, 0) rotateY(-90deg) translate3d(-100%, 0, 0);\n          transform: translate3d(-100%, 0, 0) rotateY(-90deg) translate3d(-100%, 0, 0); }\n\n.reveal .slides > section[data-transition=default].future, .reveal .slides > section[data-transition~=default-in].future, .reveal.default .slides > section:not([data-transition]).future {\n  -webkit-transform: translate3d(100%, 0, 0) rotateY(90deg) translate3d(100%, 0, 0);\n          transform: translate3d(100%, 0, 0) rotateY(90deg) translate3d(100%, 0, 0); }\n\n.reveal .slides > section > section[data-transition=default].past, .reveal .slides > section > section[data-transition~=default-out].past, .reveal.default .slides > section > section:not([data-transition]).past {\n  -webkit-transform: translate3d(0, -300px, 0) rotateX(70deg) translate3d(0, -300px, 0);\n          transform: translate3d(0, -300px, 0) rotateX(70deg) translate3d(0, -300px, 0); }\n\n.reveal .slides > section > section[data-transition=default].future, .reveal .slides > section > section[data-transition~=default-in].future, .reveal.default .slides > section > section:not([data-transition]).future {\n  -webkit-transform: translate3d(0, 300px, 0) rotateX(-70deg) translate3d(0, 300px, 0);\n          transform: translate3d(0, 300px, 0) rotateX(-70deg) translate3d(0, 300px, 0); }\n\n.reveal .slides > section[data-transition=convex].past, .reveal .slides > section[data-transition~=convex-out].past, .reveal.convex .slides > section:not([data-transition]).past {\n  -webkit-transform: translate3d(-100%, 0, 0) rotateY(-90deg) translate3d(-100%, 0, 0);\n          transform: translate3d(-100%, 0, 0) rotateY(-90deg) translate3d(-100%, 0, 0); }\n\n.reveal .slides > section[data-transition=convex].future, .reveal .slides > section[data-transition~=convex-in].future, .reveal.convex .slides > section:not([data-transition]).future {\n  -webkit-transform: translate3d(100%, 0, 0) rotateY(90deg) translate3d(100%, 0, 0);\n          transform: translate3d(100%, 0, 0) rotateY(90deg) translate3d(100%, 0, 0); }\n\n.reveal .slides > section > section[data-transition=convex].past, .reveal .slides > section > section[data-transition~=convex-out].past, .reveal.convex .slides > section > section:not([data-transition]).past {\n  -webkit-transform: translate3d(0, -300px, 0) rotateX(70deg) translate3d(0, -300px, 0);\n          transform: translate3d(0, -300px, 0) rotateX(70deg) translate3d(0, -300px, 0); }\n\n.reveal .slides > section > section[data-transition=convex].future, .reveal .slides > section > section[data-transition~=convex-in].future, .reveal.convex .slides > section > section:not([data-transition]).future {\n  -webkit-transform: translate3d(0, 300px, 0) rotateX(-70deg) translate3d(0, 300px, 0);\n          transform: translate3d(0, 300px, 0) rotateX(-70deg) translate3d(0, 300px, 0); }\n\n/*********************************************\n * CONCAVE TRANSITION\n *********************************************/\n.reveal .slides > section[data-transition=concave].past, .reveal .slides > section[data-transition~=concave-out].past, .reveal.concave .slides > section:not([data-transition]).past {\n  -webkit-transform: translate3d(-100%, 0, 0) rotateY(90deg) translate3d(-100%, 0, 0);\n          transform: translate3d(-100%, 0, 0) rotateY(90deg) translate3d(-100%, 0, 0); }\n\n.reveal .slides > section[data-transition=concave].future, .reveal .slides > section[data-transition~=concave-in].future, .reveal.concave .slides > section:not([data-transition]).future {\n  -webkit-transform: translate3d(100%, 0, 0) rotateY(-90deg) translate3d(100%, 0, 0);\n          transform: translate3d(100%, 0, 0) rotateY(-90deg) translate3d(100%, 0, 0); }\n\n.reveal .slides > section > section[data-transition=concave].past, .reveal .slides > section > section[data-transition~=concave-out].past, .reveal.concave .slides > section > section:not([data-transition]).past {\n  -webkit-transform: translate3d(0, -80%, 0) rotateX(-70deg) translate3d(0, -80%, 0);\n          transform: translate3d(0, -80%, 0) rotateX(-70deg) translate3d(0, -80%, 0); }\n\n.reveal .slides > section > section[data-transition=concave].future, .reveal .slides > section > section[data-transition~=concave-in].future, .reveal.concave .slides > section > section:not([data-transition]).future {\n  -webkit-transform: translate3d(0, 80%, 0) rotateX(70deg) translate3d(0, 80%, 0);\n          transform: translate3d(0, 80%, 0) rotateX(70deg) translate3d(0, 80%, 0); }\n\n/*********************************************\n * ZOOM TRANSITION\n *********************************************/\n.reveal .slides > section[data-transition=zoom], .reveal.zoom .slides > section:not([data-transition]) {\n  -webkit-transition-timing-function: ease;\n          transition-timing-function: ease; }\n\n.reveal .slides > section[data-transition=zoom].past, .reveal .slides > section[data-transition~=zoom-out].past, .reveal.zoom .slides > section:not([data-transition]).past {\n  visibility: hidden;\n  -webkit-transform: scale(16);\n      -ms-transform: scale(16);\n          transform: scale(16); }\n\n.reveal .slides > section[data-transition=zoom].future, .reveal .slides > section[data-transition~=zoom-in].future, .reveal.zoom .slides > section:not([data-transition]).future {\n  visibility: hidden;\n  -webkit-transform: scale(0.2);\n      -ms-transform: scale(0.2);\n          transform: scale(0.2); }\n\n.reveal .slides > section > section[data-transition=zoom].past, .reveal .slides > section > section[data-transition~=zoom-out].past, .reveal.zoom .slides > section > section:not([data-transition]).past {\n  -webkit-transform: translate(0, -150%);\n      -ms-transform: translate(0, -150%);\n          transform: translate(0, -150%); }\n\n.reveal .slides > section > section[data-transition=zoom].future, .reveal .slides > section > section[data-transition~=zoom-in].future, .reveal.zoom .slides > section > section:not([data-transition]).future {\n  -webkit-transform: translate(0, 150%);\n      -ms-transform: translate(0, 150%);\n          transform: translate(0, 150%); }\n\n/*********************************************\n * CUBE TRANSITION\n *********************************************/\n.reveal.cube .slides {\n  -webkit-perspective: 1300px;\n          perspective: 1300px; }\n\n.reveal.cube .slides section {\n  padding: 30px;\n  min-height: 700px;\n  -webkit-backface-visibility: hidden;\n          backface-visibility: hidden;\n  -moz-box-sizing: border-box;\n       box-sizing: border-box; }\n\n.reveal.center.cube .slides section {\n  min-height: 0; }\n\n.reveal.cube .slides section:not(.stack):before {\n  content: '';\n  position: absolute;\n  display: block;\n  width: 100%;\n  height: 100%;\n  left: 0;\n  top: 0;\n  background: rgba(0, 0, 0, 0.1);\n  border-radius: 4px;\n  -webkit-transform: translateZ(-20px);\n          transform: translateZ(-20px); }\n\n.reveal.cube .slides section:not(.stack):after {\n  content: '';\n  position: absolute;\n  display: block;\n  width: 90%;\n  height: 30px;\n  left: 5%;\n  bottom: 0;\n  background: none;\n  z-index: 1;\n  border-radius: 4px;\n  box-shadow: 0px 95px 25px rgba(0, 0, 0, 0.2);\n  -webkit-transform: translateZ(-90px) rotateX(65deg);\n          transform: translateZ(-90px) rotateX(65deg); }\n\n.reveal.cube .slides > section.stack {\n  padding: 0;\n  background: none; }\n\n.reveal.cube .slides > section.past {\n  -webkit-transform-origin: 100% 0%;\n      -ms-transform-origin: 100% 0%;\n          transform-origin: 100% 0%;\n  -webkit-transform: translate3d(-100%, 0, 0) rotateY(-90deg);\n          transform: translate3d(-100%, 0, 0) rotateY(-90deg); }\n\n.reveal.cube .slides > section.future {\n  -webkit-transform-origin: 0% 0%;\n      -ms-transform-origin: 0% 0%;\n          transform-origin: 0% 0%;\n  -webkit-transform: translate3d(100%, 0, 0) rotateY(90deg);\n          transform: translate3d(100%, 0, 0) rotateY(90deg); }\n\n.reveal.cube .slides > section > section.past {\n  -webkit-transform-origin: 0% 100%;\n      -ms-transform-origin: 0% 100%;\n          transform-origin: 0% 100%;\n  -webkit-transform: translate3d(0, -100%, 0) rotateX(90deg);\n          transform: translate3d(0, -100%, 0) rotateX(90deg); }\n\n.reveal.cube .slides > section > section.future {\n  -webkit-transform-origin: 0% 0%;\n      -ms-transform-origin: 0% 0%;\n          transform-origin: 0% 0%;\n  -webkit-transform: translate3d(0, 100%, 0) rotateX(-90deg);\n          transform: translate3d(0, 100%, 0) rotateX(-90deg); }\n\n/*********************************************\n * PAGE TRANSITION\n *********************************************/\n.reveal.page .slides {\n  -webkit-perspective-origin: 0% 50%;\n          perspective-origin: 0% 50%;\n  -webkit-perspective: 3000px;\n          perspective: 3000px; }\n\n.reveal.page .slides section {\n  padding: 30px;\n  min-height: 700px;\n  -moz-box-sizing: border-box;\n       box-sizing: border-box; }\n\n.reveal.page .slides section.past {\n  z-index: 12; }\n\n.reveal.page .slides section:not(.stack):before {\n  content: '';\n  position: absolute;\n  display: block;\n  width: 100%;\n  height: 100%;\n  left: 0;\n  top: 0;\n  background: rgba(0, 0, 0, 0.1);\n  -webkit-transform: translateZ(-20px);\n          transform: translateZ(-20px); }\n\n.reveal.page .slides section:not(.stack):after {\n  content: '';\n  position: absolute;\n  display: block;\n  width: 90%;\n  height: 30px;\n  left: 5%;\n  bottom: 0;\n  background: none;\n  z-index: 1;\n  border-radius: 4px;\n  box-shadow: 0px 95px 25px rgba(0, 0, 0, 0.2);\n  -webkit-transform: translateZ(-90px) rotateX(65deg); }\n\n.reveal.page .slides > section.stack {\n  padding: 0;\n  background: none; }\n\n.reveal.page .slides > section.past {\n  -webkit-transform-origin: 0% 0%;\n      -ms-transform-origin: 0% 0%;\n          transform-origin: 0% 0%;\n  -webkit-transform: translate3d(-40%, 0, 0) rotateY(-80deg);\n          transform: translate3d(-40%, 0, 0) rotateY(-80deg); }\n\n.reveal.page .slides > section.future {\n  -webkit-transform-origin: 100% 0%;\n      -ms-transform-origin: 100% 0%;\n          transform-origin: 100% 0%;\n  -webkit-transform: translate3d(0, 0, 0);\n          transform: translate3d(0, 0, 0); }\n\n.reveal.page .slides > section > section.past {\n  -webkit-transform-origin: 0% 0%;\n      -ms-transform-origin: 0% 0%;\n          transform-origin: 0% 0%;\n  -webkit-transform: translate3d(0, -40%, 0) rotateX(80deg);\n          transform: translate3d(0, -40%, 0) rotateX(80deg); }\n\n.reveal.page .slides > section > section.future {\n  -webkit-transform-origin: 0% 100%;\n      -ms-transform-origin: 0% 100%;\n          transform-origin: 0% 100%;\n  -webkit-transform: translate3d(0, 0, 0);\n          transform: translate3d(0, 0, 0); }\n\n/*********************************************\n * FADE TRANSITION\n *********************************************/\n.reveal .slides section[data-transition=fade], .reveal.fade .slides section:not([data-transition]), .reveal.fade .slides > section > section:not([data-transition]) {\n  -webkit-transform: none;\n      -ms-transform: none;\n          transform: none;\n  -webkit-transition: opacity 0.5s;\n          transition: opacity 0.5s; }\n\n.reveal.fade.overview .slides section, .reveal.fade.overview .slides > section > section {\n  -webkit-transition: none;\n          transition: none; }\n\n/*********************************************\n * NO TRANSITION\n *********************************************/\n.reveal .slides > section[data-transition=none], .reveal.none .slides > section:not([data-transition]) {\n  -webkit-transform: none;\n      -ms-transform: none;\n          transform: none;\n  -webkit-transition: none;\n          transition: none; }\n\n/*********************************************\n * PAUSED MODE\n *********************************************/\n.reveal .pause-overlay {\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n  background: black;\n  visibility: hidden;\n  opacity: 0;\n  z-index: 100;\n  -webkit-transition: all 1s ease;\n          transition: all 1s ease; }\n\n.reveal.paused .pause-overlay {\n  visibility: visible;\n  opacity: 1; }\n\n/*********************************************\n * FALLBACK\n *********************************************/\n.no-transforms {\n  overflow-y: auto; }\n\n.no-transforms .reveal .slides {\n  position: relative;\n  width: 80%;\n  height: auto !important;\n  top: 0;\n  left: 50%;\n  margin: 0;\n  text-align: center; }\n\n.no-transforms .reveal .controls, .no-transforms .reveal .progress {\n  display: none !important; }\n\n.no-transforms .reveal .slides section {\n  display: block !important;\n  opacity: 1 !important;\n  position: relative !important;\n  height: auto;\n  min-height: 0;\n  top: 0;\n  left: -50%;\n  margin: 70px 0;\n  -webkit-transform: none;\n      -ms-transform: none;\n          transform: none; }\n\n.no-transforms .reveal .slides section section {\n  left: 0; }\n\n.reveal .no-transition, .reveal .no-transition * {\n  -webkit-transition: none !important;\n          transition: none !important; }\n\n/*********************************************\n * PER-SLIDE BACKGROUNDS\n *********************************************/\n.reveal .backgrounds {\n  position: absolute;\n  width: 100%;\n  height: 100%;\n  top: 0;\n  left: 0;\n  -webkit-perspective: 600px;\n          perspective: 600px; }\n\n.reveal .slide-background {\n  display: none;\n  position: absolute;\n  width: 100%;\n  height: 100%;\n  opacity: 0;\n  visibility: hidden;\n  background-color: rgba(0, 0, 0, 0);\n  background-position: 50% 50%;\n  background-repeat: no-repeat;\n  background-size: cover;\n  -webkit-transition: all 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);\n          transition: all 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985); }\n\n.reveal .slide-background.stack {\n  display: block; }\n\n.reveal .slide-background.present {\n  opacity: 1;\n  visibility: visible; }\n\n.print-pdf .reveal .slide-background {\n  opacity: 1 !important;\n  visibility: visible !important; }\n\n/* Video backgrounds */\n.reveal .slide-background video {\n  position: absolute;\n  width: 100%;\n  height: 100%;\n  max-width: none;\n  max-height: none;\n  top: 0;\n  left: 0; }\n\n/* Immediate transition style */\n.reveal[data-background-transition=none] > .backgrounds .slide-background, .reveal > .backgrounds .slide-background[data-background-transition=none] {\n  -webkit-transition: none;\n          transition: none; }\n\n/* Slide */\n.reveal[data-background-transition=slide] > .backgrounds .slide-background, .reveal > .backgrounds .slide-background[data-background-transition=slide] {\n  opacity: 1;\n  -webkit-backface-visibility: hidden;\n          backface-visibility: hidden; }\n\n.reveal[data-background-transition=slide] > .backgrounds .slide-background.past, .reveal > .backgrounds .slide-background.past[data-background-transition=slide] {\n  -webkit-transform: translate(-100%, 0);\n      -ms-transform: translate(-100%, 0);\n          transform: translate(-100%, 0); }\n\n.reveal[data-background-transition=slide] > .backgrounds .slide-background.future, .reveal > .backgrounds .slide-background.future[data-background-transition=slide] {\n  -webkit-transform: translate(100%, 0);\n      -ms-transform: translate(100%, 0);\n          transform: translate(100%, 0); }\n\n.reveal[data-background-transition=slide] > .backgrounds .slide-background > .slide-background.past, .reveal > .backgrounds .slide-background > .slide-background.past[data-background-transition=slide] {\n  -webkit-transform: translate(0, -100%);\n      -ms-transform: translate(0, -100%);\n          transform: translate(0, -100%); }\n\n.reveal[data-background-transition=slide] > .backgrounds .slide-background > .slide-background.future, .reveal > .backgrounds .slide-background > .slide-background.future[data-background-transition=slide] {\n  -webkit-transform: translate(0, 100%);\n      -ms-transform: translate(0, 100%);\n          transform: translate(0, 100%); }\n\n/* Convex */\n.reveal[data-background-transition=convex] > .backgrounds .slide-background.past, .reveal > .backgrounds .slide-background.past[data-background-transition=convex] {\n  opacity: 0;\n  -webkit-transform: translate3d(-100%, 0, 0) rotateY(-90deg) translate3d(-100%, 0, 0);\n          transform: translate3d(-100%, 0, 0) rotateY(-90deg) translate3d(-100%, 0, 0); }\n\n.reveal[data-background-transition=convex] > .backgrounds .slide-background.future, .reveal > .backgrounds .slide-background.future[data-background-transition=convex] {\n  opacity: 0;\n  -webkit-transform: translate3d(100%, 0, 0) rotateY(90deg) translate3d(100%, 0, 0);\n          transform: translate3d(100%, 0, 0) rotateY(90deg) translate3d(100%, 0, 0); }\n\n.reveal[data-background-transition=convex] > .backgrounds .slide-background > .slide-background.past, .reveal > .backgrounds .slide-background > .slide-background.past[data-background-transition=convex] {\n  opacity: 0;\n  -webkit-transform: translate3d(0, -100%, 0) rotateX(90deg) translate3d(0, -100%, 0);\n          transform: translate3d(0, -100%, 0) rotateX(90deg) translate3d(0, -100%, 0); }\n\n.reveal[data-background-transition=convex] > .backgrounds .slide-background > .slide-background.future, .reveal > .backgrounds .slide-background > .slide-background.future[data-background-transition=convex] {\n  opacity: 0;\n  -webkit-transform: translate3d(0, 100%, 0) rotateX(-90deg) translate3d(0, 100%, 0);\n          transform: translate3d(0, 100%, 0) rotateX(-90deg) translate3d(0, 100%, 0); }\n\n/* Concave */\n.reveal[data-background-transition=concave] > .backgrounds .slide-background.past, .reveal > .backgrounds .slide-background.past[data-background-transition=concave] {\n  opacity: 0;\n  -webkit-transform: translate3d(-100%, 0, 0) rotateY(90deg) translate3d(-100%, 0, 0);\n          transform: translate3d(-100%, 0, 0) rotateY(90deg) translate3d(-100%, 0, 0); }\n\n.reveal[data-background-transition=concave] > .backgrounds .slide-background.future, .reveal > .backgrounds .slide-background.future[data-background-transition=concave] {\n  opacity: 0;\n  -webkit-transform: translate3d(100%, 0, 0) rotateY(-90deg) translate3d(100%, 0, 0);\n          transform: translate3d(100%, 0, 0) rotateY(-90deg) translate3d(100%, 0, 0); }\n\n.reveal[data-background-transition=concave] > .backgrounds .slide-background > .slide-background.past, .reveal > .backgrounds .slide-background > .slide-background.past[data-background-transition=concave] {\n  opacity: 0;\n  -webkit-transform: translate3d(0, -100%, 0) rotateX(-90deg) translate3d(0, -100%, 0);\n          transform: translate3d(0, -100%, 0) rotateX(-90deg) translate3d(0, -100%, 0); }\n\n.reveal[data-background-transition=concave] > .backgrounds .slide-background > .slide-background.future, .reveal > .backgrounds .slide-background > .slide-background.future[data-background-transition=concave] {\n  opacity: 0;\n  -webkit-transform: translate3d(0, 100%, 0) rotateX(90deg) translate3d(0, 100%, 0);\n          transform: translate3d(0, 100%, 0) rotateX(90deg) translate3d(0, 100%, 0); }\n\n/* Zoom */\n.reveal[data-background-transition=zoom] > .backgrounds .slide-background, .reveal > .backgrounds .slide-background[data-background-transition=zoom] {\n  -webkit-transition-timing-function: ease;\n          transition-timing-function: ease; }\n\n.reveal[data-background-transition=zoom] > .backgrounds .slide-background.past, .reveal > .backgrounds .slide-background.past[data-background-transition=zoom] {\n  opacity: 0;\n  visibility: hidden;\n  -webkit-transform: scale(16);\n      -ms-transform: scale(16);\n          transform: scale(16); }\n\n.reveal[data-background-transition=zoom] > .backgrounds .slide-background.future, .reveal > .backgrounds .slide-background.future[data-background-transition=zoom] {\n  opacity: 0;\n  visibility: hidden;\n  -webkit-transform: scale(0.2);\n      -ms-transform: scale(0.2);\n          transform: scale(0.2); }\n\n.reveal[data-background-transition=zoom] > .backgrounds .slide-background > .slide-background.past, .reveal > .backgrounds .slide-background > .slide-background.past[data-background-transition=zoom] {\n  opacity: 0;\n  visibility: hidden;\n  -webkit-transform: scale(16);\n      -ms-transform: scale(16);\n          transform: scale(16); }\n\n.reveal[data-background-transition=zoom] > .backgrounds .slide-background > .slide-background.future, .reveal > .backgrounds .slide-background > .slide-background.future[data-background-transition=zoom] {\n  opacity: 0;\n  visibility: hidden;\n  -webkit-transform: scale(0.2);\n      -ms-transform: scale(0.2);\n          transform: scale(0.2); }\n\n/* Global transition speed settings */\n.reveal[data-transition-speed=\"fast\"] > .backgrounds .slide-background {\n  -webkit-transition-duration: 400ms;\n          transition-duration: 400ms; }\n\n.reveal[data-transition-speed=\"slow\"] > .backgrounds .slide-background {\n  -webkit-transition-duration: 1200ms;\n          transition-duration: 1200ms; }\n\n/*********************************************\n * OVERVIEW\n *********************************************/\n.reveal.overview {\n  -webkit-perspective-origin: 50% 50%;\n          perspective-origin: 50% 50%;\n  -webkit-perspective: 700px;\n          perspective: 700px; }\n  .reveal.overview .slides section {\n    height: 700px;\n    opacity: 1 !important;\n    overflow: hidden;\n    visibility: visible !important;\n    cursor: pointer;\n    -moz-box-sizing: border-box;\n         box-sizing: border-box; }\n  .reveal.overview .slides section:hover, .reveal.overview .slides section.present {\n    outline: 10px solid rgba(150, 150, 150, 0.4);\n    outline-offset: 10px; }\n  .reveal.overview .slides section .fragment {\n    opacity: 1;\n    -webkit-transition: none;\n            transition: none; }\n  .reveal.overview .slides section:after, .reveal.overview .slides section:before {\n    display: none !important; }\n  .reveal.overview .slides > section.stack {\n    padding: 0;\n    top: 0 !important;\n    background: none;\n    outline: none;\n    overflow: visible; }\n  .reveal.overview .backgrounds {\n    -webkit-perspective: inherit;\n            perspective: inherit; }\n  .reveal.overview .backgrounds .slide-background {\n    opacity: 1;\n    visibility: visible;\n    outline: 10px solid rgba(150, 150, 150, 0.1);\n    outline-offset: 10px; }\n\n.reveal.overview .slides section, .reveal.overview-deactivating .slides section {\n  -webkit-transition: none;\n          transition: none; }\n\n.reveal.overview .backgrounds .slide-background, .reveal.overview-deactivating .backgrounds .slide-background {\n  -webkit-transition: none;\n          transition: none; }\n\n.reveal.overview-animated .slides {\n  -webkit-transition: -webkit-transform 0.4s ease;\n          transition: transform 0.4s ease; }\n\n/*********************************************\n * RTL SUPPORT\n *********************************************/\n.reveal.rtl .slides, .reveal.rtl .slides h1, .reveal.rtl .slides h2, .reveal.rtl .slides h3, .reveal.rtl .slides h4, .reveal.rtl .slides h5, .reveal.rtl .slides h6 {\n  direction: rtl;\n  font-family: sans-serif; }\n\n.reveal.rtl pre, .reveal.rtl code {\n  direction: ltr; }\n\n.reveal.rtl ol, .reveal.rtl ul {\n  text-align: right; }\n\n.reveal.rtl .progress span {\n  float: right; }\n\n/*********************************************\n * PARALLAX BACKGROUND\n *********************************************/\n.reveal.has-parallax-background .backgrounds {\n  -webkit-transition: all 0.8s ease;\n          transition: all 0.8s ease; }\n\n/* Global transition speed settings */\n.reveal.has-parallax-background[data-transition-speed=\"fast\"] .backgrounds {\n  -webkit-transition-duration: 400ms;\n          transition-duration: 400ms; }\n\n.reveal.has-parallax-background[data-transition-speed=\"slow\"] .backgrounds {\n  -webkit-transition-duration: 1200ms;\n          transition-duration: 1200ms; }\n\n/*********************************************\n * LINK PREVIEW OVERLAY\n *********************************************/\n.reveal .overlay {\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n  z-index: 1000;\n  background: rgba(0, 0, 0, 0.9);\n  opacity: 0;\n  visibility: hidden;\n  -webkit-transition: all 0.3s ease;\n          transition: all 0.3s ease; }\n\n.reveal .overlay.visible {\n  opacity: 1;\n  visibility: visible; }\n\n.reveal .overlay .spinner {\n  position: absolute;\n  display: block;\n  top: 50%;\n  left: 50%;\n  width: 32px;\n  height: 32px;\n  margin: -16px 0 0 -16px;\n  z-index: 10;\n  background-image: url(data:image/gif;base64,R0lGODlhIAAgAPMAAJmZmf%2F%2F%2F6%2Bvr8nJybW1tcDAwOjo6Nvb26ioqKOjo7Ozs%2FLy8vz8%2FAAAAAAAAAAAACH%2FC05FVFNDQVBFMi4wAwEAAAAh%2FhpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh%2BQQJCgAAACwAAAAAIAAgAAAE5xDISWlhperN52JLhSSdRgwVo1ICQZRUsiwHpTJT4iowNS8vyW2icCF6k8HMMBkCEDskxTBDAZwuAkkqIfxIQyhBQBFvAQSDITM5VDW6XNE4KagNh6Bgwe60smQUB3d4Rz1ZBApnFASDd0hihh12BkE9kjAJVlycXIg7CQIFA6SlnJ87paqbSKiKoqusnbMdmDC2tXQlkUhziYtyWTxIfy6BE8WJt5YJvpJivxNaGmLHT0VnOgSYf0dZXS7APdpB309RnHOG5gDqXGLDaC457D1zZ%2FV%2FnmOM82XiHRLYKhKP1oZmADdEAAAh%2BQQJCgAAACwAAAAAIAAgAAAE6hDISWlZpOrNp1lGNRSdRpDUolIGw5RUYhhHukqFu8DsrEyqnWThGvAmhVlteBvojpTDDBUEIFwMFBRAmBkSgOrBFZogCASwBDEY%2FCZSg7GSE0gSCjQBMVG023xWBhklAnoEdhQEfyNqMIcKjhRsjEdnezB%2BA4k8gTwJhFuiW4dokXiloUepBAp5qaKpp6%2BHo7aWW54wl7obvEe0kRuoplCGepwSx2jJvqHEmGt6whJpGpfJCHmOoNHKaHx61WiSR92E4lbFoq%2BB6QDtuetcaBPnW6%2BO7wDHpIiK9SaVK5GgV543tzjgGcghAgAh%2BQQJCgAAACwAAAAAIAAgAAAE7hDISSkxpOrN5zFHNWRdhSiVoVLHspRUMoyUakyEe8PTPCATW9A14E0UvuAKMNAZKYUZCiBMuBakSQKG8G2FzUWox2AUtAQFcBKlVQoLgQReZhQlCIJesQXI5B0CBnUMOxMCenoCfTCEWBsJColTMANldx15BGs8B5wlCZ9Po6OJkwmRpnqkqnuSrayqfKmqpLajoiW5HJq7FL1Gr2mMMcKUMIiJgIemy7xZtJsTmsM4xHiKv5KMCXqfyUCJEonXPN2rAOIAmsfB3uPoAK%2B%2BG%2Bw48edZPK%2BM6hLJpQg484enXIdQFSS1u6UhksENEQAAIfkECQoAAAAsAAAAACAAIAAABOcQyEmpGKLqzWcZRVUQnZYg1aBSh2GUVEIQ2aQOE%2BG%2BcD4ntpWkZQj1JIiZIogDFFyHI0UxQwFugMSOFIPJftfVAEoZLBbcLEFhlQiqGp1Vd140AUklUN3eCA51C1EWMzMCezCBBmkxVIVHBWd3HHl9JQOIJSdSnJ0TDKChCwUJjoWMPaGqDKannasMo6WnM562R5YluZRwur0wpgqZE7NKUm%2BFNRPIhjBJxKZteWuIBMN4zRMIVIhffcgojwCF117i4nlLnY5ztRLsnOk%2BaV%2BoJY7V7m76PdkS4trKcdg0Zc0tTcKkRAAAIfkECQoAAAAsAAAAACAAIAAABO4QyEkpKqjqzScpRaVkXZWQEximw1BSCUEIlDohrft6cpKCk5xid5MNJTaAIkekKGQkWyKHkvhKsR7ARmitkAYDYRIbUQRQjWBwJRzChi9CRlBcY1UN4g0%2FVNB0AlcvcAYHRyZPdEQFYV8ccwR5HWxEJ02YmRMLnJ1xCYp0Y5idpQuhopmmC2KgojKasUQDk5BNAwwMOh2RtRq5uQuPZKGIJQIGwAwGf6I0JXMpC8C7kXWDBINFMxS4DKMAWVWAGYsAdNqW5uaRxkSKJOZKaU3tPOBZ4DuK2LATgJhkPJMgTwKCdFjyPHEnKxFCDhEAACH5BAkKAAAALAAAAAAgACAAAATzEMhJaVKp6s2nIkolIJ2WkBShpkVRWqqQrhLSEu9MZJKK9y1ZrqYK9WiClmvoUaF8gIQSNeF1Er4MNFn4SRSDARWroAIETg1iVwuHjYB1kYc1mwruwXKC9gmsJXliGxc%2BXiUCby9ydh1sOSdMkpMTBpaXBzsfhoc5l58Gm5yToAaZhaOUqjkDgCWNHAULCwOLaTmzswadEqggQwgHuQsHIoZCHQMMQgQGubVEcxOPFAcMDAYUA85eWARmfSRQCdcMe0zeP1AAygwLlJtPNAAL19DARdPzBOWSm1brJBi45soRAWQAAkrQIykShQ9wVhHCwCQCACH5BAkKAAAALAAAAAAgACAAAATrEMhJaVKp6s2nIkqFZF2VIBWhUsJaTokqUCoBq%2BE71SRQeyqUToLA7VxF0JDyIQh%2FMVVPMt1ECZlfcjZJ9mIKoaTl1MRIl5o4CUKXOwmyrCInCKqcWtvadL2SYhyASyNDJ0uIiRMDjI0Fd30%2FiI2UA5GSS5UDj2l6NoqgOgN4gksEBgYFf0FDqKgHnyZ9OX8HrgYHdHpcHQULXAS2qKpENRg7eAMLC7kTBaixUYFkKAzWAAnLC7FLVxLWDBLKCwaKTULgEwbLA4hJtOkSBNqITT3xEgfLpBtzE%2FjiuL04RGEBgwWhShRgQExHBAAh%2BQQJCgAAACwAAAAAIAAgAAAE7xDISWlSqerNpyJKhWRdlSAVoVLCWk6JKlAqAavhO9UkUHsqlE6CwO1cRdCQ8iEIfzFVTzLdRAmZX3I2SfZiCqGk5dTESJeaOAlClzsJsqwiJwiqnFrb2nS9kmIcgEsjQydLiIlHehhpejaIjzh9eomSjZR%2BipslWIRLAgMDOR2DOqKogTB9pCUJBagDBXR6XB0EBkIIsaRsGGMMAxoDBgYHTKJiUYEGDAzHC9EACcUGkIgFzgwZ0QsSBcXHiQvOwgDdEwfFs0sDzt4S6BK4xYjkDOzn0unFeBzOBijIm1Dgmg5YFQwsCMjp1oJ8LyIAACH5BAkKAAAALAAAAAAgACAAAATwEMhJaVKp6s2nIkqFZF2VIBWhUsJaTokqUCoBq%2BE71SRQeyqUToLA7VxF0JDyIQh%2FMVVPMt1ECZlfcjZJ9mIKoaTl1MRIl5o4CUKXOwmyrCInCKqcWtvadL2SYhyASyNDJ0uIiUd6GGl6NoiPOH16iZKNlH6KmyWFOggHhEEvAwwMA0N9GBsEC6amhnVcEwavDAazGwIDaH1ipaYLBUTCGgQDA8NdHz0FpqgTBwsLqAbWAAnIA4FWKdMLGdYGEgraigbT0OITBcg5QwPT4xLrROZL6AuQAPUS7bxLpoWidY0JtxLHKhwwMJBTHgPKdEQAACH5BAkKAAAALAAAAAAgACAAAATrEMhJaVKp6s2nIkqFZF2VIBWhUsJaTokqUCoBq%2BE71SRQeyqUToLA7VxF0JDyIQh%2FMVVPMt1ECZlfcjZJ9mIKoaTl1MRIl5o4CUKXOwmyrCInCKqcWtvadL2SYhyASyNDJ0uIiUd6GAULDJCRiXo1CpGXDJOUjY%2BYip9DhToJA4RBLwMLCwVDfRgbBAaqqoZ1XBMHswsHtxtFaH1iqaoGNgAIxRpbFAgfPQSqpbgGBqUD1wBXeCYp1AYZ19JJOYgH1KwA4UBvQwXUBxPqVD9L3sbp2BNk2xvvFPJd%2BMFCN6HAAIKgNggY0KtEBAAh%2BQQJCgAAACwAAAAAIAAgAAAE6BDISWlSqerNpyJKhWRdlSAVoVLCWk6JKlAqAavhO9UkUHsqlE6CwO1cRdCQ8iEIfzFVTzLdRAmZX3I2SfYIDMaAFdTESJeaEDAIMxYFqrOUaNW4E4ObYcCXaiBVEgULe0NJaxxtYksjh2NLkZISgDgJhHthkpU4mW6blRiYmZOlh4JWkDqILwUGBnE6TYEbCgevr0N1gH4At7gHiRpFaLNrrq8HNgAJA70AWxQIH1%2BvsYMDAzZQPC9VCNkDWUhGkuE5PxJNwiUK4UfLzOlD4WvzAHaoG9nxPi5d%2BjYUqfAhhykOFwJWiAAAIfkECQoAAAAsAAAAACAAIAAABPAQyElpUqnqzaciSoVkXVUMFaFSwlpOCcMYlErAavhOMnNLNo8KsZsMZItJEIDIFSkLGQoQTNhIsFehRww2CQLKF0tYGKYSg%2BygsZIuNqJksKgbfgIGepNo2cIUB3V1B3IvNiBYNQaDSTtfhhx0CwVPI0UJe0%2Bbm4g5VgcGoqOcnjmjqDSdnhgEoamcsZuXO1aWQy8KAwOAuTYYGwi7w5h%2BKr0SJ8MFihpNbx%2B4Erq7BYBuzsdiH1jCAzoSfl0rVirNbRXlBBlLX%2BBP0XJLAPGzTkAuAOqb0WT5AH7OcdCm5B8TgRwSRKIHQtaLCwg1RAAAOwAAAAAAAAAAAA%3D%3D);\n  visibility: visible;\n  opacity: 0.6;\n  -webkit-transition: all 0.3s ease;\n          transition: all 0.3s ease; }\n\n.reveal .overlay header {\n  position: absolute;\n  left: 0;\n  top: 0;\n  width: 100%;\n  height: 40px;\n  z-index: 2;\n  border-bottom: 1px solid #222; }\n\n.reveal .overlay header a {\n  display: inline-block;\n  width: 40px;\n  height: 40px;\n  padding: 0 10px;\n  float: right;\n  opacity: 0.6;\n  -moz-box-sizing: border-box;\n       box-sizing: border-box; }\n\n.reveal .overlay header a:hover {\n  opacity: 1; }\n\n.reveal .overlay header a .icon {\n  display: inline-block;\n  width: 20px;\n  height: 20px;\n  background-position: 50% 50%;\n  background-size: 100%;\n  background-repeat: no-repeat; }\n\n.reveal .overlay header a.close .icon {\n  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABkklEQVRYR8WX4VHDMAxG6wnoJrABZQPYBCaBTWAD2g1gE5gg6OOsXuxIlr40d81dfrSJ9V4c2VLK7spHuTJ/5wpM07QXuXc5X0opX2tEJcadjHuV80li/FgxTIEK/5QBCICBD6xEhSMGHgQPgBgLiYVAB1dpSqKDawxTohFw4JSEA3clzgIBPCURwE2JucBR7rhPJJv5OpJwDX+SfDjgx1wACQeJG1aChP9K/IMmdZ8DtESV1WyP3Bt4MwM6sj4NMxMYiqUWHQu4KYA/SYkIjOsm3BXYWMKFDwU2khjCQ4ELJUJ4SmClRArOCmSXGuKma0fYD5CbzHxFpCSGAhfAVSSUGDUk2BWZaff2g6GE15BsBQ9nwmpIGDiyHQddwNTMKkbZaf9fajXQca1EX44puJZUsnY0ObGmITE3GVLCbEhQUjGVt146j6oasWN+49Vph2w1pZ5EansNZqKBm1txbU57iRRcZ86RWMDdWtBJUHBHwoQPi1GV+JCbntmvok7iTX4/Up9mgyTc/FJYDTcndgH/AA5A/CHsyEkVAAAAAElFTkSuQmCC); }\n\n.reveal .overlay header a.external .icon {\n  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAcElEQVRYR+2WSQoAIQwEzf8f7XiOMkUQxUPlGkM3hVmiQfQR9GYnH1SsAQlI4DiBqkCMoNb9y2e90IAEJPAcgdznU9+engMaeJ7Azh5Y1U67gAho4DqBqmB1buAf0MB1AlVBek83ZPkmJMGc1wAR+AAqod/B97TRpQAAAABJRU5ErkJggg==); }\n\n.reveal .overlay .viewport {\n  position: absolute;\n  top: 40px;\n  right: 0;\n  bottom: 0;\n  left: 0; }\n\n.reveal .overlay.overlay-preview .viewport iframe {\n  width: 100%;\n  height: 100%;\n  max-width: 100%;\n  max-height: 100%;\n  border: 0;\n  opacity: 0;\n  visibility: hidden;\n  -webkit-transition: all 0.3s ease;\n          transition: all 0.3s ease; }\n\n.reveal .overlay.overlay-preview.loaded .viewport iframe {\n  opacity: 1;\n  visibility: visible; }\n\n.reveal .overlay.overlay-preview.loaded .spinner {\n  opacity: 0;\n  visibility: hidden;\n  -webkit-transform: scale(0.2);\n      -ms-transform: scale(0.2);\n          transform: scale(0.2); }\n\n.reveal .overlay.overlay-help .viewport {\n  overflow: auto;\n  color: #fff; }\n\n.reveal .overlay.overlay-help .viewport .viewport-inner {\n  width: 600px;\n  margin: 0 auto;\n  padding: 60px;\n  text-align: center;\n  letter-spacing: normal; }\n\n.reveal .overlay.overlay-help .viewport .viewport-inner .title {\n  font-size: 20px; }\n\n.reveal .overlay.overlay-help .viewport .viewport-inner table {\n  border: 1px solid #fff;\n  border-collapse: collapse;\n  font-size: 14px; }\n\n.reveal .overlay.overlay-help .viewport .viewport-inner table th, .reveal .overlay.overlay-help .viewport .viewport-inner table td {\n  width: 200px;\n  padding: 10px;\n  border: 1px solid #fff;\n  vertical-align: middle; }\n\n.reveal .overlay.overlay-help .viewport .viewport-inner table th {\n  padding-top: 20px;\n  padding-bottom: 20px; }\n\n/*********************************************\n * PLAYBACK COMPONENT\n *********************************************/\n.reveal .playback {\n  position: fixed;\n  left: 15px;\n  bottom: 15px;\n  z-index: 30;\n  cursor: pointer;\n  -webkit-transition: all 400ms ease;\n          transition: all 400ms ease; }\n\n.reveal.overview .playback {\n  opacity: 0;\n  visibility: hidden; }\n\n/*********************************************\n * ROLLING LINKS\n *********************************************/\n.reveal .roll {\n  display: inline-block;\n  line-height: 1.2;\n  overflow: hidden;\n  vertical-align: top;\n  -webkit-perspective: 400px;\n          perspective: 400px;\n  -webkit-perspective-origin: 50% 50%;\n          perspective-origin: 50% 50%; }\n\n.reveal .roll:hover {\n  background: none;\n  text-shadow: none; }\n\n.reveal .roll span {\n  display: block;\n  position: relative;\n  padding: 0 2px;\n  pointer-events: none;\n  -webkit-transition: all 400ms ease;\n          transition: all 400ms ease;\n  -webkit-transform-origin: 50% 0%;\n      -ms-transform-origin: 50% 0%;\n          transform-origin: 50% 0%;\n  -webkit-transform-style: preserve-3d;\n          transform-style: preserve-3d;\n  -webkit-backface-visibility: hidden;\n          backface-visibility: hidden; }\n\n.reveal .roll:hover span {\n  background: rgba(0, 0, 0, 0.5);\n  -webkit-transform: translate3d(0px, 0px, -45px) rotateX(90deg);\n          transform: translate3d(0px, 0px, -45px) rotateX(90deg); }\n\n.reveal .roll span:after {\n  content: attr(data-title);\n  display: block;\n  position: absolute;\n  left: 0;\n  top: 0;\n  padding: 0 2px;\n  -webkit-backface-visibility: hidden;\n          backface-visibility: hidden;\n  -webkit-transform-origin: 50% 0%;\n      -ms-transform-origin: 50% 0%;\n          transform-origin: 50% 0%;\n  -webkit-transform: translate3d(0px, 110%, 0px) rotateX(-90deg);\n          transform: translate3d(0px, 110%, 0px) rotateX(-90deg); }\n\n/*********************************************\n * SPEAKER NOTES\n *********************************************/\n.reveal aside.notes {\n  display: none; }\n\n/*********************************************\n * ZOOM PLUGIN\n *********************************************/\n.zoomed .reveal *, .zoomed .reveal *:before, .zoomed .reveal *:after {\n  -webkit-backface-visibility: visible !important;\n          backface-visibility: visible !important; }\n\n.zoomed .reveal .progress, .zoomed .reveal .controls {\n  opacity: 0; }\n\n.zoomed .reveal .roll span {\n  background: none; }\n\n.zoomed .reveal .roll span:after {\n  visibility: hidden; }\n", ""]);
-
-/***/ },
-/* 31 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// style-loader: Adds some css to the DOM by adding a <style> tag
-	
-	// load the styles
-	var content = __webpack_require__(32);
-	if(typeof content === 'string') content = [[module.id, content, '']];
-	// add the styles to the DOM
-	var update = __webpack_require__(12)(content, {});
-	if(content.locals) module.exports = content.locals;
-	// Hot Module Replacement
-	if(false) {
-		// When the styles change, update the <style> tags
-		if(!content.locals) {
-			module.hot.accept("!!./../../../css-loader/index.js!./sky.css", function() {
-				var newContent = require("!!./../../../css-loader/index.js!./sky.css");
-				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-				update(newContent);
-			});
-		}
-		// When the module is disposed, remove the <style> tags
-		module.hot.dispose(function() { update(); });
-	}
-
-/***/ },
-/* 32 */
-/***/ function(module, exports, __webpack_require__) {
-
-	exports = module.exports = __webpack_require__(17)();
-	exports.push([module.id, "@import url(https://fonts.googleapis.com/css?family=Quicksand:400,700,400italic,700italic);", ""]);
-	exports.push([module.id, "@import url(https://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700);", ""]);
-	exports.push([module.id, "\n\n/**\n * Sky theme for reveal.js.\n *\n * Copyright (C) 2011-2012 Hakim El Hattab, http://hakim.se\n */\n.reveal a {\n  line-height: 1.3em; }\n\n/*********************************************\n * GLOBAL STYLES\n *********************************************/\nbody {\n  background: #add9e4;\n  background: -moz-radial-gradient(center, circle cover, #f7fbfc 0%, #add9e4 100%);\n  background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, #f7fbfc), color-stop(100%, #add9e4));\n  background: -webkit-radial-gradient(center, circle cover, #f7fbfc 0%, #add9e4 100%);\n  background: -o-radial-gradient(center, circle cover, #f7fbfc 0%, #add9e4 100%);\n  background: -ms-radial-gradient(center, circle cover, #f7fbfc 0%, #add9e4 100%);\n  background: radial-gradient(center, circle cover, #f7fbfc 0%, #add9e4 100%);\n  background-color: #f7fbfc; }\n\n.reveal {\n  font-family: 'Open Sans', sans-serif;\n  font-size: 36px;\n  font-weight: normal;\n  color: #333; }\n\n::selection {\n  color: #fff;\n  background: #134674;\n  text-shadow: none; }\n\n.reveal .slides > section, .reveal .slides > section > section {\n  line-height: 1.3;\n  font-weight: inherit; }\n\n/*********************************************\n * HEADERS\n *********************************************/\n.reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {\n  margin: 0 0 20px 0;\n  color: #333;\n  font-family: 'Quicksand', sans-serif;\n  font-weight: normal;\n  line-height: 1.2;\n  letter-spacing: -0.08em;\n  text-transform: uppercase;\n  text-shadow: none;\n  word-wrap: break-word; }\n\n.reveal h1 {\n  font-size: 3.77em; }\n\n.reveal h2 {\n  font-size: 2.11em; }\n\n.reveal h3 {\n  font-size: 1.55em; }\n\n.reveal h4 {\n  font-size: 1em; }\n\n.reveal h1 {\n  text-shadow: none; }\n\n/*********************************************\n * OTHER\n *********************************************/\n.reveal p {\n  margin: 20px 0;\n  line-height: 1.3; }\n\n/* Ensure certain elements are never larger than the slide itself */\n.reveal img, .reveal video, .reveal iframe {\n  max-width: 95%;\n  max-height: 95%; }\n\n.reveal strong, .reveal b {\n  font-weight: bold; }\n\n.reveal em {\n  font-style: italic; }\n\n.reveal ol, .reveal dl, .reveal ul {\n  display: inline-block;\n  text-align: left;\n  margin: 0 0 0 1em; }\n\n.reveal ol {\n  list-style-type: decimal; }\n\n.reveal ul {\n  list-style-type: disc; }\n\n.reveal ul ul {\n  list-style-type: square; }\n\n.reveal ul ul ul {\n  list-style-type: circle; }\n\n.reveal ul ul, .reveal ul ol, .reveal ol ol, .reveal ol ul {\n  display: block;\n  margin-left: 40px; }\n\n.reveal dt {\n  font-weight: bold; }\n\n.reveal dd {\n  margin-left: 40px; }\n\n.reveal q, .reveal blockquote {\n  quotes: none; }\n\n.reveal blockquote {\n  display: block;\n  position: relative;\n  width: 70%;\n  margin: 20px auto;\n  padding: 5px;\n  font-style: italic;\n  background: rgba(255, 255, 255, 0.05);\n  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.2); }\n\n.reveal blockquote p:first-child, .reveal blockquote p:last-child {\n  display: inline-block; }\n\n.reveal q {\n  font-style: italic; }\n\n.reveal pre {\n  display: block;\n  position: relative;\n  width: 90%;\n  margin: 20px auto;\n  text-align: left;\n  font-size: 0.55em;\n  font-family: monospace;\n  line-height: 1.2em;\n  word-wrap: break-word;\n  box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.3); }\n\n.reveal code {\n  font-family: monospace; }\n\n.reveal pre code {\n  display: block;\n  padding: 5px;\n  overflow: auto;\n  max-height: 400px;\n  word-wrap: normal;\n  background: #3F3F3F;\n  color: #DCDCDC; }\n\n.reveal table {\n  margin: auto;\n  border-collapse: collapse;\n  border-spacing: 0; }\n\n.reveal table th {\n  font-weight: bold; }\n\n.reveal table th, .reveal table td {\n  text-align: left;\n  padding: 0.2em 0.5em 0.2em 0.5em;\n  border-bottom: 1px solid; }\n\n.reveal table th[align=\"center\"], .reveal table td[align=\"center\"] {\n  text-align: center; }\n\n.reveal table th[align=\"right\"], .reveal table td[align=\"right\"] {\n  text-align: right; }\n\n.reveal table tr:last-child td {\n  border-bottom: none; }\n\n.reveal sup {\n  vertical-align: super; }\n\n.reveal sub {\n  vertical-align: sub; }\n\n.reveal small {\n  display: inline-block;\n  font-size: 0.6em;\n  line-height: 1.2em;\n  vertical-align: top; }\n\n.reveal small * {\n  vertical-align: top; }\n\n/*********************************************\n * LINKS\n *********************************************/\n.reveal a {\n  color: #3b759e;\n  text-decoration: none;\n  -webkit-transition: color 0.15s ease;\n  -moz-transition: color 0.15s ease;\n  transition: color 0.15s ease; }\n\n.reveal a:hover {\n  color: #74a8cb;\n  text-shadow: none;\n  border: none; }\n\n.reveal .roll span:after {\n  color: #fff;\n  background: #264d66; }\n\n/*********************************************\n * IMAGES\n *********************************************/\n.reveal section img {\n  margin: 15px 0px;\n  background: rgba(255, 255, 255, 0.12);\n  border: 4px solid #333;\n  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15); }\n\n.reveal a img {\n  -webkit-transition: all 0.15s linear;\n  -moz-transition: all 0.15s linear;\n  transition: all 0.15s linear; }\n\n.reveal a:hover img {\n  background: rgba(255, 255, 255, 0.2);\n  border-color: #3b759e;\n  box-shadow: 0 0 20px rgba(0, 0, 0, 0.55); }\n\n/*********************************************\n * NAVIGATION CONTROLS\n *********************************************/\n.reveal .controls div.navigate-left, .reveal .controls div.navigate-left.enabled {\n  border-right-color: #3b759e; }\n\n.reveal .controls div.navigate-right, .reveal .controls div.navigate-right.enabled {\n  border-left-color: #3b759e; }\n\n.reveal .controls div.navigate-up, .reveal .controls div.navigate-up.enabled {\n  border-bottom-color: #3b759e; }\n\n.reveal .controls div.navigate-down, .reveal .controls div.navigate-down.enabled {\n  border-top-color: #3b759e; }\n\n.reveal .controls div.navigate-left.enabled:hover {\n  border-right-color: #74a8cb; }\n\n.reveal .controls div.navigate-right.enabled:hover {\n  border-left-color: #74a8cb; }\n\n.reveal .controls div.navigate-up.enabled:hover {\n  border-bottom-color: #74a8cb; }\n\n.reveal .controls div.navigate-down.enabled:hover {\n  border-top-color: #74a8cb; }\n\n/*********************************************\n * PROGRESS BAR\n *********************************************/\n.reveal .progress {\n  background: rgba(0, 0, 0, 0.2); }\n\n.reveal .progress span {\n  background: #3b759e;\n  -webkit-transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);\n  -moz-transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);\n  transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985); }\n\n/*********************************************\n * SLIDE NUMBER\n *********************************************/\n.reveal .slide-number {\n  color: #3b759e; }\n", ""]);
-
-/***/ },
-/* 33 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -38698,6 +37368,1336 @@
 	
 	}));
 
+
+/***/ },
+/* 13 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+	
+	// load the styles
+	var content = __webpack_require__(14);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(16)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../css-loader/index.js!./reveal.css", function() {
+				var newContent = require("!!./../../css-loader/index.js!./reveal.css");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 14 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(15)();
+	exports.push([module.id, "/*!\n * reveal.js\n * http://lab.hakim.se/reveal-js\n * MIT licensed\n *\n * Copyright (C) 2015 Hakim El Hattab, http://hakim.se\n */\n/*********************************************\n * RESET STYLES\n *********************************************/\nhtml, body, .reveal div, .reveal span, .reveal applet, .reveal object, .reveal iframe, .reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6, .reveal p, .reveal blockquote, .reveal pre, .reveal a, .reveal abbr, .reveal acronym, .reveal address, .reveal big, .reveal cite, .reveal code, .reveal del, .reveal dfn, .reveal em, .reveal img, .reveal ins, .reveal kbd, .reveal q, .reveal s, .reveal samp, .reveal small, .reveal strike, .reveal strong, .reveal sub, .reveal sup, .reveal tt, .reveal var, .reveal b, .reveal u, .reveal center, .reveal dl, .reveal dt, .reveal dd, .reveal ol, .reveal ul, .reveal li, .reveal fieldset, .reveal form, .reveal label, .reveal legend, .reveal table, .reveal caption, .reveal tbody, .reveal tfoot, .reveal thead, .reveal tr, .reveal th, .reveal td, .reveal article, .reveal aside, .reveal canvas, .reveal details, .reveal embed, .reveal figure, .reveal figcaption, .reveal footer, .reveal header, .reveal hgroup, .reveal menu, .reveal nav, .reveal output, .reveal ruby, .reveal section, .reveal summary, .reveal time, .reveal mark, .reveal audio, video {\n  margin: 0;\n  padding: 0;\n  border: 0;\n  font-size: 100%;\n  font: inherit;\n  vertical-align: baseline; }\n\n.reveal article, .reveal aside, .reveal details, .reveal figcaption, .reveal figure, .reveal footer, .reveal header, .reveal hgroup, .reveal menu, .reveal nav, .reveal section {\n  display: block; }\n\n/*********************************************\n * GLOBAL STYLES\n *********************************************/\nhtml, body {\n  width: 100%;\n  height: 100%;\n  overflow: hidden; }\n\nbody {\n  position: relative;\n  line-height: 1;\n  background-color: #fff;\n  color: #000; }\n\n/*********************************************\n * VIEW FRAGMENTS\n *********************************************/\n.reveal .slides section .fragment {\n  opacity: 0;\n  visibility: hidden;\n  -webkit-transition: all 0.2s ease;\n          transition: all 0.2s ease; }\n  .reveal .slides section .fragment.visible {\n    opacity: 1;\n    visibility: visible; }\n\n.reveal .slides section .fragment.grow {\n  opacity: 1;\n  visibility: visible; }\n  .reveal .slides section .fragment.grow.visible {\n    -webkit-transform: scale(1.3);\n        -ms-transform: scale(1.3);\n            transform: scale(1.3); }\n\n.reveal .slides section .fragment.shrink {\n  opacity: 1;\n  visibility: visible; }\n  .reveal .slides section .fragment.shrink.visible {\n    -webkit-transform: scale(0.7);\n        -ms-transform: scale(0.7);\n            transform: scale(0.7); }\n\n.reveal .slides section .fragment.zoom-in {\n  -webkit-transform: scale(0.1);\n      -ms-transform: scale(0.1);\n          transform: scale(0.1); }\n  .reveal .slides section .fragment.zoom-in.visible {\n    -webkit-transform: none;\n        -ms-transform: none;\n            transform: none; }\n\n.reveal .slides section .fragment.fade-out {\n  opacity: 1;\n  visibility: visible; }\n  .reveal .slides section .fragment.fade-out.visible {\n    opacity: 0;\n    visibility: hidden; }\n\n.reveal .slides section .fragment.semi-fade-out {\n  opacity: 1;\n  visibility: visible; }\n  .reveal .slides section .fragment.semi-fade-out.visible {\n    opacity: 0.5;\n    visibility: visible; }\n\n.reveal .slides section .fragment.strike {\n  opacity: 1; }\n  .reveal .slides section .fragment.strike.visible {\n    text-decoration: line-through; }\n\n.reveal .slides section .fragment.current-visible {\n  opacity: 0;\n  visibility: hidden; }\n  .reveal .slides section .fragment.current-visible.current-fragment {\n    opacity: 1;\n    visibility: visible; }\n\n.reveal .slides section .fragment.highlight-red, .reveal .slides section .fragment.highlight-current-red, .reveal .slides section .fragment.highlight-green, .reveal .slides section .fragment.highlight-current-green, .reveal .slides section .fragment.highlight-blue, .reveal .slides section .fragment.highlight-current-blue {\n  opacity: 1;\n  visibility: visible; }\n\n.reveal .slides section .fragment.highlight-red.visible {\n  color: #ff2c2d; }\n\n.reveal .slides section .fragment.highlight-green.visible {\n  color: #17ff2e; }\n\n.reveal .slides section .fragment.highlight-blue.visible {\n  color: #1b91ff; }\n\n.reveal .slides section .fragment.highlight-current-red.current-fragment {\n  color: #ff2c2d; }\n\n.reveal .slides section .fragment.highlight-current-green.current-fragment {\n  color: #17ff2e; }\n\n.reveal .slides section .fragment.highlight-current-blue.current-fragment {\n  color: #1b91ff; }\n\n/*********************************************\n * DEFAULT ELEMENT STYLES\n *********************************************/\n/* Fixes issue in Chrome where italic fonts did not appear when printing to PDF */\n.reveal:after {\n  content: '';\n  font-style: italic; }\n\n.reveal iframe {\n  z-index: 1; }\n\n/** Prevents layering issues in certain browser/transition combinations */\n.reveal a {\n  position: relative; }\n\n.reveal .stretch {\n  max-width: none;\n  max-height: none; }\n\n.reveal pre.stretch code {\n  height: 100%;\n  max-height: 100%;\n  -moz-box-sizing: border-box;\n       box-sizing: border-box; }\n\n/*********************************************\n * CONTROLS\n *********************************************/\n.reveal .controls {\n  display: none;\n  position: fixed;\n  width: 110px;\n  height: 110px;\n  z-index: 30;\n  right: 10px;\n  bottom: 10px;\n  -webkit-user-select: none; }\n\n.reveal .controls div {\n  position: absolute;\n  opacity: 0.05;\n  width: 0;\n  height: 0;\n  border: 12px solid transparent;\n  -webkit-transform: scale(0.9999);\n      -ms-transform: scale(0.9999);\n          transform: scale(0.9999);\n  -webkit-transition: all 0.2s ease;\n          transition: all 0.2s ease;\n  -webkit-tap-highlight-color: rgba(0, 0, 0, 0); }\n\n.reveal .controls div.enabled {\n  opacity: 0.7;\n  cursor: pointer; }\n\n.reveal .controls div.enabled:active {\n  margin-top: 1px; }\n\n.reveal .controls div.navigate-left {\n  top: 42px;\n  border-right-width: 22px;\n  border-right-color: #000; }\n\n.reveal .controls div.navigate-left.fragmented {\n  opacity: 0.3; }\n\n.reveal .controls div.navigate-right {\n  left: 74px;\n  top: 42px;\n  border-left-width: 22px;\n  border-left-color: #000; }\n\n.reveal .controls div.navigate-right.fragmented {\n  opacity: 0.3; }\n\n.reveal .controls div.navigate-up {\n  left: 42px;\n  border-bottom-width: 22px;\n  border-bottom-color: #000; }\n\n.reveal .controls div.navigate-up.fragmented {\n  opacity: 0.3; }\n\n.reveal .controls div.navigate-down {\n  left: 42px;\n  top: 74px;\n  border-top-width: 22px;\n  border-top-color: #000; }\n\n.reveal .controls div.navigate-down.fragmented {\n  opacity: 0.3; }\n\n/*********************************************\n * PROGRESS BAR\n *********************************************/\n.reveal .progress {\n  position: fixed;\n  display: none;\n  height: 3px;\n  width: 100%;\n  bottom: 0;\n  left: 0;\n  z-index: 10;\n  background-color: rgba(0, 0, 0, 0.2); }\n\n.reveal .progress:after {\n  content: '';\n  display: block;\n  position: absolute;\n  height: 20px;\n  width: 100%;\n  top: -20px; }\n\n.reveal .progress span {\n  display: block;\n  height: 100%;\n  width: 0px;\n  background-color: #000;\n  -webkit-transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);\n          transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985); }\n\n/*********************************************\n * SLIDE NUMBER\n *********************************************/\n.reveal .slide-number {\n  position: fixed;\n  display: block;\n  right: 15px;\n  bottom: 15px;\n  opacity: 0.5;\n  z-index: 31;\n  font-size: 12px; }\n\n/*********************************************\n * SLIDES\n *********************************************/\n.reveal {\n  position: relative;\n  width: 100%;\n  height: 100%;\n  overflow: hidden;\n  -ms-touch-action: none;\n      touch-action: none; }\n\n.reveal .slides {\n  position: absolute;\n  width: 100%;\n  height: 100%;\n  top: 0;\n  right: 0;\n  bottom: 0;\n  left: 0;\n  margin: auto;\n  overflow: visible;\n  z-index: 1;\n  text-align: center;\n  -webkit-perspective: 600px;\n          perspective: 600px;\n  -webkit-perspective-origin: 50% 40%;\n          perspective-origin: 50% 40%; }\n\n.reveal .slides > section {\n  -ms-perspective: 600px; }\n\n.reveal .slides > section, .reveal .slides > section > section {\n  display: none;\n  position: absolute;\n  width: 100%;\n  padding: 20px 0px;\n  z-index: 10;\n  -webkit-transform-style: preserve-3d;\n          transform-style: preserve-3d;\n  -webkit-transition: -webkit-transform-origin 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985), -webkit-transform 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985), visibility 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985), opacity 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);\n          transition: -ms-transform-origin 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985), transform 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985), visibility 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985), opacity 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);\n          transition: transform-origin 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985), transform 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985), visibility 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985), opacity 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985); }\n\n/* Global transition speed settings */\n.reveal[data-transition-speed=\"fast\"] .slides section {\n  -webkit-transition-duration: 400ms;\n          transition-duration: 400ms; }\n\n.reveal[data-transition-speed=\"slow\"] .slides section {\n  -webkit-transition-duration: 1200ms;\n          transition-duration: 1200ms; }\n\n/* Slide-specific transition speed overrides */\n.reveal .slides section[data-transition-speed=\"fast\"] {\n  -webkit-transition-duration: 400ms;\n          transition-duration: 400ms; }\n\n.reveal .slides section[data-transition-speed=\"slow\"] {\n  -webkit-transition-duration: 1200ms;\n          transition-duration: 1200ms; }\n\n.reveal .slides > section.stack {\n  padding-top: 0;\n  padding-bottom: 0; }\n\n.reveal .slides > section.present, .reveal .slides > section > section.present {\n  display: block;\n  z-index: 11;\n  opacity: 1; }\n\n.reveal.center, .reveal.center .slides, .reveal.center .slides section {\n  min-height: 0 !important; }\n\n/* Don't allow interaction with invisible slides */\n.reveal .slides > section.future, .reveal .slides > section > section.future, .reveal .slides > section.past, .reveal .slides > section > section.past {\n  pointer-events: none; }\n\n.reveal.overview .slides > section, .reveal.overview .slides > section > section {\n  pointer-events: auto; }\n\n.reveal .slides > section.past, .reveal .slides > section.future, .reveal .slides > section > section.past, .reveal .slides > section > section.future {\n  opacity: 0; }\n\n/*********************************************\n * Mixins for readability of transitions\n *********************************************/\n/*********************************************\n * SLIDE TRANSITION\n * Aliased 'linear' for backwards compatibility\n *********************************************/\n.reveal.slide section {\n  -webkit-backface-visibility: hidden;\n          backface-visibility: hidden; }\n\n.reveal .slides > section[data-transition=slide].past, .reveal .slides > section[data-transition~=slide-out].past, .reveal.slide .slides > section:not([data-transition]).past {\n  -webkit-transform: translate(-150%, 0);\n      -ms-transform: translate(-150%, 0);\n          transform: translate(-150%, 0); }\n\n.reveal .slides > section[data-transition=slide].future, .reveal .slides > section[data-transition~=slide-in].future, .reveal.slide .slides > section:not([data-transition]).future {\n  -webkit-transform: translate(150%, 0);\n      -ms-transform: translate(150%, 0);\n          transform: translate(150%, 0); }\n\n.reveal .slides > section > section[data-transition=slide].past, .reveal .slides > section > section[data-transition~=slide-out].past, .reveal.slide .slides > section > section:not([data-transition]).past {\n  -webkit-transform: translate(0, -150%);\n      -ms-transform: translate(0, -150%);\n          transform: translate(0, -150%); }\n\n.reveal .slides > section > section[data-transition=slide].future, .reveal .slides > section > section[data-transition~=slide-in].future, .reveal.slide .slides > section > section:not([data-transition]).future {\n  -webkit-transform: translate(0, 150%);\n      -ms-transform: translate(0, 150%);\n          transform: translate(0, 150%); }\n\n.reveal.linear section {\n  -webkit-backface-visibility: hidden;\n          backface-visibility: hidden; }\n\n.reveal .slides > section[data-transition=linear].past, .reveal .slides > section[data-transition~=linear-out].past, .reveal.linear .slides > section:not([data-transition]).past {\n  -webkit-transform: translate(-150%, 0);\n      -ms-transform: translate(-150%, 0);\n          transform: translate(-150%, 0); }\n\n.reveal .slides > section[data-transition=linear].future, .reveal .slides > section[data-transition~=linear-in].future, .reveal.linear .slides > section:not([data-transition]).future {\n  -webkit-transform: translate(150%, 0);\n      -ms-transform: translate(150%, 0);\n          transform: translate(150%, 0); }\n\n.reveal .slides > section > section[data-transition=linear].past, .reveal .slides > section > section[data-transition~=linear-out].past, .reveal.linear .slides > section > section:not([data-transition]).past {\n  -webkit-transform: translate(0, -150%);\n      -ms-transform: translate(0, -150%);\n          transform: translate(0, -150%); }\n\n.reveal .slides > section > section[data-transition=linear].future, .reveal .slides > section > section[data-transition~=linear-in].future, .reveal.linear .slides > section > section:not([data-transition]).future {\n  -webkit-transform: translate(0, 150%);\n      -ms-transform: translate(0, 150%);\n          transform: translate(0, 150%); }\n\n/*********************************************\n * CONVEX TRANSITION\n * Aliased 'default' for backwards compatibility\n *********************************************/\n.reveal .slides > section[data-transition=default].past, .reveal .slides > section[data-transition~=default-out].past, .reveal.default .slides > section:not([data-transition]).past {\n  -webkit-transform: translate3d(-100%, 0, 0) rotateY(-90deg) translate3d(-100%, 0, 0);\n          transform: translate3d(-100%, 0, 0) rotateY(-90deg) translate3d(-100%, 0, 0); }\n\n.reveal .slides > section[data-transition=default].future, .reveal .slides > section[data-transition~=default-in].future, .reveal.default .slides > section:not([data-transition]).future {\n  -webkit-transform: translate3d(100%, 0, 0) rotateY(90deg) translate3d(100%, 0, 0);\n          transform: translate3d(100%, 0, 0) rotateY(90deg) translate3d(100%, 0, 0); }\n\n.reveal .slides > section > section[data-transition=default].past, .reveal .slides > section > section[data-transition~=default-out].past, .reveal.default .slides > section > section:not([data-transition]).past {\n  -webkit-transform: translate3d(0, -300px, 0) rotateX(70deg) translate3d(0, -300px, 0);\n          transform: translate3d(0, -300px, 0) rotateX(70deg) translate3d(0, -300px, 0); }\n\n.reveal .slides > section > section[data-transition=default].future, .reveal .slides > section > section[data-transition~=default-in].future, .reveal.default .slides > section > section:not([data-transition]).future {\n  -webkit-transform: translate3d(0, 300px, 0) rotateX(-70deg) translate3d(0, 300px, 0);\n          transform: translate3d(0, 300px, 0) rotateX(-70deg) translate3d(0, 300px, 0); }\n\n.reveal .slides > section[data-transition=convex].past, .reveal .slides > section[data-transition~=convex-out].past, .reveal.convex .slides > section:not([data-transition]).past {\n  -webkit-transform: translate3d(-100%, 0, 0) rotateY(-90deg) translate3d(-100%, 0, 0);\n          transform: translate3d(-100%, 0, 0) rotateY(-90deg) translate3d(-100%, 0, 0); }\n\n.reveal .slides > section[data-transition=convex].future, .reveal .slides > section[data-transition~=convex-in].future, .reveal.convex .slides > section:not([data-transition]).future {\n  -webkit-transform: translate3d(100%, 0, 0) rotateY(90deg) translate3d(100%, 0, 0);\n          transform: translate3d(100%, 0, 0) rotateY(90deg) translate3d(100%, 0, 0); }\n\n.reveal .slides > section > section[data-transition=convex].past, .reveal .slides > section > section[data-transition~=convex-out].past, .reveal.convex .slides > section > section:not([data-transition]).past {\n  -webkit-transform: translate3d(0, -300px, 0) rotateX(70deg) translate3d(0, -300px, 0);\n          transform: translate3d(0, -300px, 0) rotateX(70deg) translate3d(0, -300px, 0); }\n\n.reveal .slides > section > section[data-transition=convex].future, .reveal .slides > section > section[data-transition~=convex-in].future, .reveal.convex .slides > section > section:not([data-transition]).future {\n  -webkit-transform: translate3d(0, 300px, 0) rotateX(-70deg) translate3d(0, 300px, 0);\n          transform: translate3d(0, 300px, 0) rotateX(-70deg) translate3d(0, 300px, 0); }\n\n/*********************************************\n * CONCAVE TRANSITION\n *********************************************/\n.reveal .slides > section[data-transition=concave].past, .reveal .slides > section[data-transition~=concave-out].past, .reveal.concave .slides > section:not([data-transition]).past {\n  -webkit-transform: translate3d(-100%, 0, 0) rotateY(90deg) translate3d(-100%, 0, 0);\n          transform: translate3d(-100%, 0, 0) rotateY(90deg) translate3d(-100%, 0, 0); }\n\n.reveal .slides > section[data-transition=concave].future, .reveal .slides > section[data-transition~=concave-in].future, .reveal.concave .slides > section:not([data-transition]).future {\n  -webkit-transform: translate3d(100%, 0, 0) rotateY(-90deg) translate3d(100%, 0, 0);\n          transform: translate3d(100%, 0, 0) rotateY(-90deg) translate3d(100%, 0, 0); }\n\n.reveal .slides > section > section[data-transition=concave].past, .reveal .slides > section > section[data-transition~=concave-out].past, .reveal.concave .slides > section > section:not([data-transition]).past {\n  -webkit-transform: translate3d(0, -80%, 0) rotateX(-70deg) translate3d(0, -80%, 0);\n          transform: translate3d(0, -80%, 0) rotateX(-70deg) translate3d(0, -80%, 0); }\n\n.reveal .slides > section > section[data-transition=concave].future, .reveal .slides > section > section[data-transition~=concave-in].future, .reveal.concave .slides > section > section:not([data-transition]).future {\n  -webkit-transform: translate3d(0, 80%, 0) rotateX(70deg) translate3d(0, 80%, 0);\n          transform: translate3d(0, 80%, 0) rotateX(70deg) translate3d(0, 80%, 0); }\n\n/*********************************************\n * ZOOM TRANSITION\n *********************************************/\n.reveal .slides > section[data-transition=zoom], .reveal.zoom .slides > section:not([data-transition]) {\n  -webkit-transition-timing-function: ease;\n          transition-timing-function: ease; }\n\n.reveal .slides > section[data-transition=zoom].past, .reveal .slides > section[data-transition~=zoom-out].past, .reveal.zoom .slides > section:not([data-transition]).past {\n  visibility: hidden;\n  -webkit-transform: scale(16);\n      -ms-transform: scale(16);\n          transform: scale(16); }\n\n.reveal .slides > section[data-transition=zoom].future, .reveal .slides > section[data-transition~=zoom-in].future, .reveal.zoom .slides > section:not([data-transition]).future {\n  visibility: hidden;\n  -webkit-transform: scale(0.2);\n      -ms-transform: scale(0.2);\n          transform: scale(0.2); }\n\n.reveal .slides > section > section[data-transition=zoom].past, .reveal .slides > section > section[data-transition~=zoom-out].past, .reveal.zoom .slides > section > section:not([data-transition]).past {\n  -webkit-transform: translate(0, -150%);\n      -ms-transform: translate(0, -150%);\n          transform: translate(0, -150%); }\n\n.reveal .slides > section > section[data-transition=zoom].future, .reveal .slides > section > section[data-transition~=zoom-in].future, .reveal.zoom .slides > section > section:not([data-transition]).future {\n  -webkit-transform: translate(0, 150%);\n      -ms-transform: translate(0, 150%);\n          transform: translate(0, 150%); }\n\n/*********************************************\n * CUBE TRANSITION\n *********************************************/\n.reveal.cube .slides {\n  -webkit-perspective: 1300px;\n          perspective: 1300px; }\n\n.reveal.cube .slides section {\n  padding: 30px;\n  min-height: 700px;\n  -webkit-backface-visibility: hidden;\n          backface-visibility: hidden;\n  -moz-box-sizing: border-box;\n       box-sizing: border-box; }\n\n.reveal.center.cube .slides section {\n  min-height: 0; }\n\n.reveal.cube .slides section:not(.stack):before {\n  content: '';\n  position: absolute;\n  display: block;\n  width: 100%;\n  height: 100%;\n  left: 0;\n  top: 0;\n  background: rgba(0, 0, 0, 0.1);\n  border-radius: 4px;\n  -webkit-transform: translateZ(-20px);\n          transform: translateZ(-20px); }\n\n.reveal.cube .slides section:not(.stack):after {\n  content: '';\n  position: absolute;\n  display: block;\n  width: 90%;\n  height: 30px;\n  left: 5%;\n  bottom: 0;\n  background: none;\n  z-index: 1;\n  border-radius: 4px;\n  box-shadow: 0px 95px 25px rgba(0, 0, 0, 0.2);\n  -webkit-transform: translateZ(-90px) rotateX(65deg);\n          transform: translateZ(-90px) rotateX(65deg); }\n\n.reveal.cube .slides > section.stack {\n  padding: 0;\n  background: none; }\n\n.reveal.cube .slides > section.past {\n  -webkit-transform-origin: 100% 0%;\n      -ms-transform-origin: 100% 0%;\n          transform-origin: 100% 0%;\n  -webkit-transform: translate3d(-100%, 0, 0) rotateY(-90deg);\n          transform: translate3d(-100%, 0, 0) rotateY(-90deg); }\n\n.reveal.cube .slides > section.future {\n  -webkit-transform-origin: 0% 0%;\n      -ms-transform-origin: 0% 0%;\n          transform-origin: 0% 0%;\n  -webkit-transform: translate3d(100%, 0, 0) rotateY(90deg);\n          transform: translate3d(100%, 0, 0) rotateY(90deg); }\n\n.reveal.cube .slides > section > section.past {\n  -webkit-transform-origin: 0% 100%;\n      -ms-transform-origin: 0% 100%;\n          transform-origin: 0% 100%;\n  -webkit-transform: translate3d(0, -100%, 0) rotateX(90deg);\n          transform: translate3d(0, -100%, 0) rotateX(90deg); }\n\n.reveal.cube .slides > section > section.future {\n  -webkit-transform-origin: 0% 0%;\n      -ms-transform-origin: 0% 0%;\n          transform-origin: 0% 0%;\n  -webkit-transform: translate3d(0, 100%, 0) rotateX(-90deg);\n          transform: translate3d(0, 100%, 0) rotateX(-90deg); }\n\n/*********************************************\n * PAGE TRANSITION\n *********************************************/\n.reveal.page .slides {\n  -webkit-perspective-origin: 0% 50%;\n          perspective-origin: 0% 50%;\n  -webkit-perspective: 3000px;\n          perspective: 3000px; }\n\n.reveal.page .slides section {\n  padding: 30px;\n  min-height: 700px;\n  -moz-box-sizing: border-box;\n       box-sizing: border-box; }\n\n.reveal.page .slides section.past {\n  z-index: 12; }\n\n.reveal.page .slides section:not(.stack):before {\n  content: '';\n  position: absolute;\n  display: block;\n  width: 100%;\n  height: 100%;\n  left: 0;\n  top: 0;\n  background: rgba(0, 0, 0, 0.1);\n  -webkit-transform: translateZ(-20px);\n          transform: translateZ(-20px); }\n\n.reveal.page .slides section:not(.stack):after {\n  content: '';\n  position: absolute;\n  display: block;\n  width: 90%;\n  height: 30px;\n  left: 5%;\n  bottom: 0;\n  background: none;\n  z-index: 1;\n  border-radius: 4px;\n  box-shadow: 0px 95px 25px rgba(0, 0, 0, 0.2);\n  -webkit-transform: translateZ(-90px) rotateX(65deg); }\n\n.reveal.page .slides > section.stack {\n  padding: 0;\n  background: none; }\n\n.reveal.page .slides > section.past {\n  -webkit-transform-origin: 0% 0%;\n      -ms-transform-origin: 0% 0%;\n          transform-origin: 0% 0%;\n  -webkit-transform: translate3d(-40%, 0, 0) rotateY(-80deg);\n          transform: translate3d(-40%, 0, 0) rotateY(-80deg); }\n\n.reveal.page .slides > section.future {\n  -webkit-transform-origin: 100% 0%;\n      -ms-transform-origin: 100% 0%;\n          transform-origin: 100% 0%;\n  -webkit-transform: translate3d(0, 0, 0);\n          transform: translate3d(0, 0, 0); }\n\n.reveal.page .slides > section > section.past {\n  -webkit-transform-origin: 0% 0%;\n      -ms-transform-origin: 0% 0%;\n          transform-origin: 0% 0%;\n  -webkit-transform: translate3d(0, -40%, 0) rotateX(80deg);\n          transform: translate3d(0, -40%, 0) rotateX(80deg); }\n\n.reveal.page .slides > section > section.future {\n  -webkit-transform-origin: 0% 100%;\n      -ms-transform-origin: 0% 100%;\n          transform-origin: 0% 100%;\n  -webkit-transform: translate3d(0, 0, 0);\n          transform: translate3d(0, 0, 0); }\n\n/*********************************************\n * FADE TRANSITION\n *********************************************/\n.reveal .slides section[data-transition=fade], .reveal.fade .slides section:not([data-transition]), .reveal.fade .slides > section > section:not([data-transition]) {\n  -webkit-transform: none;\n      -ms-transform: none;\n          transform: none;\n  -webkit-transition: opacity 0.5s;\n          transition: opacity 0.5s; }\n\n.reveal.fade.overview .slides section, .reveal.fade.overview .slides > section > section {\n  -webkit-transition: none;\n          transition: none; }\n\n/*********************************************\n * NO TRANSITION\n *********************************************/\n.reveal .slides > section[data-transition=none], .reveal.none .slides > section:not([data-transition]) {\n  -webkit-transform: none;\n      -ms-transform: none;\n          transform: none;\n  -webkit-transition: none;\n          transition: none; }\n\n/*********************************************\n * PAUSED MODE\n *********************************************/\n.reveal .pause-overlay {\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n  background: black;\n  visibility: hidden;\n  opacity: 0;\n  z-index: 100;\n  -webkit-transition: all 1s ease;\n          transition: all 1s ease; }\n\n.reveal.paused .pause-overlay {\n  visibility: visible;\n  opacity: 1; }\n\n/*********************************************\n * FALLBACK\n *********************************************/\n.no-transforms {\n  overflow-y: auto; }\n\n.no-transforms .reveal .slides {\n  position: relative;\n  width: 80%;\n  height: auto !important;\n  top: 0;\n  left: 50%;\n  margin: 0;\n  text-align: center; }\n\n.no-transforms .reveal .controls, .no-transforms .reveal .progress {\n  display: none !important; }\n\n.no-transforms .reveal .slides section {\n  display: block !important;\n  opacity: 1 !important;\n  position: relative !important;\n  height: auto;\n  min-height: 0;\n  top: 0;\n  left: -50%;\n  margin: 70px 0;\n  -webkit-transform: none;\n      -ms-transform: none;\n          transform: none; }\n\n.no-transforms .reveal .slides section section {\n  left: 0; }\n\n.reveal .no-transition, .reveal .no-transition * {\n  -webkit-transition: none !important;\n          transition: none !important; }\n\n/*********************************************\n * PER-SLIDE BACKGROUNDS\n *********************************************/\n.reveal .backgrounds {\n  position: absolute;\n  width: 100%;\n  height: 100%;\n  top: 0;\n  left: 0;\n  -webkit-perspective: 600px;\n          perspective: 600px; }\n\n.reveal .slide-background {\n  display: none;\n  position: absolute;\n  width: 100%;\n  height: 100%;\n  opacity: 0;\n  visibility: hidden;\n  background-color: rgba(0, 0, 0, 0);\n  background-position: 50% 50%;\n  background-repeat: no-repeat;\n  background-size: cover;\n  -webkit-transition: all 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);\n          transition: all 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985); }\n\n.reveal .slide-background.stack {\n  display: block; }\n\n.reveal .slide-background.present {\n  opacity: 1;\n  visibility: visible; }\n\n.print-pdf .reveal .slide-background {\n  opacity: 1 !important;\n  visibility: visible !important; }\n\n/* Video backgrounds */\n.reveal .slide-background video {\n  position: absolute;\n  width: 100%;\n  height: 100%;\n  max-width: none;\n  max-height: none;\n  top: 0;\n  left: 0; }\n\n/* Immediate transition style */\n.reveal[data-background-transition=none] > .backgrounds .slide-background, .reveal > .backgrounds .slide-background[data-background-transition=none] {\n  -webkit-transition: none;\n          transition: none; }\n\n/* Slide */\n.reveal[data-background-transition=slide] > .backgrounds .slide-background, .reveal > .backgrounds .slide-background[data-background-transition=slide] {\n  opacity: 1;\n  -webkit-backface-visibility: hidden;\n          backface-visibility: hidden; }\n\n.reveal[data-background-transition=slide] > .backgrounds .slide-background.past, .reveal > .backgrounds .slide-background.past[data-background-transition=slide] {\n  -webkit-transform: translate(-100%, 0);\n      -ms-transform: translate(-100%, 0);\n          transform: translate(-100%, 0); }\n\n.reveal[data-background-transition=slide] > .backgrounds .slide-background.future, .reveal > .backgrounds .slide-background.future[data-background-transition=slide] {\n  -webkit-transform: translate(100%, 0);\n      -ms-transform: translate(100%, 0);\n          transform: translate(100%, 0); }\n\n.reveal[data-background-transition=slide] > .backgrounds .slide-background > .slide-background.past, .reveal > .backgrounds .slide-background > .slide-background.past[data-background-transition=slide] {\n  -webkit-transform: translate(0, -100%);\n      -ms-transform: translate(0, -100%);\n          transform: translate(0, -100%); }\n\n.reveal[data-background-transition=slide] > .backgrounds .slide-background > .slide-background.future, .reveal > .backgrounds .slide-background > .slide-background.future[data-background-transition=slide] {\n  -webkit-transform: translate(0, 100%);\n      -ms-transform: translate(0, 100%);\n          transform: translate(0, 100%); }\n\n/* Convex */\n.reveal[data-background-transition=convex] > .backgrounds .slide-background.past, .reveal > .backgrounds .slide-background.past[data-background-transition=convex] {\n  opacity: 0;\n  -webkit-transform: translate3d(-100%, 0, 0) rotateY(-90deg) translate3d(-100%, 0, 0);\n          transform: translate3d(-100%, 0, 0) rotateY(-90deg) translate3d(-100%, 0, 0); }\n\n.reveal[data-background-transition=convex] > .backgrounds .slide-background.future, .reveal > .backgrounds .slide-background.future[data-background-transition=convex] {\n  opacity: 0;\n  -webkit-transform: translate3d(100%, 0, 0) rotateY(90deg) translate3d(100%, 0, 0);\n          transform: translate3d(100%, 0, 0) rotateY(90deg) translate3d(100%, 0, 0); }\n\n.reveal[data-background-transition=convex] > .backgrounds .slide-background > .slide-background.past, .reveal > .backgrounds .slide-background > .slide-background.past[data-background-transition=convex] {\n  opacity: 0;\n  -webkit-transform: translate3d(0, -100%, 0) rotateX(90deg) translate3d(0, -100%, 0);\n          transform: translate3d(0, -100%, 0) rotateX(90deg) translate3d(0, -100%, 0); }\n\n.reveal[data-background-transition=convex] > .backgrounds .slide-background > .slide-background.future, .reveal > .backgrounds .slide-background > .slide-background.future[data-background-transition=convex] {\n  opacity: 0;\n  -webkit-transform: translate3d(0, 100%, 0) rotateX(-90deg) translate3d(0, 100%, 0);\n          transform: translate3d(0, 100%, 0) rotateX(-90deg) translate3d(0, 100%, 0); }\n\n/* Concave */\n.reveal[data-background-transition=concave] > .backgrounds .slide-background.past, .reveal > .backgrounds .slide-background.past[data-background-transition=concave] {\n  opacity: 0;\n  -webkit-transform: translate3d(-100%, 0, 0) rotateY(90deg) translate3d(-100%, 0, 0);\n          transform: translate3d(-100%, 0, 0) rotateY(90deg) translate3d(-100%, 0, 0); }\n\n.reveal[data-background-transition=concave] > .backgrounds .slide-background.future, .reveal > .backgrounds .slide-background.future[data-background-transition=concave] {\n  opacity: 0;\n  -webkit-transform: translate3d(100%, 0, 0) rotateY(-90deg) translate3d(100%, 0, 0);\n          transform: translate3d(100%, 0, 0) rotateY(-90deg) translate3d(100%, 0, 0); }\n\n.reveal[data-background-transition=concave] > .backgrounds .slide-background > .slide-background.past, .reveal > .backgrounds .slide-background > .slide-background.past[data-background-transition=concave] {\n  opacity: 0;\n  -webkit-transform: translate3d(0, -100%, 0) rotateX(-90deg) translate3d(0, -100%, 0);\n          transform: translate3d(0, -100%, 0) rotateX(-90deg) translate3d(0, -100%, 0); }\n\n.reveal[data-background-transition=concave] > .backgrounds .slide-background > .slide-background.future, .reveal > .backgrounds .slide-background > .slide-background.future[data-background-transition=concave] {\n  opacity: 0;\n  -webkit-transform: translate3d(0, 100%, 0) rotateX(90deg) translate3d(0, 100%, 0);\n          transform: translate3d(0, 100%, 0) rotateX(90deg) translate3d(0, 100%, 0); }\n\n/* Zoom */\n.reveal[data-background-transition=zoom] > .backgrounds .slide-background, .reveal > .backgrounds .slide-background[data-background-transition=zoom] {\n  -webkit-transition-timing-function: ease;\n          transition-timing-function: ease; }\n\n.reveal[data-background-transition=zoom] > .backgrounds .slide-background.past, .reveal > .backgrounds .slide-background.past[data-background-transition=zoom] {\n  opacity: 0;\n  visibility: hidden;\n  -webkit-transform: scale(16);\n      -ms-transform: scale(16);\n          transform: scale(16); }\n\n.reveal[data-background-transition=zoom] > .backgrounds .slide-background.future, .reveal > .backgrounds .slide-background.future[data-background-transition=zoom] {\n  opacity: 0;\n  visibility: hidden;\n  -webkit-transform: scale(0.2);\n      -ms-transform: scale(0.2);\n          transform: scale(0.2); }\n\n.reveal[data-background-transition=zoom] > .backgrounds .slide-background > .slide-background.past, .reveal > .backgrounds .slide-background > .slide-background.past[data-background-transition=zoom] {\n  opacity: 0;\n  visibility: hidden;\n  -webkit-transform: scale(16);\n      -ms-transform: scale(16);\n          transform: scale(16); }\n\n.reveal[data-background-transition=zoom] > .backgrounds .slide-background > .slide-background.future, .reveal > .backgrounds .slide-background > .slide-background.future[data-background-transition=zoom] {\n  opacity: 0;\n  visibility: hidden;\n  -webkit-transform: scale(0.2);\n      -ms-transform: scale(0.2);\n          transform: scale(0.2); }\n\n/* Global transition speed settings */\n.reveal[data-transition-speed=\"fast\"] > .backgrounds .slide-background {\n  -webkit-transition-duration: 400ms;\n          transition-duration: 400ms; }\n\n.reveal[data-transition-speed=\"slow\"] > .backgrounds .slide-background {\n  -webkit-transition-duration: 1200ms;\n          transition-duration: 1200ms; }\n\n/*********************************************\n * OVERVIEW\n *********************************************/\n.reveal.overview {\n  -webkit-perspective-origin: 50% 50%;\n          perspective-origin: 50% 50%;\n  -webkit-perspective: 700px;\n          perspective: 700px; }\n  .reveal.overview .slides section {\n    height: 700px;\n    opacity: 1 !important;\n    overflow: hidden;\n    visibility: visible !important;\n    cursor: pointer;\n    -moz-box-sizing: border-box;\n         box-sizing: border-box; }\n  .reveal.overview .slides section:hover, .reveal.overview .slides section.present {\n    outline: 10px solid rgba(150, 150, 150, 0.4);\n    outline-offset: 10px; }\n  .reveal.overview .slides section .fragment {\n    opacity: 1;\n    -webkit-transition: none;\n            transition: none; }\n  .reveal.overview .slides section:after, .reveal.overview .slides section:before {\n    display: none !important; }\n  .reveal.overview .slides > section.stack {\n    padding: 0;\n    top: 0 !important;\n    background: none;\n    outline: none;\n    overflow: visible; }\n  .reveal.overview .backgrounds {\n    -webkit-perspective: inherit;\n            perspective: inherit; }\n  .reveal.overview .backgrounds .slide-background {\n    opacity: 1;\n    visibility: visible;\n    outline: 10px solid rgba(150, 150, 150, 0.1);\n    outline-offset: 10px; }\n\n.reveal.overview .slides section, .reveal.overview-deactivating .slides section {\n  -webkit-transition: none;\n          transition: none; }\n\n.reveal.overview .backgrounds .slide-background, .reveal.overview-deactivating .backgrounds .slide-background {\n  -webkit-transition: none;\n          transition: none; }\n\n.reveal.overview-animated .slides {\n  -webkit-transition: -webkit-transform 0.4s ease;\n          transition: transform 0.4s ease; }\n\n/*********************************************\n * RTL SUPPORT\n *********************************************/\n.reveal.rtl .slides, .reveal.rtl .slides h1, .reveal.rtl .slides h2, .reveal.rtl .slides h3, .reveal.rtl .slides h4, .reveal.rtl .slides h5, .reveal.rtl .slides h6 {\n  direction: rtl;\n  font-family: sans-serif; }\n\n.reveal.rtl pre, .reveal.rtl code {\n  direction: ltr; }\n\n.reveal.rtl ol, .reveal.rtl ul {\n  text-align: right; }\n\n.reveal.rtl .progress span {\n  float: right; }\n\n/*********************************************\n * PARALLAX BACKGROUND\n *********************************************/\n.reveal.has-parallax-background .backgrounds {\n  -webkit-transition: all 0.8s ease;\n          transition: all 0.8s ease; }\n\n/* Global transition speed settings */\n.reveal.has-parallax-background[data-transition-speed=\"fast\"] .backgrounds {\n  -webkit-transition-duration: 400ms;\n          transition-duration: 400ms; }\n\n.reveal.has-parallax-background[data-transition-speed=\"slow\"] .backgrounds {\n  -webkit-transition-duration: 1200ms;\n          transition-duration: 1200ms; }\n\n/*********************************************\n * LINK PREVIEW OVERLAY\n *********************************************/\n.reveal .overlay {\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n  z-index: 1000;\n  background: rgba(0, 0, 0, 0.9);\n  opacity: 0;\n  visibility: hidden;\n  -webkit-transition: all 0.3s ease;\n          transition: all 0.3s ease; }\n\n.reveal .overlay.visible {\n  opacity: 1;\n  visibility: visible; }\n\n.reveal .overlay .spinner {\n  position: absolute;\n  display: block;\n  top: 50%;\n  left: 50%;\n  width: 32px;\n  height: 32px;\n  margin: -16px 0 0 -16px;\n  z-index: 10;\n  background-image: url(data:image/gif;base64,R0lGODlhIAAgAPMAAJmZmf%2F%2F%2F6%2Bvr8nJybW1tcDAwOjo6Nvb26ioqKOjo7Ozs%2FLy8vz8%2FAAAAAAAAAAAACH%2FC05FVFNDQVBFMi4wAwEAAAAh%2FhpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh%2BQQJCgAAACwAAAAAIAAgAAAE5xDISWlhperN52JLhSSdRgwVo1ICQZRUsiwHpTJT4iowNS8vyW2icCF6k8HMMBkCEDskxTBDAZwuAkkqIfxIQyhBQBFvAQSDITM5VDW6XNE4KagNh6Bgwe60smQUB3d4Rz1ZBApnFASDd0hihh12BkE9kjAJVlycXIg7CQIFA6SlnJ87paqbSKiKoqusnbMdmDC2tXQlkUhziYtyWTxIfy6BE8WJt5YJvpJivxNaGmLHT0VnOgSYf0dZXS7APdpB309RnHOG5gDqXGLDaC457D1zZ%2FV%2FnmOM82XiHRLYKhKP1oZmADdEAAAh%2BQQJCgAAACwAAAAAIAAgAAAE6hDISWlZpOrNp1lGNRSdRpDUolIGw5RUYhhHukqFu8DsrEyqnWThGvAmhVlteBvojpTDDBUEIFwMFBRAmBkSgOrBFZogCASwBDEY%2FCZSg7GSE0gSCjQBMVG023xWBhklAnoEdhQEfyNqMIcKjhRsjEdnezB%2BA4k8gTwJhFuiW4dokXiloUepBAp5qaKpp6%2BHo7aWW54wl7obvEe0kRuoplCGepwSx2jJvqHEmGt6whJpGpfJCHmOoNHKaHx61WiSR92E4lbFoq%2BB6QDtuetcaBPnW6%2BO7wDHpIiK9SaVK5GgV543tzjgGcghAgAh%2BQQJCgAAACwAAAAAIAAgAAAE7hDISSkxpOrN5zFHNWRdhSiVoVLHspRUMoyUakyEe8PTPCATW9A14E0UvuAKMNAZKYUZCiBMuBakSQKG8G2FzUWox2AUtAQFcBKlVQoLgQReZhQlCIJesQXI5B0CBnUMOxMCenoCfTCEWBsJColTMANldx15BGs8B5wlCZ9Po6OJkwmRpnqkqnuSrayqfKmqpLajoiW5HJq7FL1Gr2mMMcKUMIiJgIemy7xZtJsTmsM4xHiKv5KMCXqfyUCJEonXPN2rAOIAmsfB3uPoAK%2B%2BG%2Bw48edZPK%2BM6hLJpQg484enXIdQFSS1u6UhksENEQAAIfkECQoAAAAsAAAAACAAIAAABOcQyEmpGKLqzWcZRVUQnZYg1aBSh2GUVEIQ2aQOE%2BG%2BcD4ntpWkZQj1JIiZIogDFFyHI0UxQwFugMSOFIPJftfVAEoZLBbcLEFhlQiqGp1Vd140AUklUN3eCA51C1EWMzMCezCBBmkxVIVHBWd3HHl9JQOIJSdSnJ0TDKChCwUJjoWMPaGqDKannasMo6WnM562R5YluZRwur0wpgqZE7NKUm%2BFNRPIhjBJxKZteWuIBMN4zRMIVIhffcgojwCF117i4nlLnY5ztRLsnOk%2BaV%2BoJY7V7m76PdkS4trKcdg0Zc0tTcKkRAAAIfkECQoAAAAsAAAAACAAIAAABO4QyEkpKqjqzScpRaVkXZWQEximw1BSCUEIlDohrft6cpKCk5xid5MNJTaAIkekKGQkWyKHkvhKsR7ARmitkAYDYRIbUQRQjWBwJRzChi9CRlBcY1UN4g0%2FVNB0AlcvcAYHRyZPdEQFYV8ccwR5HWxEJ02YmRMLnJ1xCYp0Y5idpQuhopmmC2KgojKasUQDk5BNAwwMOh2RtRq5uQuPZKGIJQIGwAwGf6I0JXMpC8C7kXWDBINFMxS4DKMAWVWAGYsAdNqW5uaRxkSKJOZKaU3tPOBZ4DuK2LATgJhkPJMgTwKCdFjyPHEnKxFCDhEAACH5BAkKAAAALAAAAAAgACAAAATzEMhJaVKp6s2nIkolIJ2WkBShpkVRWqqQrhLSEu9MZJKK9y1ZrqYK9WiClmvoUaF8gIQSNeF1Er4MNFn4SRSDARWroAIETg1iVwuHjYB1kYc1mwruwXKC9gmsJXliGxc%2BXiUCby9ydh1sOSdMkpMTBpaXBzsfhoc5l58Gm5yToAaZhaOUqjkDgCWNHAULCwOLaTmzswadEqggQwgHuQsHIoZCHQMMQgQGubVEcxOPFAcMDAYUA85eWARmfSRQCdcMe0zeP1AAygwLlJtPNAAL19DARdPzBOWSm1brJBi45soRAWQAAkrQIykShQ9wVhHCwCQCACH5BAkKAAAALAAAAAAgACAAAATrEMhJaVKp6s2nIkqFZF2VIBWhUsJaTokqUCoBq%2BE71SRQeyqUToLA7VxF0JDyIQh%2FMVVPMt1ECZlfcjZJ9mIKoaTl1MRIl5o4CUKXOwmyrCInCKqcWtvadL2SYhyASyNDJ0uIiRMDjI0Fd30%2FiI2UA5GSS5UDj2l6NoqgOgN4gksEBgYFf0FDqKgHnyZ9OX8HrgYHdHpcHQULXAS2qKpENRg7eAMLC7kTBaixUYFkKAzWAAnLC7FLVxLWDBLKCwaKTULgEwbLA4hJtOkSBNqITT3xEgfLpBtzE%2FjiuL04RGEBgwWhShRgQExHBAAh%2BQQJCgAAACwAAAAAIAAgAAAE7xDISWlSqerNpyJKhWRdlSAVoVLCWk6JKlAqAavhO9UkUHsqlE6CwO1cRdCQ8iEIfzFVTzLdRAmZX3I2SfZiCqGk5dTESJeaOAlClzsJsqwiJwiqnFrb2nS9kmIcgEsjQydLiIlHehhpejaIjzh9eomSjZR%2BipslWIRLAgMDOR2DOqKogTB9pCUJBagDBXR6XB0EBkIIsaRsGGMMAxoDBgYHTKJiUYEGDAzHC9EACcUGkIgFzgwZ0QsSBcXHiQvOwgDdEwfFs0sDzt4S6BK4xYjkDOzn0unFeBzOBijIm1Dgmg5YFQwsCMjp1oJ8LyIAACH5BAkKAAAALAAAAAAgACAAAATwEMhJaVKp6s2nIkqFZF2VIBWhUsJaTokqUCoBq%2BE71SRQeyqUToLA7VxF0JDyIQh%2FMVVPMt1ECZlfcjZJ9mIKoaTl1MRIl5o4CUKXOwmyrCInCKqcWtvadL2SYhyASyNDJ0uIiUd6GGl6NoiPOH16iZKNlH6KmyWFOggHhEEvAwwMA0N9GBsEC6amhnVcEwavDAazGwIDaH1ipaYLBUTCGgQDA8NdHz0FpqgTBwsLqAbWAAnIA4FWKdMLGdYGEgraigbT0OITBcg5QwPT4xLrROZL6AuQAPUS7bxLpoWidY0JtxLHKhwwMJBTHgPKdEQAACH5BAkKAAAALAAAAAAgACAAAATrEMhJaVKp6s2nIkqFZF2VIBWhUsJaTokqUCoBq%2BE71SRQeyqUToLA7VxF0JDyIQh%2FMVVPMt1ECZlfcjZJ9mIKoaTl1MRIl5o4CUKXOwmyrCInCKqcWtvadL2SYhyASyNDJ0uIiUd6GAULDJCRiXo1CpGXDJOUjY%2BYip9DhToJA4RBLwMLCwVDfRgbBAaqqoZ1XBMHswsHtxtFaH1iqaoGNgAIxRpbFAgfPQSqpbgGBqUD1wBXeCYp1AYZ19JJOYgH1KwA4UBvQwXUBxPqVD9L3sbp2BNk2xvvFPJd%2BMFCN6HAAIKgNggY0KtEBAAh%2BQQJCgAAACwAAAAAIAAgAAAE6BDISWlSqerNpyJKhWRdlSAVoVLCWk6JKlAqAavhO9UkUHsqlE6CwO1cRdCQ8iEIfzFVTzLdRAmZX3I2SfYIDMaAFdTESJeaEDAIMxYFqrOUaNW4E4ObYcCXaiBVEgULe0NJaxxtYksjh2NLkZISgDgJhHthkpU4mW6blRiYmZOlh4JWkDqILwUGBnE6TYEbCgevr0N1gH4At7gHiRpFaLNrrq8HNgAJA70AWxQIH1%2BvsYMDAzZQPC9VCNkDWUhGkuE5PxJNwiUK4UfLzOlD4WvzAHaoG9nxPi5d%2BjYUqfAhhykOFwJWiAAAIfkECQoAAAAsAAAAACAAIAAABPAQyElpUqnqzaciSoVkXVUMFaFSwlpOCcMYlErAavhOMnNLNo8KsZsMZItJEIDIFSkLGQoQTNhIsFehRww2CQLKF0tYGKYSg%2BygsZIuNqJksKgbfgIGepNo2cIUB3V1B3IvNiBYNQaDSTtfhhx0CwVPI0UJe0%2Bbm4g5VgcGoqOcnjmjqDSdnhgEoamcsZuXO1aWQy8KAwOAuTYYGwi7w5h%2BKr0SJ8MFihpNbx%2B4Erq7BYBuzsdiH1jCAzoSfl0rVirNbRXlBBlLX%2BBP0XJLAPGzTkAuAOqb0WT5AH7OcdCm5B8TgRwSRKIHQtaLCwg1RAAAOwAAAAAAAAAAAA%3D%3D);\n  visibility: visible;\n  opacity: 0.6;\n  -webkit-transition: all 0.3s ease;\n          transition: all 0.3s ease; }\n\n.reveal .overlay header {\n  position: absolute;\n  left: 0;\n  top: 0;\n  width: 100%;\n  height: 40px;\n  z-index: 2;\n  border-bottom: 1px solid #222; }\n\n.reveal .overlay header a {\n  display: inline-block;\n  width: 40px;\n  height: 40px;\n  padding: 0 10px;\n  float: right;\n  opacity: 0.6;\n  -moz-box-sizing: border-box;\n       box-sizing: border-box; }\n\n.reveal .overlay header a:hover {\n  opacity: 1; }\n\n.reveal .overlay header a .icon {\n  display: inline-block;\n  width: 20px;\n  height: 20px;\n  background-position: 50% 50%;\n  background-size: 100%;\n  background-repeat: no-repeat; }\n\n.reveal .overlay header a.close .icon {\n  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABkklEQVRYR8WX4VHDMAxG6wnoJrABZQPYBCaBTWAD2g1gE5gg6OOsXuxIlr40d81dfrSJ9V4c2VLK7spHuTJ/5wpM07QXuXc5X0opX2tEJcadjHuV80li/FgxTIEK/5QBCICBD6xEhSMGHgQPgBgLiYVAB1dpSqKDawxTohFw4JSEA3clzgIBPCURwE2JucBR7rhPJJv5OpJwDX+SfDjgx1wACQeJG1aChP9K/IMmdZ8DtESV1WyP3Bt4MwM6sj4NMxMYiqUWHQu4KYA/SYkIjOsm3BXYWMKFDwU2khjCQ4ELJUJ4SmClRArOCmSXGuKma0fYD5CbzHxFpCSGAhfAVSSUGDUk2BWZaff2g6GE15BsBQ9nwmpIGDiyHQddwNTMKkbZaf9fajXQca1EX44puJZUsnY0ObGmITE3GVLCbEhQUjGVt146j6oasWN+49Vph2w1pZ5EansNZqKBm1txbU57iRRcZ86RWMDdWtBJUHBHwoQPi1GV+JCbntmvok7iTX4/Up9mgyTc/FJYDTcndgH/AA5A/CHsyEkVAAAAAElFTkSuQmCC); }\n\n.reveal .overlay header a.external .icon {\n  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAcElEQVRYR+2WSQoAIQwEzf8f7XiOMkUQxUPlGkM3hVmiQfQR9GYnH1SsAQlI4DiBqkCMoNb9y2e90IAEJPAcgdznU9+engMaeJ7Azh5Y1U67gAho4DqBqmB1buAf0MB1AlVBek83ZPkmJMGc1wAR+AAqod/B97TRpQAAAABJRU5ErkJggg==); }\n\n.reveal .overlay .viewport {\n  position: absolute;\n  top: 40px;\n  right: 0;\n  bottom: 0;\n  left: 0; }\n\n.reveal .overlay.overlay-preview .viewport iframe {\n  width: 100%;\n  height: 100%;\n  max-width: 100%;\n  max-height: 100%;\n  border: 0;\n  opacity: 0;\n  visibility: hidden;\n  -webkit-transition: all 0.3s ease;\n          transition: all 0.3s ease; }\n\n.reveal .overlay.overlay-preview.loaded .viewport iframe {\n  opacity: 1;\n  visibility: visible; }\n\n.reveal .overlay.overlay-preview.loaded .spinner {\n  opacity: 0;\n  visibility: hidden;\n  -webkit-transform: scale(0.2);\n      -ms-transform: scale(0.2);\n          transform: scale(0.2); }\n\n.reveal .overlay.overlay-help .viewport {\n  overflow: auto;\n  color: #fff; }\n\n.reveal .overlay.overlay-help .viewport .viewport-inner {\n  width: 600px;\n  margin: 0 auto;\n  padding: 60px;\n  text-align: center;\n  letter-spacing: normal; }\n\n.reveal .overlay.overlay-help .viewport .viewport-inner .title {\n  font-size: 20px; }\n\n.reveal .overlay.overlay-help .viewport .viewport-inner table {\n  border: 1px solid #fff;\n  border-collapse: collapse;\n  font-size: 14px; }\n\n.reveal .overlay.overlay-help .viewport .viewport-inner table th, .reveal .overlay.overlay-help .viewport .viewport-inner table td {\n  width: 200px;\n  padding: 10px;\n  border: 1px solid #fff;\n  vertical-align: middle; }\n\n.reveal .overlay.overlay-help .viewport .viewport-inner table th {\n  padding-top: 20px;\n  padding-bottom: 20px; }\n\n/*********************************************\n * PLAYBACK COMPONENT\n *********************************************/\n.reveal .playback {\n  position: fixed;\n  left: 15px;\n  bottom: 15px;\n  z-index: 30;\n  cursor: pointer;\n  -webkit-transition: all 400ms ease;\n          transition: all 400ms ease; }\n\n.reveal.overview .playback {\n  opacity: 0;\n  visibility: hidden; }\n\n/*********************************************\n * ROLLING LINKS\n *********************************************/\n.reveal .roll {\n  display: inline-block;\n  line-height: 1.2;\n  overflow: hidden;\n  vertical-align: top;\n  -webkit-perspective: 400px;\n          perspective: 400px;\n  -webkit-perspective-origin: 50% 50%;\n          perspective-origin: 50% 50%; }\n\n.reveal .roll:hover {\n  background: none;\n  text-shadow: none; }\n\n.reveal .roll span {\n  display: block;\n  position: relative;\n  padding: 0 2px;\n  pointer-events: none;\n  -webkit-transition: all 400ms ease;\n          transition: all 400ms ease;\n  -webkit-transform-origin: 50% 0%;\n      -ms-transform-origin: 50% 0%;\n          transform-origin: 50% 0%;\n  -webkit-transform-style: preserve-3d;\n          transform-style: preserve-3d;\n  -webkit-backface-visibility: hidden;\n          backface-visibility: hidden; }\n\n.reveal .roll:hover span {\n  background: rgba(0, 0, 0, 0.5);\n  -webkit-transform: translate3d(0px, 0px, -45px) rotateX(90deg);\n          transform: translate3d(0px, 0px, -45px) rotateX(90deg); }\n\n.reveal .roll span:after {\n  content: attr(data-title);\n  display: block;\n  position: absolute;\n  left: 0;\n  top: 0;\n  padding: 0 2px;\n  -webkit-backface-visibility: hidden;\n          backface-visibility: hidden;\n  -webkit-transform-origin: 50% 0%;\n      -ms-transform-origin: 50% 0%;\n          transform-origin: 50% 0%;\n  -webkit-transform: translate3d(0px, 110%, 0px) rotateX(-90deg);\n          transform: translate3d(0px, 110%, 0px) rotateX(-90deg); }\n\n/*********************************************\n * SPEAKER NOTES\n *********************************************/\n.reveal aside.notes {\n  display: none; }\n\n/*********************************************\n * ZOOM PLUGIN\n *********************************************/\n.zoomed .reveal *, .zoomed .reveal *:before, .zoomed .reveal *:after {\n  -webkit-backface-visibility: visible !important;\n          backface-visibility: visible !important; }\n\n.zoomed .reveal .progress, .zoomed .reveal .controls {\n  opacity: 0; }\n\n.zoomed .reveal .roll span {\n  background: none; }\n\n.zoomed .reveal .roll span:after {\n  visibility: hidden; }\n", ""]);
+
+/***/ },
+/* 15 */
+/***/ function(module, exports) {
+
+	/*
+		MIT License http://www.opensource.org/licenses/mit-license.php
+		Author Tobias Koppers @sokra
+	*/
+	// css base code, injected by the css-loader
+	module.exports = function() {
+		var list = [];
+	
+		// return the list of modules as css string
+		list.toString = function toString() {
+			var result = [];
+			for(var i = 0; i < this.length; i++) {
+				var item = this[i];
+				if(item[2]) {
+					result.push("@media " + item[2] + "{" + item[1] + "}");
+				} else {
+					result.push(item[1]);
+				}
+			}
+			return result.join("");
+		};
+	
+		// import a list of modules into the list
+		list.i = function(modules, mediaQuery) {
+			if(typeof modules === "string")
+				modules = [[null, modules, ""]];
+			var alreadyImportedModules = {};
+			for(var i = 0; i < this.length; i++) {
+				var id = this[i][0];
+				if(typeof id === "number")
+					alreadyImportedModules[id] = true;
+			}
+			for(i = 0; i < modules.length; i++) {
+				var item = modules[i];
+				// skip already imported module
+				// this implementation is not 100% perfect for weird media query combinations
+				//  when a module is imported multiple times with different media queries.
+				//  I hope this will never occur (Hey this way we have smaller bundles)
+				if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+					if(mediaQuery && !item[2]) {
+						item[2] = mediaQuery;
+					} else if(mediaQuery) {
+						item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+					}
+					list.push(item);
+				}
+			}
+		};
+		return list;
+	};
+
+
+/***/ },
+/* 16 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+		MIT License http://www.opensource.org/licenses/mit-license.php
+		Author Tobias Koppers @sokra
+	*/
+	var stylesInDom = {},
+		memoize = function(fn) {
+			var memo;
+			return function () {
+				if (typeof memo === "undefined") memo = fn.apply(this, arguments);
+				return memo;
+			};
+		},
+		isOldIE = memoize(function() {
+			return /msie [6-9]\b/.test(window.navigator.userAgent.toLowerCase());
+		}),
+		getHeadElement = memoize(function () {
+			return document.head || document.getElementsByTagName("head")[0];
+		}),
+		singletonElement = null,
+		singletonCounter = 0;
+	
+	module.exports = function(list, options) {
+		if(false) {
+			if(typeof document !== "object") throw new Error("The style-loader cannot be used in a non-browser environment");
+		}
+	
+		options = options || {};
+		// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
+		// tags it will allow on a page
+		if (typeof options.singleton === "undefined") options.singleton = isOldIE();
+	
+		var styles = listToStyles(list);
+		addStylesToDom(styles, options);
+	
+		return function update(newList) {
+			var mayRemove = [];
+			for(var i = 0; i < styles.length; i++) {
+				var item = styles[i];
+				var domStyle = stylesInDom[item.id];
+				domStyle.refs--;
+				mayRemove.push(domStyle);
+			}
+			if(newList) {
+				var newStyles = listToStyles(newList);
+				addStylesToDom(newStyles, options);
+			}
+			for(var i = 0; i < mayRemove.length; i++) {
+				var domStyle = mayRemove[i];
+				if(domStyle.refs === 0) {
+					for(var j = 0; j < domStyle.parts.length; j++)
+						domStyle.parts[j]();
+					delete stylesInDom[domStyle.id];
+				}
+			}
+		};
+	}
+	
+	function addStylesToDom(styles, options) {
+		for(var i = 0; i < styles.length; i++) {
+			var item = styles[i];
+			var domStyle = stylesInDom[item.id];
+			if(domStyle) {
+				domStyle.refs++;
+				for(var j = 0; j < domStyle.parts.length; j++) {
+					domStyle.parts[j](item.parts[j]);
+				}
+				for(; j < item.parts.length; j++) {
+					domStyle.parts.push(addStyle(item.parts[j], options));
+				}
+			} else {
+				var parts = [];
+				for(var j = 0; j < item.parts.length; j++) {
+					parts.push(addStyle(item.parts[j], options));
+				}
+				stylesInDom[item.id] = {id: item.id, refs: 1, parts: parts};
+			}
+		}
+	}
+	
+	function listToStyles(list) {
+		var styles = [];
+		var newStyles = {};
+		for(var i = 0; i < list.length; i++) {
+			var item = list[i];
+			var id = item[0];
+			var css = item[1];
+			var media = item[2];
+			var sourceMap = item[3];
+			var part = {css: css, media: media, sourceMap: sourceMap};
+			if(!newStyles[id])
+				styles.push(newStyles[id] = {id: id, parts: [part]});
+			else
+				newStyles[id].parts.push(part);
+		}
+		return styles;
+	}
+	
+	function createStyleElement() {
+		var styleElement = document.createElement("style");
+		var head = getHeadElement();
+		styleElement.type = "text/css";
+		head.appendChild(styleElement);
+		return styleElement;
+	}
+	
+	function createLinkElement() {
+		var linkElement = document.createElement("link");
+		var head = getHeadElement();
+		linkElement.rel = "stylesheet";
+		head.appendChild(linkElement);
+		return linkElement;
+	}
+	
+	function addStyle(obj, options) {
+		var styleElement, update, remove;
+	
+		if (options.singleton) {
+			var styleIndex = singletonCounter++;
+			styleElement = singletonElement || (singletonElement = createStyleElement());
+			update = applyToSingletonTag.bind(null, styleElement, styleIndex, false);
+			remove = applyToSingletonTag.bind(null, styleElement, styleIndex, true);
+		} else if(obj.sourceMap &&
+			typeof URL === "function" &&
+			typeof URL.createObjectURL === "function" &&
+			typeof URL.revokeObjectURL === "function" &&
+			typeof Blob === "function" &&
+			typeof btoa === "function") {
+			styleElement = createLinkElement();
+			update = updateLink.bind(null, styleElement);
+			remove = function() {
+				styleElement.parentNode.removeChild(styleElement);
+				if(styleElement.href)
+					URL.revokeObjectURL(styleElement.href);
+			};
+		} else {
+			styleElement = createStyleElement();
+			update = applyToTag.bind(null, styleElement);
+			remove = function() {
+				styleElement.parentNode.removeChild(styleElement);
+			};
+		}
+	
+		update(obj);
+	
+		return function updateStyle(newObj) {
+			if(newObj) {
+				if(newObj.css === obj.css && newObj.media === obj.media && newObj.sourceMap === obj.sourceMap)
+					return;
+				update(obj = newObj);
+			} else {
+				remove();
+			}
+		};
+	}
+	
+	var replaceText = (function () {
+		var textStore = [];
+	
+		return function (index, replacement) {
+			textStore[index] = replacement;
+			return textStore.filter(Boolean).join('\n');
+		};
+	})();
+	
+	function applyToSingletonTag(styleElement, index, remove, obj) {
+		var css = remove ? "" : obj.css;
+	
+		if (styleElement.styleSheet) {
+			styleElement.styleSheet.cssText = replaceText(index, css);
+		} else {
+			var cssNode = document.createTextNode(css);
+			var childNodes = styleElement.childNodes;
+			if (childNodes[index]) styleElement.removeChild(childNodes[index]);
+			if (childNodes.length) {
+				styleElement.insertBefore(cssNode, childNodes[index]);
+			} else {
+				styleElement.appendChild(cssNode);
+			}
+		}
+	}
+	
+	function applyToTag(styleElement, obj) {
+		var css = obj.css;
+		var media = obj.media;
+		var sourceMap = obj.sourceMap;
+	
+		if(media) {
+			styleElement.setAttribute("media", media)
+		}
+	
+		if(styleElement.styleSheet) {
+			styleElement.styleSheet.cssText = css;
+		} else {
+			while(styleElement.firstChild) {
+				styleElement.removeChild(styleElement.firstChild);
+			}
+			styleElement.appendChild(document.createTextNode(css));
+		}
+	}
+	
+	function updateLink(linkElement, obj) {
+		var css = obj.css;
+		var media = obj.media;
+		var sourceMap = obj.sourceMap;
+	
+		if(sourceMap) {
+			// http://stackoverflow.com/a/26603875
+			css += "\n/*# sourceMappingURL=data:application/json;base64," + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + " */";
+		}
+	
+		var blob = new Blob([css], { type: "text/css" });
+	
+		var oldSrc = linkElement.href;
+	
+		linkElement.href = URL.createObjectURL(blob);
+	
+		if(oldSrc)
+			URL.revokeObjectURL(oldSrc);
+	}
+
+
+/***/ },
+/* 17 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+	
+	// load the styles
+	var content = __webpack_require__(18);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(16)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../../css-loader/index.js!./sky.css", function() {
+				var newContent = require("!!./../../../css-loader/index.js!./sky.css");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 18 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(15)();
+	exports.push([module.id, "@import url(https://fonts.googleapis.com/css?family=Quicksand:400,700,400italic,700italic);", ""]);
+	exports.push([module.id, "@import url(https://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700);", ""]);
+	exports.push([module.id, "\n\n/**\n * Sky theme for reveal.js.\n *\n * Copyright (C) 2011-2012 Hakim El Hattab, http://hakim.se\n */\n.reveal a {\n  line-height: 1.3em; }\n\n/*********************************************\n * GLOBAL STYLES\n *********************************************/\nbody {\n  background: #add9e4;\n  background: -moz-radial-gradient(center, circle cover, #f7fbfc 0%, #add9e4 100%);\n  background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, #f7fbfc), color-stop(100%, #add9e4));\n  background: -webkit-radial-gradient(center, circle cover, #f7fbfc 0%, #add9e4 100%);\n  background: -o-radial-gradient(center, circle cover, #f7fbfc 0%, #add9e4 100%);\n  background: -ms-radial-gradient(center, circle cover, #f7fbfc 0%, #add9e4 100%);\n  background: radial-gradient(center, circle cover, #f7fbfc 0%, #add9e4 100%);\n  background-color: #f7fbfc; }\n\n.reveal {\n  font-family: 'Open Sans', sans-serif;\n  font-size: 36px;\n  font-weight: normal;\n  color: #333; }\n\n::selection {\n  color: #fff;\n  background: #134674;\n  text-shadow: none; }\n\n.reveal .slides > section, .reveal .slides > section > section {\n  line-height: 1.3;\n  font-weight: inherit; }\n\n/*********************************************\n * HEADERS\n *********************************************/\n.reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {\n  margin: 0 0 20px 0;\n  color: #333;\n  font-family: 'Quicksand', sans-serif;\n  font-weight: normal;\n  line-height: 1.2;\n  letter-spacing: -0.08em;\n  text-transform: uppercase;\n  text-shadow: none;\n  word-wrap: break-word; }\n\n.reveal h1 {\n  font-size: 3.77em; }\n\n.reveal h2 {\n  font-size: 2.11em; }\n\n.reveal h3 {\n  font-size: 1.55em; }\n\n.reveal h4 {\n  font-size: 1em; }\n\n.reveal h1 {\n  text-shadow: none; }\n\n/*********************************************\n * OTHER\n *********************************************/\n.reveal p {\n  margin: 20px 0;\n  line-height: 1.3; }\n\n/* Ensure certain elements are never larger than the slide itself */\n.reveal img, .reveal video, .reveal iframe {\n  max-width: 95%;\n  max-height: 95%; }\n\n.reveal strong, .reveal b {\n  font-weight: bold; }\n\n.reveal em {\n  font-style: italic; }\n\n.reveal ol, .reveal dl, .reveal ul {\n  display: inline-block;\n  text-align: left;\n  margin: 0 0 0 1em; }\n\n.reveal ol {\n  list-style-type: decimal; }\n\n.reveal ul {\n  list-style-type: disc; }\n\n.reveal ul ul {\n  list-style-type: square; }\n\n.reveal ul ul ul {\n  list-style-type: circle; }\n\n.reveal ul ul, .reveal ul ol, .reveal ol ol, .reveal ol ul {\n  display: block;\n  margin-left: 40px; }\n\n.reveal dt {\n  font-weight: bold; }\n\n.reveal dd {\n  margin-left: 40px; }\n\n.reveal q, .reveal blockquote {\n  quotes: none; }\n\n.reveal blockquote {\n  display: block;\n  position: relative;\n  width: 70%;\n  margin: 20px auto;\n  padding: 5px;\n  font-style: italic;\n  background: rgba(255, 255, 255, 0.05);\n  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.2); }\n\n.reveal blockquote p:first-child, .reveal blockquote p:last-child {\n  display: inline-block; }\n\n.reveal q {\n  font-style: italic; }\n\n.reveal pre {\n  display: block;\n  position: relative;\n  width: 90%;\n  margin: 20px auto;\n  text-align: left;\n  font-size: 0.55em;\n  font-family: monospace;\n  line-height: 1.2em;\n  word-wrap: break-word;\n  box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.3); }\n\n.reveal code {\n  font-family: monospace; }\n\n.reveal pre code {\n  display: block;\n  padding: 5px;\n  overflow: auto;\n  max-height: 400px;\n  word-wrap: normal;\n  background: #3F3F3F;\n  color: #DCDCDC; }\n\n.reveal table {\n  margin: auto;\n  border-collapse: collapse;\n  border-spacing: 0; }\n\n.reveal table th {\n  font-weight: bold; }\n\n.reveal table th, .reveal table td {\n  text-align: left;\n  padding: 0.2em 0.5em 0.2em 0.5em;\n  border-bottom: 1px solid; }\n\n.reveal table th[align=\"center\"], .reveal table td[align=\"center\"] {\n  text-align: center; }\n\n.reveal table th[align=\"right\"], .reveal table td[align=\"right\"] {\n  text-align: right; }\n\n.reveal table tr:last-child td {\n  border-bottom: none; }\n\n.reveal sup {\n  vertical-align: super; }\n\n.reveal sub {\n  vertical-align: sub; }\n\n.reveal small {\n  display: inline-block;\n  font-size: 0.6em;\n  line-height: 1.2em;\n  vertical-align: top; }\n\n.reveal small * {\n  vertical-align: top; }\n\n/*********************************************\n * LINKS\n *********************************************/\n.reveal a {\n  color: #3b759e;\n  text-decoration: none;\n  -webkit-transition: color 0.15s ease;\n  -moz-transition: color 0.15s ease;\n  transition: color 0.15s ease; }\n\n.reveal a:hover {\n  color: #74a8cb;\n  text-shadow: none;\n  border: none; }\n\n.reveal .roll span:after {\n  color: #fff;\n  background: #264d66; }\n\n/*********************************************\n * IMAGES\n *********************************************/\n.reveal section img {\n  margin: 15px 0px;\n  background: rgba(255, 255, 255, 0.12);\n  border: 4px solid #333;\n  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15); }\n\n.reveal a img {\n  -webkit-transition: all 0.15s linear;\n  -moz-transition: all 0.15s linear;\n  transition: all 0.15s linear; }\n\n.reveal a:hover img {\n  background: rgba(255, 255, 255, 0.2);\n  border-color: #3b759e;\n  box-shadow: 0 0 20px rgba(0, 0, 0, 0.55); }\n\n/*********************************************\n * NAVIGATION CONTROLS\n *********************************************/\n.reveal .controls div.navigate-left, .reveal .controls div.navigate-left.enabled {\n  border-right-color: #3b759e; }\n\n.reveal .controls div.navigate-right, .reveal .controls div.navigate-right.enabled {\n  border-left-color: #3b759e; }\n\n.reveal .controls div.navigate-up, .reveal .controls div.navigate-up.enabled {\n  border-bottom-color: #3b759e; }\n\n.reveal .controls div.navigate-down, .reveal .controls div.navigate-down.enabled {\n  border-top-color: #3b759e; }\n\n.reveal .controls div.navigate-left.enabled:hover {\n  border-right-color: #74a8cb; }\n\n.reveal .controls div.navigate-right.enabled:hover {\n  border-left-color: #74a8cb; }\n\n.reveal .controls div.navigate-up.enabled:hover {\n  border-bottom-color: #74a8cb; }\n\n.reveal .controls div.navigate-down.enabled:hover {\n  border-top-color: #74a8cb; }\n\n/*********************************************\n * PROGRESS BAR\n *********************************************/\n.reveal .progress {\n  background: rgba(0, 0, 0, 0.2); }\n\n.reveal .progress span {\n  background: #3b759e;\n  -webkit-transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);\n  -moz-transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);\n  transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985); }\n\n/*********************************************\n * SLIDE NUMBER\n *********************************************/\n.reveal .slide-number {\n  color: #3b759e; }\n", ""]);
+
+/***/ },
+/* 19 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	
+	var _zSlideHtml = __webpack_require__(20);
+	
+	var _zSlideHtml2 = _interopRequireDefault(_zSlideHtml);
+	
+	var _zSlideControllerJs = __webpack_require__(21);
+	
+	var _zSlideControllerJs2 = _interopRequireDefault(_zSlideControllerJs);
+	
+	var zSlideComponent = function zSlideComponent() {
+	  var dir = {
+	    template: _zSlideHtml2['default'],
+	    controller: _zSlideControllerJs2['default'],
+	    link: function link(scope, element, attrs) {},
+	    transclude: true,
+	    restrict: 'E',
+	    replace: true,
+	    controllerAs: 'vm',
+	    scope: {},
+	    bindToController: true
+	  };
+	  return dir;
+	};
+	
+	exports['default'] = zSlideComponent;
+	module.exports = exports['default'];
+
+/***/ },
+/* 20 */
+/***/ function(module, exports) {
+
+	module.exports = "<section>\n    <ng-transclude></ng-transclude>\n</section>"
+
+/***/ },
+/* 21 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, '__esModule', {
+		value: true
+	});
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+	
+	var zSlideController = function zSlideController() {
+		_classCallCheck(this, zSlideController);
+	
+		this.name = 'navbar';
+	};
+	
+	exports['default'] = zSlideController;
+	module.exports = exports['default'];
+
+/***/ },
+/* 22 */
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__(23);
+	module.exports = 'ngSanitize';
+
+
+/***/ },
+/* 23 */
+/***/ function(module, exports) {
+
+	/**
+	 * @license AngularJS v1.4.0
+	 * (c) 2010-2015 Google, Inc. http://angularjs.org
+	 * License: MIT
+	 */
+	(function(window, angular, undefined) {'use strict';
+	
+	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+	 *     Any commits to this file should be reviewed with security in mind.  *
+	 *   Changes to this file can potentially create security vulnerabilities. *
+	 *          An approval from 2 Core members with history of modifying      *
+	 *                         this file is required.                          *
+	 *                                                                         *
+	 *  Does the change somehow allow for arbitrary javascript to be executed? *
+	 *    Or allows for someone to change the prototype of built-in objects?   *
+	 *     Or gives undesired access to variables likes document or window?    *
+	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+	
+	var $sanitizeMinErr = angular.$$minErr('$sanitize');
+	
+	/**
+	 * @ngdoc module
+	 * @name ngSanitize
+	 * @description
+	 *
+	 * # ngSanitize
+	 *
+	 * The `ngSanitize` module provides functionality to sanitize HTML.
+	 *
+	 *
+	 * <div doc-module-components="ngSanitize"></div>
+	 *
+	 * See {@link ngSanitize.$sanitize `$sanitize`} for usage.
+	 */
+	
+	/*
+	 * HTML Parser By Misko Hevery (misko@hevery.com)
+	 * based on:  HTML Parser By John Resig (ejohn.org)
+	 * Original code by Erik Arvidsson, Mozilla Public License
+	 * http://erik.eae.net/simplehtmlparser/simplehtmlparser.js
+	 *
+	 * // Use like so:
+	 * htmlParser(htmlString, {
+	 *     start: function(tag, attrs, unary) {},
+	 *     end: function(tag) {},
+	 *     chars: function(text) {},
+	 *     comment: function(text) {}
+	 * });
+	 *
+	 */
+	
+	
+	/**
+	 * @ngdoc service
+	 * @name $sanitize
+	 * @kind function
+	 *
+	 * @description
+	 *   The input is sanitized by parsing the HTML into tokens. All safe tokens (from a whitelist) are
+	 *   then serialized back to properly escaped html string. This means that no unsafe input can make
+	 *   it into the returned string, however, since our parser is more strict than a typical browser
+	 *   parser, it's possible that some obscure input, which would be recognized as valid HTML by a
+	 *   browser, won't make it through the sanitizer. The input may also contain SVG markup.
+	 *   The whitelist is configured using the functions `aHrefSanitizationWhitelist` and
+	 *   `imgSrcSanitizationWhitelist` of {@link ng.$compileProvider `$compileProvider`}.
+	 *
+	 * @param {string} html HTML input.
+	 * @returns {string} Sanitized HTML.
+	 *
+	 * @example
+	   <example module="sanitizeExample" deps="angular-sanitize.js">
+	   <file name="index.html">
+	     <script>
+	         angular.module('sanitizeExample', ['ngSanitize'])
+	           .controller('ExampleController', ['$scope', '$sce', function($scope, $sce) {
+	             $scope.snippet =
+	               '<p style="color:blue">an html\n' +
+	               '<em onmouseover="this.textContent=\'PWN3D!\'">click here</em>\n' +
+	               'snippet</p>';
+	             $scope.deliberatelyTrustDangerousSnippet = function() {
+	               return $sce.trustAsHtml($scope.snippet);
+	             };
+	           }]);
+	     </script>
+	     <div ng-controller="ExampleController">
+	        Snippet: <textarea ng-model="snippet" cols="60" rows="3"></textarea>
+	       <table>
+	         <tr>
+	           <td>Directive</td>
+	           <td>How</td>
+	           <td>Source</td>
+	           <td>Rendered</td>
+	         </tr>
+	         <tr id="bind-html-with-sanitize">
+	           <td>ng-bind-html</td>
+	           <td>Automatically uses $sanitize</td>
+	           <td><pre>&lt;div ng-bind-html="snippet"&gt;<br/>&lt;/div&gt;</pre></td>
+	           <td><div ng-bind-html="snippet"></div></td>
+	         </tr>
+	         <tr id="bind-html-with-trust">
+	           <td>ng-bind-html</td>
+	           <td>Bypass $sanitize by explicitly trusting the dangerous value</td>
+	           <td>
+	           <pre>&lt;div ng-bind-html="deliberatelyTrustDangerousSnippet()"&gt;
+	&lt;/div&gt;</pre>
+	           </td>
+	           <td><div ng-bind-html="deliberatelyTrustDangerousSnippet()"></div></td>
+	         </tr>
+	         <tr id="bind-default">
+	           <td>ng-bind</td>
+	           <td>Automatically escapes</td>
+	           <td><pre>&lt;div ng-bind="snippet"&gt;<br/>&lt;/div&gt;</pre></td>
+	           <td><div ng-bind="snippet"></div></td>
+	         </tr>
+	       </table>
+	       </div>
+	   </file>
+	   <file name="protractor.js" type="protractor">
+	     it('should sanitize the html snippet by default', function() {
+	       expect(element(by.css('#bind-html-with-sanitize div')).getInnerHtml()).
+	         toBe('<p>an html\n<em>click here</em>\nsnippet</p>');
+	     });
+	
+	     it('should inline raw snippet if bound to a trusted value', function() {
+	       expect(element(by.css('#bind-html-with-trust div')).getInnerHtml()).
+	         toBe("<p style=\"color:blue\">an html\n" +
+	              "<em onmouseover=\"this.textContent='PWN3D!'\">click here</em>\n" +
+	              "snippet</p>");
+	     });
+	
+	     it('should escape snippet without any filter', function() {
+	       expect(element(by.css('#bind-default div')).getInnerHtml()).
+	         toBe("&lt;p style=\"color:blue\"&gt;an html\n" +
+	              "&lt;em onmouseover=\"this.textContent='PWN3D!'\"&gt;click here&lt;/em&gt;\n" +
+	              "snippet&lt;/p&gt;");
+	     });
+	
+	     it('should update', function() {
+	       element(by.model('snippet')).clear();
+	       element(by.model('snippet')).sendKeys('new <b onclick="alert(1)">text</b>');
+	       expect(element(by.css('#bind-html-with-sanitize div')).getInnerHtml()).
+	         toBe('new <b>text</b>');
+	       expect(element(by.css('#bind-html-with-trust div')).getInnerHtml()).toBe(
+	         'new <b onclick="alert(1)">text</b>');
+	       expect(element(by.css('#bind-default div')).getInnerHtml()).toBe(
+	         "new &lt;b onclick=\"alert(1)\"&gt;text&lt;/b&gt;");
+	     });
+	   </file>
+	   </example>
+	 */
+	function $SanitizeProvider() {
+	  this.$get = ['$$sanitizeUri', function($$sanitizeUri) {
+	    return function(html) {
+	      var buf = [];
+	      htmlParser(html, htmlSanitizeWriter(buf, function(uri, isImage) {
+	        return !/^unsafe/.test($$sanitizeUri(uri, isImage));
+	      }));
+	      return buf.join('');
+	    };
+	  }];
+	}
+	
+	function sanitizeText(chars) {
+	  var buf = [];
+	  var writer = htmlSanitizeWriter(buf, angular.noop);
+	  writer.chars(chars);
+	  return buf.join('');
+	}
+	
+	
+	// Regular Expressions for parsing tags and attributes
+	var START_TAG_REGEXP =
+	       /^<((?:[a-zA-Z])[\w:-]*)((?:\s+[\w:-]+(?:\s*=\s*(?:(?:"[^"]*")|(?:'[^']*')|[^>\s]+))?)*)\s*(\/?)\s*(>?)/,
+	  END_TAG_REGEXP = /^<\/\s*([\w:-]+)[^>]*>/,
+	  ATTR_REGEXP = /([\w:-]+)(?:\s*=\s*(?:(?:"((?:[^"])*)")|(?:'((?:[^'])*)')|([^>\s]+)))?/g,
+	  BEGIN_TAG_REGEXP = /^</,
+	  BEGING_END_TAGE_REGEXP = /^<\//,
+	  COMMENT_REGEXP = /<!--(.*?)-->/g,
+	  DOCTYPE_REGEXP = /<!DOCTYPE([^>]*?)>/i,
+	  CDATA_REGEXP = /<!\[CDATA\[(.*?)]]>/g,
+	  SURROGATE_PAIR_REGEXP = /[\uD800-\uDBFF][\uDC00-\uDFFF]/g,
+	  // Match everything outside of normal chars and " (quote character)
+	  NON_ALPHANUMERIC_REGEXP = /([^\#-~| |!])/g;
+	
+	
+	// Good source of info about elements and attributes
+	// http://dev.w3.org/html5/spec/Overview.html#semantics
+	// http://simon.html5.org/html-elements
+	
+	// Safe Void Elements - HTML5
+	// http://dev.w3.org/html5/spec/Overview.html#void-elements
+	var voidElements = makeMap("area,br,col,hr,img,wbr");
+	
+	// Elements that you can, intentionally, leave open (and which close themselves)
+	// http://dev.w3.org/html5/spec/Overview.html#optional-tags
+	var optionalEndTagBlockElements = makeMap("colgroup,dd,dt,li,p,tbody,td,tfoot,th,thead,tr"),
+	    optionalEndTagInlineElements = makeMap("rp,rt"),
+	    optionalEndTagElements = angular.extend({},
+	                                            optionalEndTagInlineElements,
+	                                            optionalEndTagBlockElements);
+	
+	// Safe Block Elements - HTML5
+	var blockElements = angular.extend({}, optionalEndTagBlockElements, makeMap("address,article," +
+	        "aside,blockquote,caption,center,del,dir,div,dl,figure,figcaption,footer,h1,h2,h3,h4,h5," +
+	        "h6,header,hgroup,hr,ins,map,menu,nav,ol,pre,script,section,table,ul"));
+	
+	// Inline Elements - HTML5
+	var inlineElements = angular.extend({}, optionalEndTagInlineElements, makeMap("a,abbr,acronym,b," +
+	        "bdi,bdo,big,br,cite,code,del,dfn,em,font,i,img,ins,kbd,label,map,mark,q,ruby,rp,rt,s," +
+	        "samp,small,span,strike,strong,sub,sup,time,tt,u,var"));
+	
+	// SVG Elements
+	// https://wiki.whatwg.org/wiki/Sanitization_rules#svg_Elements
+	// Note: the elements animate,animateColor,animateMotion,animateTransform,set are intentionally omitted.
+	// They can potentially allow for arbitrary javascript to be executed. See #11290
+	var svgElements = makeMap("circle,defs,desc,ellipse,font-face,font-face-name,font-face-src,g,glyph," +
+	        "hkern,image,linearGradient,line,marker,metadata,missing-glyph,mpath,path,polygon,polyline," +
+	        "radialGradient,rect,stop,svg,switch,text,title,tspan,use");
+	
+	// Special Elements (can contain anything)
+	var specialElements = makeMap("script,style");
+	
+	var validElements = angular.extend({},
+	                                   voidElements,
+	                                   blockElements,
+	                                   inlineElements,
+	                                   optionalEndTagElements,
+	                                   svgElements);
+	
+	//Attributes that have href and hence need to be sanitized
+	var uriAttrs = makeMap("background,cite,href,longdesc,src,usemap,xlink:href");
+	
+	var htmlAttrs = makeMap('abbr,align,alt,axis,bgcolor,border,cellpadding,cellspacing,class,clear,' +
+	    'color,cols,colspan,compact,coords,dir,face,headers,height,hreflang,hspace,' +
+	    'ismap,lang,language,nohref,nowrap,rel,rev,rows,rowspan,rules,' +
+	    'scope,scrolling,shape,size,span,start,summary,target,title,type,' +
+	    'valign,value,vspace,width');
+	
+	// SVG attributes (without "id" and "name" attributes)
+	// https://wiki.whatwg.org/wiki/Sanitization_rules#svg_Attributes
+	var svgAttrs = makeMap('accent-height,accumulate,additive,alphabetic,arabic-form,ascent,' +
+	    'baseProfile,bbox,begin,by,calcMode,cap-height,class,color,color-rendering,content,' +
+	    'cx,cy,d,dx,dy,descent,display,dur,end,fill,fill-rule,font-family,font-size,font-stretch,' +
+	    'font-style,font-variant,font-weight,from,fx,fy,g1,g2,glyph-name,gradientUnits,hanging,' +
+	    'height,horiz-adv-x,horiz-origin-x,ideographic,k,keyPoints,keySplines,keyTimes,lang,' +
+	    'marker-end,marker-mid,marker-start,markerHeight,markerUnits,markerWidth,mathematical,' +
+	    'max,min,offset,opacity,orient,origin,overline-position,overline-thickness,panose-1,' +
+	    'path,pathLength,points,preserveAspectRatio,r,refX,refY,repeatCount,repeatDur,' +
+	    'requiredExtensions,requiredFeatures,restart,rotate,rx,ry,slope,stemh,stemv,stop-color,' +
+	    'stop-opacity,strikethrough-position,strikethrough-thickness,stroke,stroke-dasharray,' +
+	    'stroke-dashoffset,stroke-linecap,stroke-linejoin,stroke-miterlimit,stroke-opacity,' +
+	    'stroke-width,systemLanguage,target,text-anchor,to,transform,type,u1,u2,underline-position,' +
+	    'underline-thickness,unicode,unicode-range,units-per-em,values,version,viewBox,visibility,' +
+	    'width,widths,x,x-height,x1,x2,xlink:actuate,xlink:arcrole,xlink:role,xlink:show,xlink:title,' +
+	    'xlink:type,xml:base,xml:lang,xml:space,xmlns,xmlns:xlink,y,y1,y2,zoomAndPan', true);
+	
+	var validAttrs = angular.extend({},
+	                                uriAttrs,
+	                                svgAttrs,
+	                                htmlAttrs);
+	
+	function makeMap(str, lowercaseKeys) {
+	  var obj = {}, items = str.split(','), i;
+	  for (i = 0; i < items.length; i++) {
+	    obj[lowercaseKeys ? angular.lowercase(items[i]) : items[i]] = true;
+	  }
+	  return obj;
+	}
+	
+	
+	/**
+	 * @example
+	 * htmlParser(htmlString, {
+	 *     start: function(tag, attrs, unary) {},
+	 *     end: function(tag) {},
+	 *     chars: function(text) {},
+	 *     comment: function(text) {}
+	 * });
+	 *
+	 * @param {string} html string
+	 * @param {object} handler
+	 */
+	function htmlParser(html, handler) {
+	  if (typeof html !== 'string') {
+	    if (html === null || typeof html === 'undefined') {
+	      html = '';
+	    } else {
+	      html = '' + html;
+	    }
+	  }
+	  var index, chars, match, stack = [], last = html, text;
+	  stack.last = function() { return stack[stack.length - 1]; };
+	
+	  while (html) {
+	    text = '';
+	    chars = true;
+	
+	    // Make sure we're not in a script or style element
+	    if (!stack.last() || !specialElements[stack.last()]) {
+	
+	      // Comment
+	      if (html.indexOf("<!--") === 0) {
+	        // comments containing -- are not allowed unless they terminate the comment
+	        index = html.indexOf("--", 4);
+	
+	        if (index >= 0 && html.lastIndexOf("-->", index) === index) {
+	          if (handler.comment) handler.comment(html.substring(4, index));
+	          html = html.substring(index + 3);
+	          chars = false;
+	        }
+	      // DOCTYPE
+	      } else if (DOCTYPE_REGEXP.test(html)) {
+	        match = html.match(DOCTYPE_REGEXP);
+	
+	        if (match) {
+	          html = html.replace(match[0], '');
+	          chars = false;
+	        }
+	      // end tag
+	      } else if (BEGING_END_TAGE_REGEXP.test(html)) {
+	        match = html.match(END_TAG_REGEXP);
+	
+	        if (match) {
+	          html = html.substring(match[0].length);
+	          match[0].replace(END_TAG_REGEXP, parseEndTag);
+	          chars = false;
+	        }
+	
+	      // start tag
+	      } else if (BEGIN_TAG_REGEXP.test(html)) {
+	        match = html.match(START_TAG_REGEXP);
+	
+	        if (match) {
+	          // We only have a valid start-tag if there is a '>'.
+	          if (match[4]) {
+	            html = html.substring(match[0].length);
+	            match[0].replace(START_TAG_REGEXP, parseStartTag);
+	          }
+	          chars = false;
+	        } else {
+	          // no ending tag found --- this piece should be encoded as an entity.
+	          text += '<';
+	          html = html.substring(1);
+	        }
+	      }
+	
+	      if (chars) {
+	        index = html.indexOf("<");
+	
+	        text += index < 0 ? html : html.substring(0, index);
+	        html = index < 0 ? "" : html.substring(index);
+	
+	        if (handler.chars) handler.chars(decodeEntities(text));
+	      }
+	
+	    } else {
+	      // IE versions 9 and 10 do not understand the regex '[^]', so using a workaround with [\W\w].
+	      html = html.replace(new RegExp("([\\W\\w]*)<\\s*\\/\\s*" + stack.last() + "[^>]*>", 'i'),
+	        function(all, text) {
+	          text = text.replace(COMMENT_REGEXP, "$1").replace(CDATA_REGEXP, "$1");
+	
+	          if (handler.chars) handler.chars(decodeEntities(text));
+	
+	          return "";
+	      });
+	
+	      parseEndTag("", stack.last());
+	    }
+	
+	    if (html == last) {
+	      throw $sanitizeMinErr('badparse', "The sanitizer was unable to parse the following block " +
+	                                        "of html: {0}", html);
+	    }
+	    last = html;
+	  }
+	
+	  // Clean up any remaining tags
+	  parseEndTag();
+	
+	  function parseStartTag(tag, tagName, rest, unary) {
+	    tagName = angular.lowercase(tagName);
+	    if (blockElements[tagName]) {
+	      while (stack.last() && inlineElements[stack.last()]) {
+	        parseEndTag("", stack.last());
+	      }
+	    }
+	
+	    if (optionalEndTagElements[tagName] && stack.last() == tagName) {
+	      parseEndTag("", tagName);
+	    }
+	
+	    unary = voidElements[tagName] || !!unary;
+	
+	    if (!unary) {
+	      stack.push(tagName);
+	    }
+	
+	    var attrs = {};
+	
+	    rest.replace(ATTR_REGEXP,
+	      function(match, name, doubleQuotedValue, singleQuotedValue, unquotedValue) {
+	        var value = doubleQuotedValue
+	          || singleQuotedValue
+	          || unquotedValue
+	          || '';
+	
+	        attrs[name] = decodeEntities(value);
+	    });
+	    if (handler.start) handler.start(tagName, attrs, unary);
+	  }
+	
+	  function parseEndTag(tag, tagName) {
+	    var pos = 0, i;
+	    tagName = angular.lowercase(tagName);
+	    if (tagName) {
+	      // Find the closest opened tag of the same type
+	      for (pos = stack.length - 1; pos >= 0; pos--) {
+	        if (stack[pos] == tagName) break;
+	      }
+	    }
+	
+	    if (pos >= 0) {
+	      // Close all the open elements, up the stack
+	      for (i = stack.length - 1; i >= pos; i--)
+	        if (handler.end) handler.end(stack[i]);
+	
+	      // Remove the open elements from the stack
+	      stack.length = pos;
+	    }
+	  }
+	}
+	
+	var hiddenPre=document.createElement("pre");
+	/**
+	 * decodes all entities into regular string
+	 * @param value
+	 * @returns {string} A string with decoded entities.
+	 */
+	function decodeEntities(value) {
+	  if (!value) { return ''; }
+	
+	  hiddenPre.innerHTML = value.replace(/</g,"&lt;");
+	  // innerText depends on styling as it doesn't display hidden elements.
+	  // Therefore, it's better to use textContent not to cause unnecessary reflows.
+	  return hiddenPre.textContent;
+	}
+	
+	/**
+	 * Escapes all potentially dangerous characters, so that the
+	 * resulting string can be safely inserted into attribute or
+	 * element text.
+	 * @param value
+	 * @returns {string} escaped text
+	 */
+	function encodeEntities(value) {
+	  return value.
+	    replace(/&/g, '&amp;').
+	    replace(SURROGATE_PAIR_REGEXP, function(value) {
+	      var hi = value.charCodeAt(0);
+	      var low = value.charCodeAt(1);
+	      return '&#' + (((hi - 0xD800) * 0x400) + (low - 0xDC00) + 0x10000) + ';';
+	    }).
+	    replace(NON_ALPHANUMERIC_REGEXP, function(value) {
+	      return '&#' + value.charCodeAt(0) + ';';
+	    }).
+	    replace(/</g, '&lt;').
+	    replace(/>/g, '&gt;');
+	}
+	
+	/**
+	 * create an HTML/XML writer which writes to buffer
+	 * @param {Array} buf use buf.jain('') to get out sanitized html string
+	 * @returns {object} in the form of {
+	 *     start: function(tag, attrs, unary) {},
+	 *     end: function(tag) {},
+	 *     chars: function(text) {},
+	 *     comment: function(text) {}
+	 * }
+	 */
+	function htmlSanitizeWriter(buf, uriValidator) {
+	  var ignore = false;
+	  var out = angular.bind(buf, buf.push);
+	  return {
+	    start: function(tag, attrs, unary) {
+	      tag = angular.lowercase(tag);
+	      if (!ignore && specialElements[tag]) {
+	        ignore = tag;
+	      }
+	      if (!ignore && validElements[tag] === true) {
+	        out('<');
+	        out(tag);
+	        angular.forEach(attrs, function(value, key) {
+	          var lkey=angular.lowercase(key);
+	          var isImage = (tag === 'img' && lkey === 'src') || (lkey === 'background');
+	          if (validAttrs[lkey] === true &&
+	            (uriAttrs[lkey] !== true || uriValidator(value, isImage))) {
+	            out(' ');
+	            out(key);
+	            out('="');
+	            out(encodeEntities(value));
+	            out('"');
+	          }
+	        });
+	        out(unary ? '/>' : '>');
+	      }
+	    },
+	    end: function(tag) {
+	        tag = angular.lowercase(tag);
+	        if (!ignore && validElements[tag] === true) {
+	          out('</');
+	          out(tag);
+	          out('>');
+	        }
+	        if (tag == ignore) {
+	          ignore = false;
+	        }
+	      },
+	    chars: function(chars) {
+	        if (!ignore) {
+	          out(encodeEntities(chars));
+	        }
+	      }
+	  };
+	}
+	
+	
+	// define ngSanitize module and register $sanitize service
+	angular.module('ngSanitize', []).provider('$sanitize', $SanitizeProvider);
+	
+	/* global sanitizeText: false */
+	
+	/**
+	 * @ngdoc filter
+	 * @name linky
+	 * @kind function
+	 *
+	 * @description
+	 * Finds links in text input and turns them into html links. Supports http/https/ftp/mailto and
+	 * plain email address links.
+	 *
+	 * Requires the {@link ngSanitize `ngSanitize`} module to be installed.
+	 *
+	 * @param {string} text Input text.
+	 * @param {string} target Window (_blank|_self|_parent|_top) or named frame to open links in.
+	 * @returns {string} Html-linkified text.
+	 *
+	 * @usage
+	   <span ng-bind-html="linky_expression | linky"></span>
+	 *
+	 * @example
+	   <example module="linkyExample" deps="angular-sanitize.js">
+	     <file name="index.html">
+	       <script>
+	         angular.module('linkyExample', ['ngSanitize'])
+	           .controller('ExampleController', ['$scope', function($scope) {
+	             $scope.snippet =
+	               'Pretty text with some links:\n'+
+	               'http://angularjs.org/,\n'+
+	               'mailto:us@somewhere.org,\n'+
+	               'another@somewhere.org,\n'+
+	               'and one more: ftp://127.0.0.1/.';
+	             $scope.snippetWithTarget = 'http://angularjs.org/';
+	           }]);
+	       </script>
+	       <div ng-controller="ExampleController">
+	       Snippet: <textarea ng-model="snippet" cols="60" rows="3"></textarea>
+	       <table>
+	         <tr>
+	           <td>Filter</td>
+	           <td>Source</td>
+	           <td>Rendered</td>
+	         </tr>
+	         <tr id="linky-filter">
+	           <td>linky filter</td>
+	           <td>
+	             <pre>&lt;div ng-bind-html="snippet | linky"&gt;<br>&lt;/div&gt;</pre>
+	           </td>
+	           <td>
+	             <div ng-bind-html="snippet | linky"></div>
+	           </td>
+	         </tr>
+	         <tr id="linky-target">
+	          <td>linky target</td>
+	          <td>
+	            <pre>&lt;div ng-bind-html="snippetWithTarget | linky:'_blank'"&gt;<br>&lt;/div&gt;</pre>
+	          </td>
+	          <td>
+	            <div ng-bind-html="snippetWithTarget | linky:'_blank'"></div>
+	          </td>
+	         </tr>
+	         <tr id="escaped-html">
+	           <td>no filter</td>
+	           <td><pre>&lt;div ng-bind="snippet"&gt;<br>&lt;/div&gt;</pre></td>
+	           <td><div ng-bind="snippet"></div></td>
+	         </tr>
+	       </table>
+	     </file>
+	     <file name="protractor.js" type="protractor">
+	       it('should linkify the snippet with urls', function() {
+	         expect(element(by.id('linky-filter')).element(by.binding('snippet | linky')).getText()).
+	             toBe('Pretty text with some links: http://angularjs.org/, us@somewhere.org, ' +
+	                  'another@somewhere.org, and one more: ftp://127.0.0.1/.');
+	         expect(element.all(by.css('#linky-filter a')).count()).toEqual(4);
+	       });
+	
+	       it('should not linkify snippet without the linky filter', function() {
+	         expect(element(by.id('escaped-html')).element(by.binding('snippet')).getText()).
+	             toBe('Pretty text with some links: http://angularjs.org/, mailto:us@somewhere.org, ' +
+	                  'another@somewhere.org, and one more: ftp://127.0.0.1/.');
+	         expect(element.all(by.css('#escaped-html a')).count()).toEqual(0);
+	       });
+	
+	       it('should update', function() {
+	         element(by.model('snippet')).clear();
+	         element(by.model('snippet')).sendKeys('new http://link.');
+	         expect(element(by.id('linky-filter')).element(by.binding('snippet | linky')).getText()).
+	             toBe('new http://link.');
+	         expect(element.all(by.css('#linky-filter a')).count()).toEqual(1);
+	         expect(element(by.id('escaped-html')).element(by.binding('snippet')).getText())
+	             .toBe('new http://link.');
+	       });
+	
+	       it('should work with the target property', function() {
+	        expect(element(by.id('linky-target')).
+	            element(by.binding("snippetWithTarget | linky:'_blank'")).getText()).
+	            toBe('http://angularjs.org/');
+	        expect(element(by.css('#linky-target a')).getAttribute('target')).toEqual('_blank');
+	       });
+	     </file>
+	   </example>
+	 */
+	angular.module('ngSanitize').filter('linky', ['$sanitize', function($sanitize) {
+	  var LINKY_URL_REGEXP =
+	        /((ftp|https?):\/\/|(www\.)|(mailto:)?[A-Za-z0-9._%+-]+@)\S*[^\s.;,(){}<>"”’]/,
+	      MAILTO_REGEXP = /^mailto:/;
+	
+	  return function(text, target) {
+	    if (!text) return text;
+	    var match;
+	    var raw = text;
+	    var html = [];
+	    var url;
+	    var i;
+	    while ((match = raw.match(LINKY_URL_REGEXP))) {
+	      // We can not end in these as they are sometimes found at the end of the sentence
+	      url = match[0];
+	      // if we did not match ftp/http/www/mailto then assume mailto
+	      if (!match[2] && !match[4]) {
+	        url = (match[3] ? 'http://' : 'mailto:') + url;
+	      }
+	      i = match.index;
+	      addText(raw.substr(0, i));
+	      addLink(url, match[0].replace(MAILTO_REGEXP, ''));
+	      raw = raw.substring(i + match[0].length);
+	    }
+	    addText(raw);
+	    return $sanitize(html.join(''));
+	
+	    function addText(text) {
+	      if (!text) {
+	        return;
+	      }
+	      html.push(sanitizeText(text));
+	    }
+	
+	    function addLink(url, text) {
+	      html.push('<a ');
+	      if (angular.isDefined(target)) {
+	        html.push('target="',
+	                  target,
+	                  '" ');
+	      }
+	      html.push('href="',
+	                url.replace(/"/g, '&quot;'),
+	                '">');
+	      addText(text);
+	      html.push('</a>');
+	    }
+	  };
+	}]);
+	
+	
+	})(window, window.angular);
+
+
+/***/ },
+/* 24 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, '__esModule', {
+		value: true
+	});
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	
+	var _angular = __webpack_require__(3);
+	
+	var _angular2 = _interopRequireDefault(_angular);
+	
+	var _homeHome = __webpack_require__(25);
+	
+	var _homeHome2 = _interopRequireDefault(_homeHome);
+	
+	var componentModule = _angular2['default'].module('app.components', [_homeHome2['default'].name]);
+	
+	exports['default'] = componentModule;
+	module.exports = exports['default'];
+
+/***/ },
+/* 25 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, '__esModule', {
+		value: true
+	});
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	
+	var _angular = __webpack_require__(3);
+	
+	var _angular2 = _interopRequireDefault(_angular);
+	
+	var _angularUiRouter = __webpack_require__(5);
+	
+	var _angularUiRouter2 = _interopRequireDefault(_angularUiRouter);
+	
+	var _homeComponent = __webpack_require__(26);
+	
+	var _homeComponent2 = _interopRequireDefault(_homeComponent);
+	
+	var _homeService = __webpack_require__(31);
+	
+	var _homeService2 = _interopRequireDefault(_homeService);
+	
+	var homeModule = _angular2['default'].module('home', [_angularUiRouter2['default']]).config(function ($stateProvider, $urlRouterProvider) {
+		$urlRouterProvider.otherwise('/');
+	
+		$stateProvider.state('home', {
+			url: '/',
+			template: '<home></home>'
+		});
+	}).directive('home', _homeComponent2['default']).service('homeService', _homeService2['default']);
+	
+	exports['default'] = homeModule;
+	module.exports = exports['default'];
+
+/***/ },
+/* 26 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, '__esModule', {
+		value: true
+	});
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	
+	var _homeHtml = __webpack_require__(27);
+	
+	var _homeHtml2 = _interopRequireDefault(_homeHtml);
+	
+	var _homeController = __webpack_require__(28);
+	
+	var _homeController2 = _interopRequireDefault(_homeController);
+	
+	__webpack_require__(29);
+	
+	var homeComponent = function homeComponent() {
+		return {
+			template: _homeHtml2['default'],
+			controller: _homeController2['default'],
+			restrict: 'E',
+			controllerAs: 'vm',
+			scope: {},
+			bindToController: true
+		};
+	};
+	
+	exports['default'] = homeComponent;
+	module.exports = exports['default'];
+
+/***/ },
+/* 27 */
+/***/ function(module, exports) {
+
+	module.exports = "<!--if you'd like to have the navbar and or header on every page, move it up a level to app.html!-->\n<navbar></navbar>\n<header>\n\t<hero></hero>\n</header>\n<main>\n\t<div style=\"position: inherit\" class=\"reveal\">\n\t\t<z-present slides=\"slides\">\n\t\t</z-present>\n\t</div>\n</main>"
+
+/***/ },
+/* 28 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, '__esModule', {
+		value: true
+	});
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+	
+	var HomeController = function HomeController($scope, $timeout, homeService) {
+		_classCallCheck(this, HomeController);
+	
+		this.name = 'home';
+	
+		homeService.getSlides().success(function (slides) {
+			$scope.slides = slides;
+		});
+	};
+	
+	exports['default'] = HomeController;
+	module.exports = exports['default'];
+
+/***/ },
+/* 29 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+	
+	// load the styles
+	var content = __webpack_require__(30);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(16)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/sass-loader/index.js!./home.scss", function() {
+				var newContent = require("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/sass-loader/index.js!./home.scss");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 30 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(15)();
+	exports.push([module.id, "p {\n  font-size: 30px; }\n", ""]);
+
+/***/ },
+/* 31 */
+/***/ function(module, exports) {
+
+	/**
+	 * Created by osamaalghanmi on 6/4/15.
+	 */
+	
+	'use strict';
+	
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+	var homeService = function homeService($http) {
+	    this.getSlides = function () {
+	        return $http.get('/slides.json');
+	    };
+	};
+	exports['default'] = homeService;
+	module.exports = exports['default'];
+
+/***/ },
+/* 32 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+	
+	// load the styles
+	var content = __webpack_require__(33);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(16)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../css-loader/index.js!./normalize.css", function() {
+				var newContent = require("!!./../css-loader/index.js!./normalize.css");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 33 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(15)();
+	exports.push([module.id, "/*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */\n\n/**\n * 1. Set default font family to sans-serif.\n * 2. Prevent iOS and IE text size adjust after device orientation change,\n *    without disabling user zoom.\n */\n\nhtml {\n  font-family: sans-serif; /* 1 */\n  -ms-text-size-adjust: 100%; /* 2 */\n  -webkit-text-size-adjust: 100%; /* 2 */\n}\n\n/**\n * Remove default margin.\n */\n\nbody {\n  margin: 0;\n}\n\n/* HTML5 display definitions\n   ========================================================================== */\n\n/**\n * Correct `block` display not defined for any HTML5 element in IE 8/9.\n * Correct `block` display not defined for `details` or `summary` in IE 10/11\n * and Firefox.\n * Correct `block` display not defined for `main` in IE 11.\n */\n\narticle,\naside,\ndetails,\nfigcaption,\nfigure,\nfooter,\nheader,\nhgroup,\nmain,\nmenu,\nnav,\nsection,\nsummary {\n  display: block;\n}\n\n/**\n * 1. Correct `inline-block` display not defined in IE 8/9.\n * 2. Normalize vertical alignment of `progress` in Chrome, Firefox, and Opera.\n */\n\naudio,\ncanvas,\nprogress,\nvideo {\n  display: inline-block; /* 1 */\n  vertical-align: baseline; /* 2 */\n}\n\n/**\n * Prevent modern browsers from displaying `audio` without controls.\n * Remove excess height in iOS 5 devices.\n */\n\naudio:not([controls]) {\n  display: none;\n  height: 0;\n}\n\n/**\n * Address `[hidden]` styling not present in IE 8/9/10.\n * Hide the `template` element in IE 8/9/10/11, Safari, and Firefox < 22.\n */\n\n[hidden],\ntemplate {\n  display: none;\n}\n\n/* Links\n   ========================================================================== */\n\n/**\n * Remove the gray background color from active links in IE 10.\n */\n\na {\n  background-color: transparent;\n}\n\n/**\n * Improve readability of focused elements when they are also in an\n * active/hover state.\n */\n\na:active,\na:hover {\n  outline: 0;\n}\n\n/* Text-level semantics\n   ========================================================================== */\n\n/**\n * Address styling not present in IE 8/9/10/11, Safari, and Chrome.\n */\n\nabbr[title] {\n  border-bottom: 1px dotted;\n}\n\n/**\n * Address style set to `bolder` in Firefox 4+, Safari, and Chrome.\n */\n\nb,\nstrong {\n  font-weight: bold;\n}\n\n/**\n * Address styling not present in Safari and Chrome.\n */\n\ndfn {\n  font-style: italic;\n}\n\n/**\n * Address variable `h1` font-size and margin within `section` and `article`\n * contexts in Firefox 4+, Safari, and Chrome.\n */\n\nh1 {\n  font-size: 2em;\n  margin: 0.67em 0;\n}\n\n/**\n * Address styling not present in IE 8/9.\n */\n\nmark {\n  background: #ff0;\n  color: #000;\n}\n\n/**\n * Address inconsistent and variable font size in all browsers.\n */\n\nsmall {\n  font-size: 80%;\n}\n\n/**\n * Prevent `sub` and `sup` affecting `line-height` in all browsers.\n */\n\nsub,\nsup {\n  font-size: 75%;\n  line-height: 0;\n  position: relative;\n  vertical-align: baseline;\n}\n\nsup {\n  top: -0.5em;\n}\n\nsub {\n  bottom: -0.25em;\n}\n\n/* Embedded content\n   ========================================================================== */\n\n/**\n * Remove border when inside `a` element in IE 8/9/10.\n */\n\nimg {\n  border: 0;\n}\n\n/**\n * Correct overflow not hidden in IE 9/10/11.\n */\n\nsvg:not(:root) {\n  overflow: hidden;\n}\n\n/* Grouping content\n   ========================================================================== */\n\n/**\n * Address margin not present in IE 8/9 and Safari.\n */\n\nfigure {\n  margin: 1em 40px;\n}\n\n/**\n * Address differences between Firefox and other browsers.\n */\n\nhr {\n  box-sizing: content-box;\n  height: 0;\n}\n\n/**\n * Contain overflow in all browsers.\n */\n\npre {\n  overflow: auto;\n}\n\n/**\n * Address odd `em`-unit font size rendering in all browsers.\n */\n\ncode,\nkbd,\npre,\nsamp {\n  font-family: monospace, monospace;\n  font-size: 1em;\n}\n\n/* Forms\n   ========================================================================== */\n\n/**\n * Known limitation: by default, Chrome and Safari on OS X allow very limited\n * styling of `select`, unless a `border` property is set.\n */\n\n/**\n * 1. Correct color not being inherited.\n *    Known issue: affects color of disabled elements.\n * 2. Correct font properties not being inherited.\n * 3. Address margins set differently in Firefox 4+, Safari, and Chrome.\n */\n\nbutton,\ninput,\noptgroup,\nselect,\ntextarea {\n  color: inherit; /* 1 */\n  font: inherit; /* 2 */\n  margin: 0; /* 3 */\n}\n\n/**\n * Address `overflow` set to `hidden` in IE 8/9/10/11.\n */\n\nbutton {\n  overflow: visible;\n}\n\n/**\n * Address inconsistent `text-transform` inheritance for `button` and `select`.\n * All other form control elements do not inherit `text-transform` values.\n * Correct `button` style inheritance in Firefox, IE 8/9/10/11, and Opera.\n * Correct `select` style inheritance in Firefox.\n */\n\nbutton,\nselect {\n  text-transform: none;\n}\n\n/**\n * 1. Avoid the WebKit bug in Android 4.0.* where (2) destroys native `audio`\n *    and `video` controls.\n * 2. Correct inability to style clickable `input` types in iOS.\n * 3. Improve usability and consistency of cursor style between image-type\n *    `input` and others.\n */\n\nbutton,\nhtml input[type=\"button\"], /* 1 */\ninput[type=\"reset\"],\ninput[type=\"submit\"] {\n  -webkit-appearance: button; /* 2 */\n  cursor: pointer; /* 3 */\n}\n\n/**\n * Re-set default cursor for disabled elements.\n */\n\nbutton[disabled],\nhtml input[disabled] {\n  cursor: default;\n}\n\n/**\n * Remove inner padding and border in Firefox 4+.\n */\n\nbutton::-moz-focus-inner,\ninput::-moz-focus-inner {\n  border: 0;\n  padding: 0;\n}\n\n/**\n * Address Firefox 4+ setting `line-height` on `input` using `!important` in\n * the UA stylesheet.\n */\n\ninput {\n  line-height: normal;\n}\n\n/**\n * It's recommended that you don't attempt to style these elements.\n * Firefox's implementation doesn't respect box-sizing, padding, or width.\n *\n * 1. Address box sizing set to `content-box` in IE 8/9/10.\n * 2. Remove excess padding in IE 8/9/10.\n */\n\ninput[type=\"checkbox\"],\ninput[type=\"radio\"] {\n  box-sizing: border-box; /* 1 */\n  padding: 0; /* 2 */\n}\n\n/**\n * Fix the cursor style for Chrome's increment/decrement buttons. For certain\n * `font-size` values of the `input`, it causes the cursor style of the\n * decrement button to change from `default` to `text`.\n */\n\ninput[type=\"number\"]::-webkit-inner-spin-button,\ninput[type=\"number\"]::-webkit-outer-spin-button {\n  height: auto;\n}\n\n/**\n * 1. Address `appearance` set to `searchfield` in Safari and Chrome.\n * 2. Address `box-sizing` set to `border-box` in Safari and Chrome.\n */\n\ninput[type=\"search\"] {\n  -webkit-appearance: textfield; /* 1 */\n  box-sizing: content-box; /* 2 */\n}\n\n/**\n * Remove inner padding and search cancel button in Safari and Chrome on OS X.\n * Safari (but not Chrome) clips the cancel button when the search input has\n * padding (and `textfield` appearance).\n */\n\ninput[type=\"search\"]::-webkit-search-cancel-button,\ninput[type=\"search\"]::-webkit-search-decoration {\n  -webkit-appearance: none;\n}\n\n/**\n * Define consistent border, margin, and padding.\n */\n\nfieldset {\n  border: 1px solid #c0c0c0;\n  margin: 0 2px;\n  padding: 0.35em 0.625em 0.75em;\n}\n\n/**\n * 1. Correct `color` not being inherited in IE 8/9/10/11.\n * 2. Remove padding so people aren't caught out if they zero out fieldsets.\n */\n\nlegend {\n  border: 0; /* 1 */\n  padding: 0; /* 2 */\n}\n\n/**\n * Remove default vertical scrollbar in IE 8/9/10/11.\n */\n\ntextarea {\n  overflow: auto;\n}\n\n/**\n * Don't inherit the `font-weight` (applied by a rule above).\n * NOTE: the default cannot safely be changed in Chrome and Safari on OS X.\n */\n\noptgroup {\n  font-weight: bold;\n}\n\n/* Tables\n   ========================================================================== */\n\n/**\n * Remove most spacing between table cells.\n */\n\ntable {\n  border-collapse: collapse;\n  border-spacing: 0;\n}\n\ntd,\nth {\n  padding: 0;\n}\n", ""]);
 
 /***/ }
 /******/ ]);

@@ -1,6 +1,6 @@
 import template from './zPresent.html';
 import controller from './zPresent.controller.js';
-import revealConnector from './reveal.connector.js';
+import revealConnector from './Reveal.connector.js';
 //import data from 'slides.js'
 
 

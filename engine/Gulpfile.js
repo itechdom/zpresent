@@ -13,18 +13,16 @@ var gulp	 		= require('gulp'),
 		 gutil = require('gulp-util'),
 		markdown = require('gulp-markdown-to-json');
 
-var root = 'engine';
-
 
 // helper method to resolveToApp paths
 var resolveToApp = function(glob){
 	glob = glob || '';
-	return path.join(root, 'app', glob); // app/{glob}
+	return path.join( 'app', glob); // app/{glob}
 };
 
 var resolveToComponents = function(glob){
 	glob = glob || '';
-	return path.join(root, 'app/components', glob); // app/components/{glob}
+	return path.join('app/components', glob); // app/components/{glob}
 };
 
 
@@ -35,16 +33,16 @@ var paths = {
 	styl: resolveToApp('**/*.styl'), // our stylus files
 	html: [
 		resolveToApp('**/*.html'),
-		path.join(root, 'index.html')
+		path.join('index.html')
 	],
-	entry: path.join(root, 'app/app.js'),
-	output: root,
+	entry: path.join('app/app.js'),
+	output: "./",
 	blankTemplates: path.join(__dirname, 'generator', 'component/**/*.**')
 };
 
 //this task is responsible for looking
 gulp.task('buildSlides',function(){
-	return gulp.src('./slides/**/*.md')
+	return gulp.src('../slides/**/*.md')
 		.pipe(gutil.buffer())
 		.pipe(markdown('slides.json'))
 		.pipe(gulp.dest('client'));
@@ -64,7 +62,7 @@ gulp.task('serve', function(){
 		port: process.env.PORT || 3000,
 		open: false,
 		server: {
-			baseDir: root
+			baseDir: "./"
 		}
 	});
 });
