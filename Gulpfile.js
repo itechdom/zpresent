@@ -13,7 +13,7 @@ var gulp	 		= require('gulp'),
 		 gutil = require('gulp-util'),
 		markdown = require('gulp-markdown-to-json');
 
-var root = 'client';
+var root = 'engine';
 
 
 // helper method to resolveToApp paths
