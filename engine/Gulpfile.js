@@ -42,10 +42,11 @@ var paths = {
 
 //this task is responsible for looking
 gulp.task('buildSlides',function(){
-	return gulp.src('../slides/**/*.md')
+	return gulp.src('../material/**/*.md')
 		.pipe(gutil.buffer())
 		.pipe(markdown('slides.json'))
-		.pipe(gulp.dest('client'));
+		.pipe(gulp.dest('../'))
+		.pipe(gulp.dest('./'));
 });
 
 // use our webpack.config.js to 
