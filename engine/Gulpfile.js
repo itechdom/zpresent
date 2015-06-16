@@ -12,6 +12,8 @@ var gulp	 		= require('gulp'),
 		data = require('gulp-data'),
 		 gutil = require('gulp-util'),
 		markdown = require('gulp-markdown-to-json');
+		fm = require('front-matter');
+		flatten = require('flat');
 
 
 // helper method to resolveToApp paths
@@ -50,13 +52,13 @@ gulp.task('buildSlides',function(){
 });
 
 gulp.task('mindmap',function(){
-	return gulp.src('../material/**/*.md')
-		.pipe(gutil.buffer())
-		.pipe(markdown('slides.json'))
-		.pipe(gulp.dest('../'))
+	gulp.src('../mindmaps/javascript.json')
+	.pipe(data(function(file){
+	content = String(file.contents);
+	object = JSON.parse(content)
+	return object;
+	})).pipe(gulp.dest('./hello'));
 });
-
-
 // use our webpack.config.js to 
 // build our modules
 gulp.task('webpack', function(){

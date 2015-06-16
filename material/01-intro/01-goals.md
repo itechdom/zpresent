@@ -1,3 +1,8 @@
+-------------------
+completed: 10
+level: 20
+exercise: 50
+------------------
 ## Learning Goals
 
 * Learn the importance of Ajax and what it stands for
