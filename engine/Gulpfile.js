@@ -49,6 +49,14 @@ gulp.task('buildSlides',function(){
 		.pipe(gulp.dest('./'));
 });
 
+gulp.task('mindmap',function(){
+	return gulp.src('../material/**/*.md')
+		.pipe(gutil.buffer())
+		.pipe(markdown('slides.json'))
+		.pipe(gulp.dest('../'))
+});
+
+
 // use our webpack.config.js to 
 // build our modules
 gulp.task('webpack', function(){
