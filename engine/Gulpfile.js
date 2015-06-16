@@ -14,6 +14,8 @@ var gulp	 		= require('gulp'),
 		markdown = require('gulp-markdown-to-json');
 		fm = require('front-matter');
 		flatten = require('flat');
+		shell = require('gulp-shell');
+
 
 
 // helper method to resolveToApp paths
@@ -37,6 +39,7 @@ var paths = {
 		resolveToApp('**/*.html'),
 		path.join('index.html')
 	],
+	server:'./server.js',
 	entry: path.join('app/app.js'),
 	output: "./",
 	blankTemplates: path.join(__dirname, 'generator', 'component/**/*.**')
@@ -76,7 +79,14 @@ gulp.task('serve', function(){
 			baseDir: "./"
 		}
 	});
+
+	//start the express server
+	shell.task('node server.js');
+
 });
+
+gulp.task('express', shell.task('node server.js')
+);
 
 
 gulp.task('watch', function(){
@@ -111,5 +121,5 @@ gulp.task('watch', function(){
 //});
 
 gulp.task('default', function(done){
-	sync('webpack', 'serve', 'watch', done);
+	sync('webpack', 'serve','express', 'watch', done);
 });
