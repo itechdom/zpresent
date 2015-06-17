@@ -21,8 +21,10 @@ app.post('/',function(req,res) {
     //    res.send("slides have been written");
     //});
 });
+//TODO: submit the code and get correct or not correct
+app.post('/code',function(req,res) {
 
-
+});
 
 var server = app.listen(4000,function(){
     console.log("app is listenting on port 4000");
