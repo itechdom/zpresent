@@ -87,8 +87,9 @@ gulp.task('buildSlides',function(){
 
 gulp.task('inject-test', function() {
 	return gulp.src('../material/01-intro/00-index.md')
-		.pipe(inject(gulp.src(['../material/**/*.js'], {read: true}), {
-			starttag: '<!-- inject:{{ext}} -->',
+		.pipe(inject(gulp.src(['../material/01-intro/**/*.js'], {read: true}), {
+			starttag: 'include:{{ext}}```',
+			endtag: '```',
 			transform: function (filepath, file, i, length) {
 				console.log(filepath);
 				return file.contents.toString('utf8');

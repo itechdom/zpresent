@@ -12,5 +12,5 @@ Finally, we should also have exercises that can be evaluated on the server side 
 require(example);
 ```
 
-<!-- inject:js -->
-<!-- endinject -->
+  include:js``` 
+  ```
