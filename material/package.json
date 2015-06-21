@@ -9,7 +9,8 @@
   "dependencies": {
     "class-intro": "1.0.0",
     "class-importance":"1.0.0",
-    "class-ajax": "1.0.0"
+    "class-ajax": "1.0.0",
+    "zpresent-code":"1.0.0"
   },
   "author": "",
   "license": "ISC"
