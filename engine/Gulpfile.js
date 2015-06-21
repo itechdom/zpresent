@@ -14,6 +14,7 @@ var gulp	 		= require('gulp'),
 	browserify = require('browserify'),
 	util = require('util'),
 	 swig = require('gulp-swig'),
+	inject = require('gulp-inject'),
 
 //my own markdown parser here ...
 	parser = require('zpresent-parser'),
@@ -55,7 +56,6 @@ var paths = {
 gulp.task('buildSlides',function(){
 	return gulp.src('../material/**/*.md')
 		.pipe(gutil.buffer())
-
 		.pipe(parser('slides.json'))
 
 		//todo: move this to another file
@@ -71,7 +71,7 @@ gulp.task('buildSlides',function(){
 			//b.add("../material/01-intro/example.js");
 
 			//we use vinyl files, so we need to change the content of a file
-			file.contents = new Buffer("what's up");
+			//file.contents = new Buffer("what's up");
 
 			return file;
 			//b.bundle();
@@ -85,6 +85,19 @@ gulp.task('buildSlides',function(){
 		.pipe(gulp.dest('./'));
 });
 
+gulp.task('inject-test', function() {
+	return gulp.src('../material/01-intro/00-index.md')
+		.pipe(inject(gulp.src(['../material/**/*.js'], {read: true}), {
+			starttag: '<!-- inject:{{ext}} -->',
+			transform: function (filepath, file, i, length) {
+				console.log(filepath);
+				return file.contents.toString('utf8');
+				//return '  "' + filepath + '"' + (i + 1 < length ? ',' : '');
+			}
+		}))
+		.pipe(gulp.dest('./'));
+});
+
 gulp.task('fm-test', function() {
 	return gulp.src('../material/01-intro/00-index.md')
 		.pipe(data(function(file) {
@@ -95,6 +108,8 @@ gulp.task('fm-test', function() {
 		}))
 		.pipe(gulp.dest('build'));
 });
+
+
 
 gulp.task('mindmap',function(){
 	gulp.src('../mindmaps/javascript.json')

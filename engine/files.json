@@ -1,0 +1,10 @@
+{
+  "js": [
+        "/app/app.component.js",
+        "/app/app.js"
+      ],
+  "css": [
+  ],
+  "html": [
+  ]
+}

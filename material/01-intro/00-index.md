@@ -11,3 +11,6 @@ Finally, we should also have exercises that can be evaluated on the server side 
 ```javascript
 require(example);
 ```
+
+<!-- inject:js -->
+<!-- endinject -->
