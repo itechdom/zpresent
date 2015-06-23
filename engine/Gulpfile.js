@@ -15,9 +15,13 @@ var gulp	 		= require('gulp'),
 	util = require('util'),
 	 swig = require('gulp-swig'),
 	inject = require('gulp-inject'),
-
+	path = require('path');
 //my own markdown parser here ...
 	parser = require('zpresent-parser'),
+		parser = require('zpresent-parser'),
+
+		through = require('through2'),
+
 // markdown will parse markdown file, and then it will look for code tags and replace them with appropriate file?
 	markdown = require('gulp-markdown-to-json'),
 
@@ -64,15 +68,27 @@ gulp.task('buildSlides',function(){
 			return highlight.highlightAuto(code).value;
 		}
 	};
-	return gulp.src('../material/**/*.md')
-		.pipe(inject(gulp.src(['../material/**/*.js'], {read: true}), {
-			starttag: 'include\n```{{ext}}',
+
+	return gulp.src(['../material/**/*.md','!../material/node_modules/**'])
+		//include examples for concepts
+		.pipe(
+		inject(gulp.src('../material/**/example/*', {read: true}),{
+			starttag: 'include:example\n```{{ext}}',
 			endtag: '```',
 			transform: function (filepath, file, i, length) {
 				return file.contents.toString('utf8');
-				//return '  "' + filepath + '"' + (i + 1 < length ? ',' : '');
 			}
-		}))
+		})
+		)
+		//include exercises for concepts
+		//.pipe(inject(gulp.src(['../material/**/exercise/*'], {read: true}), {
+		//	starttag: 'include:exercise\n```{{ext}}',
+		//	endtag: '```',
+		//	transform: function (filepath, file, i, length) {
+		//		if(file.path.indexOf(currentDir) > -1)
+		//			return file.contents.toString('utf8');
+		//	}
+		//}))
 		.pipe(gutil.buffer())
 		.pipe(parser('slides.json',markedOptions))
 		//todo: move this to another file

@@ -8,10 +8,12 @@ This should also include the examples
 
 Finally, we should also have exercises that can be evaluated on the server side and the answer should be recorded here
 
-```javascript
+```js
 require(example);
 ```
 
-include
-```js
+
+include:example
+```html
 ```
+
