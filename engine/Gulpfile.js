@@ -17,7 +17,7 @@ var gulp	 		= require('gulp'),
 	inject = require('gulp-inject'),
 	path = require('path');
 //my own markdown parser here ...
-	parser = require('zpresent-parser'),
+	injector = require('zpresent-injector'),
 		parser = require('zpresent-parser'),
 
 		through = require('through2'),
