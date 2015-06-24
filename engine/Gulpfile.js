@@ -7,7 +7,7 @@ var wrench = require('wrench');
 var sync = require('run-sequence');
 
 var options = {
-  src: 'app',
+  src: './app/app.js',
   dist: 'dist',
   tmp: '.tmp',
   errorHandler: function(title) {

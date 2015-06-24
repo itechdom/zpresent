@@ -6,6 +6,8 @@ var serve = require('browser-sync');
 
 var util = require('util');
 
+var shell = require('gulp-shell');
+
 module.exports = function(options) {
 
 gulp.task('serve', function(){
