@@ -5,8 +5,8 @@ var webpack = require('gulp-webpack');
 
 module.exports = function(options) {
 gulp.task('webpack', function(){
-	return gulp.src(paths.entry)
-		.pipe(webpack(require('./webpack.config')))
-		.pipe(gulp.dest(paths.output));
+	return gulp.src(options.src)
+		.pipe(webpack(require('../webpack.config')))
+		.pipe(gulp.dest(options.dist));
 });
 }

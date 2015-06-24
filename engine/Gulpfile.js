@@ -7,10 +7,9 @@ var wrench = require('wrench');
 var sync = require('run-sequence');
 
 var options = {
-  src: 'src',
+  src: 'app',
   dist: 'dist',
   tmp: '.tmp',
-  e2e: 'e2e',
   errorHandler: function(title) {
     return function(err) {
       gutil.log(gutil.colors.red('[' + title + ']'), err.toString());
@@ -26,5 +25,5 @@ wrench.readdirSyncRecursive('./gulp').filter(function(file) {
 });
 
 gulp.task('default', function(done){
-	sync('webpack', 'serve','express', 'watch', done);
+	sync('webpack', 'serve', 'watch', done);
 });

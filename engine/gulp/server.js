@@ -2,7 +2,7 @@
 
 var gulp = require('gulp');
 
-var serve = require('browser-sync'),
+var serve = require('browser-sync');
 
 var util = require('util');
 
