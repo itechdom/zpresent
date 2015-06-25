@@ -3,7 +3,7 @@ var gulp = require('gulp');
 var inject = require('gulp-inject');
 var gutil = require('gulp-util');
 var highlight = require('highlight.js');
-var data = require("gulp-data")
+var data = require("gulp-data");
 
 var injector = require("../gulp-custom/injector/index.js");
 var parser = require("../gulp-custom/parser/index.js");
