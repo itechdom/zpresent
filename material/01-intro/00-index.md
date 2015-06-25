@@ -14,6 +14,6 @@ require(example);
 
 
 include:example
-```html
+```js
 ```
 
