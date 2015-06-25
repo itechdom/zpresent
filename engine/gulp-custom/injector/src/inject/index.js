@@ -25,6 +25,7 @@ var PLUGIN_NAME = 'gulp-inject';
 
 module.exports = exports = function(sources, opt){
 
+  console.log(sources,opt)
   if (!sources) {
     throw error('Missing sources stream!');
   }

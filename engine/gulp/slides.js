@@ -7,7 +7,8 @@ var injector = require('zpresent-injector');
 var highlight = require('highlight.js');
 var data = require("gulp-data")
 
-
+var injector = require("../gulp-custom/injector/index.js");
+var parser = require("../gulp-custom/parser/index.js");
 
 module.exports = function (options) {
     gulp.task('buildSlides', function () {
