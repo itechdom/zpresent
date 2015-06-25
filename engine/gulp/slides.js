@@ -2,8 +2,6 @@
 var gulp = require('gulp');
 var inject = require('gulp-inject');
 var gutil = require('gulp-util');
-var parser = require('zpresent-parser');
-var injector = require('zpresent-injector');
 var highlight = require('highlight.js');
 var data = require("gulp-data")
 
