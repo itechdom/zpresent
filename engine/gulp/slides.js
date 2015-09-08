@@ -4,12 +4,11 @@ var inject = require('gulp-inject');
 var gutil = require('gulp-util');
 var highlight = require('highlight.js');
 var data = require("gulp-data");
-
 var injector = require("../gulp-custom/injector/index.js");
 var parser = require("../gulp-custom/parser/index.js");
 
 module.exports = function (options) {
-    gulp.task('buildSlides', function () {
+    gulp.task('slides:build', function () {
 
         //set the marked options to highlight code
         var markedOptions = {
@@ -17,6 +16,7 @@ module.exports = function (options) {
                 return highlight.highlightAuto(code).value;
             }
         };
+
         return gulp.src(['../material/**/*.md', '!../material/node_modules/**'])
             .pipe(
             injector(gulp.src(['../material/**/*', '!../material/node_modules/**'], {read: true}), {
@@ -62,7 +62,6 @@ module.exports = function (options) {
                 starttag: 'include:{{ext}}```',
                 endtag: '```',
                 transform: function (filepath, file, i, length) {
-                    console.log(filepath);
                     return file.contents.toString('utf8');
                     //return '  "' + filepath + '"' + (i + 1 < length ? ',' : '');
                 }

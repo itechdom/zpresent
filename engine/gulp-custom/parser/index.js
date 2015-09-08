@@ -14,99 +14,99 @@ var streamingErr = new PluginError(NAME, 'Streaming not supported');
 
 
 function parse( file, flatten ){
-  if( file.isNull() ) return;
-  if( file.isStream() ) return this.emit('error', streamingErr);
+	if( file.isNull() ) return;
+	if( file.isStream() ) return this.emit('error', streamingErr);
 
-  if( file.isBuffer() ){
+	if( file.isBuffer() ){
 
-    //we have all the buffer methods here available to us
-    //I want the ability to find where the file resides so I can tell browsify to compile it?
-
-    var path = file.relative.split('.').shift().replace(/\//g, '.');
-    var parsed = frontmatter(file.contents.toString());
-
-
-    var body = parsed.body.split(/\n/);
-
-    //var lexed_mark = marked.lexer(parsed.body);
-    //
-    //
-    ////extract the code
-    //var code_arr = [];
-    //var code_obj = {};
-    //lexed_mark.forEach(function(parsed){
-    //  if(parsed.type == 'code'){
-    //    code_obj.text = parsed.text;
-    //    code_obj.lang = parsed.lang;
-    //    code_arr.push(code_obj);
-    //  }
-    //});
+		//we have all the buffer methods here available to us
+		//I want the ability to find where the file resides so I can tell browsify to compile it?
+		var path = file.relative.split('.').shift().replace(/\//g, '.');
+		var parsed = frontmatter(file.contents.toString());
 
 
-    var markup = marked(parsed.body).split(/\n/);
+		var body = parsed.body.split(/\n/);
 
-    var title = markup[0].substr(0,3) === '<h1'
-      ? body[0]
-      : false;
+		//var lexed_mark = marked.lexer(parsed.body);
+		//
+		//
+		////extract the code
+		//var code_arr = [];
+		//var code_obj = {};
+		//lexed_mark.forEach(function(parsed){
+		//  if(parsed.type == 'code'){
+		//    code_obj.text = parsed.text;
+		//    code_obj.lang = parsed.lang;
+		//    code_arr.push(code_obj);
+		//  }
+		//});
 
-    var data = {};
-    data[path] = parsed.attributes;
+		var markup = marked(parsed.body).split(/\n/);
 
-    if( title && !data[path].title ){
-      data[path].title = (title.substr(0,1) === '#')
-        ? title.substr(2)
-        : title;
-      data[path].body = markup.slice(1).join(' ');
-    } else {
-      data[path].body = marked(parsed.body);
-    }
+		var title = markup[0].substr(0,3) === '<h1'
+			? body[0]
+			: false;
 
-    if( flatten ) data = data[path];
+		var data = {};
+		data[path] = parsed.attributes;
 
-    file.path = gutil.replaceExtension(file.path, '.json');
-    file.contents = new Buffer( JSON.stringify(data) );
+		if( title && !data[path].title ){
+			data[path].title = (title.substr(0,1) === '#')
+				? title.substr(2)
+				: title;
+			data[path].body = markup.slice(1).join(' ');
+		} else {
+			data[path].body = marked(parsed.body);
+		}
 
-    return file;
-  }
+		if( flatten ) data = data[path];
+
+		file.path = gutil.replaceExtension(file.path, '.json');
+		file.contents = new Buffer( JSON.stringify(data) );
+
+		return file;
+	}
 }
 
 module.exports = function( config, marked_options ){
-  var options = config && marked_options
-    ? marked_options
-    : config;
+	var options = config && marked_options
+		? marked_options
+		: config;
 
-  marked.setOptions(options);
-  var stream = through.obj(function( input, enc, callback ){
-    var file;
+	marked.setOptions(options);
+	var stream = through.obj(function( input, enc, callback ){
+		var file;
 
-    if( util.isArray(input) ){
-      var data = {};
+		if( util.isArray(input) ){
+			var data = {};
 
-      input.forEach(function( file ){
-        var file_data = JSON.parse(parse(file).contents.toString());
-        data = extend(file_data, data);
-      });
+			input.forEach(function( file ){
+				var file_data = JSON.parse(parse(file).contents.toString());
+				data = extend(file_data, data);
+			});
+			var tree = sort(expand(data));
+			//TODO: sort the tree recursively
+			for(leaf in tree){
+				tree[leaf] = sort(tree[leaf]);
+			}
+			var json = JSON.stringify(tree);
+			var name = config && typeof config === 'string'
+		? config
+		: 'content.json';
 
-      var tree = sort(expand(data));
-      var json = JSON.stringify(tree);
+	file = new gutil.File({
+		base: '/',
+	     cwd: '/',
+	     path: '/' + name,
+	     contents: new Buffer(json)
+	});
+		} else {
+			file = parse(input, true);
+		}
 
-      var name = config && typeof config === 'string'
-        ? config
-        : 'content.json';
+		this.push(file);
+		callback();
+	});
 
-      file = new gutil.File({
-        base: '/',
-        cwd: '/',
-        path: '/' + name,
-        contents: new Buffer(json)
-      });
-    } else {
-      file = parse(input, true);
-    }
-
-    this.push(file);
-    callback();
-  });
-
-  return stream;
+	return stream;
 };

@@ -10,6 +10,8 @@ var options = {
   src: './app/app.js',
   dist: 'dist',
   tmp: '.tmp',
+  app:'./app/**/*.js',
+  material:'../material/**/*.md',
   errorHandler: function(title) {
     return function(err) {
       gutil.log(gutil.colors.red('[' + title + ']'), err.toString());
@@ -25,5 +27,5 @@ wrench.readdirSyncRecursive('./gulp').filter(function(file) {
 });
 
 gulp.task('default', function(done){
-	sync('webpack', 'serve', 'watch', done);
+	sync('slides:build','webpack', 'serve', 'watch','watch:material', done);
 });

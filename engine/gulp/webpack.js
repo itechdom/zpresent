@@ -9,19 +9,20 @@ var config = {
 		filename: 'bundle.js'
 	},
 	module: {
-		loaders: [
-			 { test: /\.js$/, exclude: [/app\/lib/, /node_modules/], loader: 'babel' },
-       { test: /\.html$/, loader: 'raw' },
+			loaders: [
+			{ test: /\.js$/, exclude: [/app\/lib/, /node_modules/], loader: 'babel' },
+			{ test: /\.html$/, loader: 'raw' },
+			{ test: /\.md$/, loader: "html!markdown" },
 			{test: /\.scss$/, loader: "style!css!sass"},
 			{ test: /\.css$/, loader: 'style!css' }
-		]
-	}
+			]
+		}
 };
 
 module.exports = function(options) {
-gulp.task('webpack', function(){
-	return gulp.src(options.src)
+	gulp.task('webpack', function(){
+		return gulp.src(options.src)
 		.pipe(webpack(config))
 		.pipe(gulp.dest(options.dist));
-});
+	});
 }
