@@ -1,6 +1,7 @@
 import Reveal from 'reveal.js';
 import 'reveal.js/css/reveal.css';
 import 'reveal.js/css/theme/sky.css';
+import './reveal.custom.css';
 
 
 class revealConnector {
@@ -12,6 +13,7 @@ class revealConnector {
 			loop: false,
 			center: true,
 			minScale: 0.6,
+			margin:0,
 			transition: 'default'
 		});
 	}
